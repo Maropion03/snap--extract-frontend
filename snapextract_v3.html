@@ -6021,7 +6021,7 @@ GPA：4.07 / 5.0 ｜ 专业排名：1 / 78（前 1%）
 . 售后服务要求 7×24 小时响应
 . 一般情况 48 小时内到场处理
 
-(OCR 识别于 74 个文本块；封面字段与正文条款均可恢复，但付款比例、验收时限与售后要求被拆成更细短块)`,
+(OCR 识别于前 12 页共 186 个文本块；封面、正文、附件与价款表均被扫出，但条款连续性较弱，表格列和页尾信息存在拆碎与串行问题)`,
 
   cn_agreement: `深港科技创新合作区 BIM 平台项目补充协议
 
@@ -6490,7 +6490,7 @@ const DIFF_METRICS = {
   receipt:   { tess:{n:12, acc:71}, se:{n:6,  acc:98} },
   cn_resume:   { tess:{n:58, acc:88}, se:{n:16, acc:98} },
   cn_jd:       { tess:{n:24, acc:91}, se:{n:10, acc:99} },
-  cn_contract: { tess:{n:21, acc:81}, se:{n:9,  acc:96} },
+  cn_contract: { tess:{n:186, acc:81}, se:{n:9,  acc:96} },
   cn_agreement:{ tess:{n:18, acc:91}, se:{n:8,  acc:98} },
   cn_receipt:  { tess:{n:11, acc:93}, se:{n:7,  acc:99} },
   cn_bank:     { tess:{n:18, acc:95}, se:{n:9,  acc:99} },
@@ -6774,6 +6774,9 @@ const CUSTOM_PARSE_ASSETS = {
 };
 
 function getParseAsset(mockKey){
+  if (mockKey === 'cn_contract' && window.CN_CONTRACT_PARSE_ASSET?.pages?.length){
+    return window.CN_CONTRACT_PARSE_ASSET;
+  }
   if (CUSTOM_PARSE_ASSETS[mockKey]) return CUSTOM_PARSE_ASSETS[mockKey];
   if (!window.__snapParseAssetsCache){
     const raw = document.getElementById('snap-parse-assets')?.textContent || '{}';
@@ -6963,6 +6966,27 @@ async function renderPdfPane(source){
   `;
   const pageEl = document.getElementById('pane-raw-page');
   if (pageEl) pageEl.textContent = asset?.pages?.length ? `1 / ${asset.pages.length}` : (renderedSrc ? '1 / 1' : '1 / 2');
+  if (asset?.pages?.length){
+    const wrap = document.getElementById('pane-raw-pdf');
+    const pages = [...document.querySelectorAll('#pane-raw-pdf .ppane-pdfpage')];
+    const syncPage = ()=>{
+      if (!pageEl || !pages.length) return;
+      const wrapRect = wrap?.getBoundingClientRect();
+      let current = 1;
+      let best = Number.POSITIVE_INFINITY;
+      pages.forEach((node, idx)=>{
+        const rect = node.getBoundingClientRect();
+        const delta = Math.abs((rect.top - (wrapRect?.top || 0)));
+        if (delta < best){
+          best = delta;
+          current = idx + 1;
+        }
+      });
+      pageEl.textContent = `${current} / ${pages.length}`;
+    };
+    syncPage();
+    wrap?.addEventListener('scroll', syncPage, { passive:true });
+  }
   renderParseDocBoxes();
   return true;
 }
@@ -11489,5 +11513,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
   if (window.lucide) lucide.createIcons();
 });
 </script>
+<script src="./demo_sample_files_public/contract_cn_parse_asset.js"></script>
 </body>
 </html>
