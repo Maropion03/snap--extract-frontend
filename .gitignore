@@ -11,6 +11,7 @@ snapextract_minimax_config.json
 *.xml
 *.md~
 home_hero_demo.mp4
+modal_capture_animation.mp4
 tmp_*.png
 tmp_*.jpg
 tmp_*.jpeg
