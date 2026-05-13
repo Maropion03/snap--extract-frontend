@@ -1,0 +1,3622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>SnapExtract · 端侧闪击演示</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg:#07090d;
+    --bg-2:#0d1117;
+    --panel:#121821;
+    --panel-2:#1a2230;
+    --line:#1f2937;
+    --line-2:#2b3647;
+    --text:#e6edf3;
+    --muted:#7d8999;
+    --dim:#4b5563;
+    --accent:#6ef3c4;        /* electric mint — "fast" */
+    --accent-2:#7dd3fc;       /* ice cyan */
+    --amber:#f5b454;
+    --danger:#ef6878;
+    --grid:rgba(110,243,196,0.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:-apple-system,"SF Pro Text","PingFang SC","Helvetica Neue",sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(800px 400px at 20% -10%, rgba(110,243,196,.08), transparent 60%),
+      radial-gradient(600px 300px at 100% 20%, rgba(125,211,252,.05), transparent 60%);
+    background-size: 48px 48px, 48px 48px, auto, auto;
+    min-height:100vh;padding:28px 40px 64px;
+  }
+  .mono{font-family:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;font-feature-settings:"tnum" 1,"ss01" 1}
+
+  /* ———— header ———— */
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;border:1px solid var(--line);border-radius:14px;
+    background:linear-gradient(180deg,var(--panel) 0%,var(--bg-2) 100%);
+    margin-bottom:24px;position:relative;overflow:hidden;
+  }
+  header::after{content:"";position:absolute;inset:0;background:radial-gradient(400px 120px at 10% 100%,rgba(110,243,196,.08),transparent 70%);pointer-events:none}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,#6ef3c4 0%,#7dd3fc 100%);
+    display:grid;place-items:center;color:#071a12;font-weight:800;font-size:18px;
+    box-shadow:0 0 24px rgba(110,243,196,.35);
+  }
+  .brand-txt h1{font-size:17px;font-weight:650;letter-spacing:.3px}
+  .brand-txt p{color:var(--muted);font-size:12.5px;margin-top:2px}
+
+  .h-right{display:flex;align-items:center;gap:10px}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 12px;border:1px solid var(--line-2);border-radius:999px;
+    background:var(--panel-2);font-size:12px;color:var(--text);
+  }
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 1.6s infinite}
+  .badge.warn .dot{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+  /* ———— boot overlay ———— */
+  #boot{
+    position:fixed;inset:0;background:rgba(7,9,13,.95);backdrop-filter:blur(6px);
+    display:grid;place-items:center;z-index:99;transition:opacity .6s ease;
+  }
+  #boot.done{opacity:0;pointer-events:none}
+  .boot-box{width:420px;padding:28px 32px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+  .boot-title{font-size:14px;color:var(--muted);margin-bottom:14px;letter-spacing:1px;text-transform:uppercase}
+  .boot-step{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13px;color:var(--dim);transition:color .2s}
+  .boot-step.on{color:var(--text)}
+  .boot-step.ok{color:var(--accent)}
+  .boot-step .tick{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--dim);display:grid;place-items:center;font-size:10px;flex-shrink:0}
+  .boot-step.on .tick{border-color:var(--amber);animation:spin 1s linear infinite}
+  .boot-step.ok .tick{border-color:var(--accent);background:var(--accent);color:#061b12}
+  .boot-step.ok .tick::before{content:"✓"}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .boot-ready{font-size:22px;font-weight:700;margin-top:18px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;color:transparent;opacity:0;transition:opacity .3s .4s}
+  .boot-ready.show{opacity:1}
+  .boot-time{color:var(--muted);font-size:12px;margin-top:4px;opacity:0;transition:opacity .3s .5s}
+  .boot-time.show{opacity:1}
+
+  /* ———— section ———— */
+  section{margin-bottom:28px;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+  .sec-head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .sec-head h2{font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px}
+  .sec-head h2 .num{width:22px;height:22px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line-2);display:grid;place-items:center;font-size:11px;color:var(--accent);font-family:"JetBrains Mono",monospace}
+  .sec-head .kicker{font-size:11.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .sec-body{padding:22px}
+
+  /* ———— feature 1: workstation ———— */
+  .ws{display:grid;grid-template-columns:240px 1fr 300px;gap:16px}
+  .sample-list{display:flex;flex-direction:column;gap:8px}
+  .upload-dropzone{
+    width:100%;max-width:520px;min-height:260px;padding:22px;border:1px dashed rgba(110,243,196,.38);border-radius:18px;
+    background:linear-gradient(180deg,rgba(110,243,196,.08),rgba(125,211,252,.04));
+    cursor:pointer;transition:border-color .15s, background .15s, transform .15s;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .upload-dropzone:hover,.upload-dropzone.dragover{
+    border-color:var(--accent);background:linear-gradient(180deg,rgba(110,243,196,.14),rgba(125,211,252,.08));
+    transform:translateY(-1px);
+  }
+  .upload-dropzone input{display:none}
+  .upload-dropzone .up-title{font-size:20px;font-weight:600}
+  .upload-dropzone .up-desc{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.8}
+  .upload-dropzone .up-meta{font-size:12px;color:var(--accent-2);margin-top:14px;font-family:"JetBrains Mono",monospace}
+  .sample{
+    padding:12px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;
+    background:var(--bg-2);transition:all .15s;display:flex;align-items:center;
+  }
+  .sample.uploaded{
+    border-style:dashed;
+  }
+  .sample:hover{border-color:var(--line-2);background:var(--panel-2)}
+  .sample.active{border-color:var(--accent);background:rgba(110,243,196,.06);box-shadow:inset 0 0 0 1px rgba(110,243,196,.25)}
+  .sample .ico{display:none}
+  .sample .tt{font-size:13px;font-weight:500}
+  .sample .dd{font-size:11px;color:var(--muted);margin-top:1px}
+
+  .canvas{
+    border:1px solid var(--line);border-radius:10px;background:var(--bg-2);
+    display:flex;flex-direction:column;min-height:440px;
+  }
+  .canvas-head{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);gap:12px}
+  .canvas-head-right{display:flex;align-items:center;gap:10px}
+  .canvas-upload-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--text);font-size:12px;cursor:pointer}
+  .canvas-upload-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .file-input-native{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+  .canvas-head .tag{padding:2px 8px;border-radius:5px;background:var(--panel-2);color:var(--text);font-size:11px;font-family:"JetBrains Mono",monospace}
+  .preview{flex:1;position:relative;padding:18px;display:grid;place-items:center;overflow:hidden}
+  .preview.dragover{box-shadow:inset 0 0 0 2px rgba(110,243,196,.55);background:linear-gradient(180deg,rgba(110,243,196,.08),rgba(125,211,252,.05))}
+  .preview svg{max-width:100%;max-height:280px}
+  .preview img{max-width:100%;max-height:280px;border-radius:12px;object-fit:contain;border:1px solid var(--line)}
+  .preview iframe{width:100%;height:100%;min-height:320px;border:none;border-radius:14px;background:#fff}
+  .preview pre{width:100%;height:100%;min-height:320px;overflow:auto;padding:20px;border-radius:14px;border:1px solid var(--line);background:#101722;color:var(--text);font:12px/1.8 "JetBrains Mono","SF Mono",ui-monospace,monospace;white-space:pre-wrap}
+  .preview-empty{
+    width:100%;height:100%;display:grid;place-items:center;
+  }
+  .file-card{
+    width:min(100%,420px);padding:18px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--panel-2),var(--bg-2));
+    box-shadow:inset 0 0 0 1px rgba(125,211,252,.06);
+  }
+  .file-card .fc-type{font-size:11px;color:var(--accent-2);letter-spacing:.8px;text-transform:uppercase}
+  .file-card .fc-name{font-size:14px;font-weight:600;margin-top:10px;word-break:break-all}
+  .file-card .fc-meta{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+  .file-card .fc-note{font-size:12px;color:var(--text);margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+
+  .prompt-row{padding:12px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center}
+  .upload-status{
+    padding:10px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);
+    background:linear-gradient(180deg,rgba(125,211,252,.04),transparent);
+  }
+  .upload-status strong{color:var(--text);font-weight:600}
+  .upload-status.ok{color:var(--accent-2)}
+  .upload-status.error{color:var(--danger)}
+  .prompt-input{
+    flex:1;padding:10px 12px;background:var(--bg);border:1px solid var(--line-2);border-radius:8px;color:var(--text);font-size:13px;
+    font-family:inherit;
+  }
+  .prompt-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,243,196,.12)}
+  .btn{
+    padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:13px;
+    background:linear-gradient(180deg,#6ef3c4,#3dd9a8);color:#062015;transition:transform .1s;
+    box-shadow:0 4px 14px rgba(110,243,196,.25);
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+  .btn.ghost{background:var(--panel-2);color:var(--text);box-shadow:none;border:1px solid var(--line-2)}
+  .hidden{display:none !important}
+
+  /* answer stream area */
+  .result{
+    padding:14px 16px;font-size:13.5px;line-height:1.75;min-height:80px;
+    border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(110,243,196,.02),transparent)
+  }
+  .result.error{background:linear-gradient(180deg,rgba(239,104,120,.10),rgba(239,104,120,.02))}
+  .result:empty::before{content:"点击「闪击解析」开始 · 首字预计 < 400ms";color:var(--muted);font-size:12px}
+  .caret{display:inline-block;width:7px;height:14px;background:var(--accent);vertical-align:middle;margin-left:2px;animation:blink .8s infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hl-link{background:rgba(110,243,196,.15);border-bottom:1px dashed var(--accent);padding:0 3px;border-radius:3px;cursor:pointer;transition:background .15s}
+  .hl-link:hover,.hl-link.active{background:rgba(110,243,196,.35)}
+
+  /* ———— NPU pulse dashboard ———— */
+  .pulse{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:14px;display:flex;flex-direction:column;gap:14px}
+  .pulse-title{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;display:flex;justify-content:space-between}
+  .pulse-title .live{color:var(--accent);display:flex;gap:5px;align-items:center}
+  .pulse-title .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent);animation:pulse 1s infinite}
+  .metric{border-top:1px solid var(--line);padding-top:12px}
+  .metric:first-of-type{border-top:none;padding-top:0}
+  .metric-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px}
+  .metric-val{font-size:26px;font-weight:700;font-family:"JetBrains Mono",monospace;letter-spacing:-.5px}
+  .metric-val.accent{color:var(--accent)}
+  .metric-val .u{font-size:11px;color:var(--muted);font-weight:400;margin-left:4px}
+  .sparkline{width:100%;height:46px;margin-top:6px}
+  .bar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden;margin-top:6px}
+  .bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .2s}
+  .metric-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+  /* ———— feature 2: bidirectional highlight ———— */
+  .link-demo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .link-pane{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:18px;min-height:340px}
+  .link-pane h3{font-size:12px;color:var(--muted);margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase}
+  .flow-node{
+    fill:var(--panel-2);stroke:var(--line-2);stroke-width:1.5;transition:all .2s;cursor:pointer;
+  }
+  .flow-node.hot{fill:rgba(110,243,196,.18);stroke:var(--accent);filter:drop-shadow(0 0 8px rgba(110,243,196,.5))}
+  .flow-label{fill:var(--text);font-size:13px;font-weight:500;pointer-events:none}
+  .flow-arrow{stroke:var(--line-2);stroke-width:1.5;fill:none;marker-end:url(#arr)}
+  .link-ans{font-size:13.5px;line-height:1.9}
+  .link-ans .ch{
+    display:inline-block;padding:2px 6px;border-radius:5px;margin:0 1px;
+    background:rgba(125,211,252,.08);border-bottom:1px dashed var(--accent-2);cursor:pointer;transition:background .15s;
+  }
+  .link-ans .ch:hover,.link-ans .ch.on{background:rgba(110,243,196,.25);border-color:var(--accent)}
+
+  /* ———— feature 3: formula flip ———— */
+  .flip-demo{display:grid;grid-template-columns:1fr 380px;gap:22px;align-items:center}
+  .flip-card{
+    width:100%;height:200px;perspective:1200px;cursor:pointer;
+  }
+  .flip-inner{
+    position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+  .flip-face{
+    position:absolute;inset:0;border:1px solid var(--line);border-radius:12px;
+    background:var(--bg-2);display:grid;place-items:center;backface-visibility:hidden;padding:20px;
+  }
+  .flip-face.back{transform:rotateY(180deg);background:#0b1117}
+  .flip-face code{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--accent-2);white-space:pre-wrap;text-align:left;line-height:1.7}
+  .flip-face .corner{position:absolute;top:10px;right:12px;font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .flip-face .copy{position:absolute;bottom:12px;right:14px;font-size:11px;padding:4px 10px;background:var(--panel-2);border:1px solid var(--line-2);border-radius:6px;color:var(--text);cursor:pointer}
+  .flip-face .copy:hover{border-color:var(--accent)}
+  .flip-info h3{font-size:15px;margin-bottom:10px}
+  .flip-info p{color:var(--muted);font-size:13px;margin-bottom:14px;line-height:1.7}
+  .flip-time{display:flex;gap:22px;margin-top:18px}
+  .flip-time div{flex:1;border-left:2px solid var(--accent);padding-left:12px}
+  .flip-time .n{font-size:22px;font-weight:700;font-family:"JetBrains Mono",monospace}
+  .flip-time .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+
+  /* ———— privacy radar ———— */
+  .radar-demo{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:center}
+  .radar{width:240px;height:240px;position:relative;margin:0 auto}
+  .radar svg{width:100%;height:100%}
+  .radar-ring{fill:none;stroke:var(--line-2);stroke-width:1}
+  .radar-sweep{fill:url(#radGrad);transform-origin:center;animation:sweep 3s linear infinite}
+  @keyframes sweep{to{transform:rotate(360deg)}}
+  .radar-center{font-family:"JetBrains Mono",monospace;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+  .radar-center .n{font-size:52px;color:var(--accent);line-height:1}
+  .radar-center .l{font-size:10.5px;color:var(--muted);letter-spacing:1px;margin-top:3px}
+  .radar-info h3{font-size:15px;margin-bottom:8px}
+  .radar-log{border:1px solid var(--line);border-radius:8px;background:#060a0e;padding:12px 14px;font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.8;max-height:160px;overflow:hidden}
+  .radar-log .ok{color:var(--accent)}
+  .radar-log .t{color:var(--dim)}
+
+  /* common */
+  .chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chip{padding:4px 10px;background:var(--panel-2);border:1px solid var(--line-2);border-radius:999px;font-size:11.5px;cursor:pointer;color:var(--muted);transition:all .15s}
+  .chip:hover{border-color:var(--accent);color:var(--text)}
+
+  /* ———— Source tag (LIVE / MOCK) ———— */
+  .src-tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:10.5px;font-family:"JetBrains Mono",monospace;letter-spacing:.5px;margin-bottom:10px}
+  .src-tag.live{background:rgba(110,243,196,.14);color:var(--accent);border:1px solid rgba(110,243,196,.45);box-shadow:0 0 10px rgba(110,243,196,.2)}
+  .src-tag.mock{background:rgba(125,133,153,.08);color:var(--muted);border:1px solid var(--line-2)}
+  .src-tag::after{content:"";display:block;height:6px}
+
+  /* ———— X-ray scan overlay ———— */
+  .scan-line{position:absolute;left:0;right:0;height:2px;top:0;pointer-events:none;opacity:0;z-index:4;
+    background:linear-gradient(90deg,transparent 5%,#6ef3c4 50%,transparent 95%);
+    box-shadow:0 0 16px rgba(110,243,196,.9),0 0 34px rgba(110,243,196,.5)}
+  .scan-line.active{animation:scanMove 780ms ease-out}
+  @keyframes scanMove{0%{top:-2%;opacity:1}88%{opacity:1}100%{top:100%;opacity:0}}
+  .scan-particle{position:absolute;background:rgba(110,243,196,.14);border:1px solid rgba(110,243,196,.55);
+    color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:10.5px;padding:2px 8px;border-radius:4px;
+    pointer-events:none;z-index:5;box-shadow:0 0 12px rgba(110,243,196,.4);white-space:nowrap;
+    animation:flyOut 1250ms ease-out forwards}
+  @keyframes flyOut{0%{opacity:0;transform:translateY(12px) scale(.7)}28%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-46px) scale(.95)}}
+
+  /* ———— Race PK ———— */
+  .race{display:flex;flex-direction:column;gap:12px}
+  .race-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg-2);border:1px solid var(--line);border-radius:10px}
+  .race-prompt{font-size:13px;color:var(--muted)}
+  .lane{display:grid;grid-template-columns:180px 1fr 92px;gap:16px;align-items:center;padding:14px 16px;background:var(--bg-2);border:1px solid var(--line);border-radius:10px}
+  .lane-name{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .lane-sub{font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.3px}
+  .track{position:relative;height:40px;background:linear-gradient(90deg,var(--bg),var(--panel-2));border-radius:6px;overflow:hidden;border:1px solid var(--line-2)}
+  .track::after{content:"";position:absolute;top:0;bottom:0;right:7%;width:1px;background:repeating-linear-gradient(0deg,var(--line-2) 0 4px,transparent 4px 8px)}
+  .track-bar{position:absolute;top:0;bottom:0;left:0;width:0;background:linear-gradient(90deg,rgba(239,104,120,.08),rgba(239,104,120,.4));transition:width 60ms linear}
+  .track-bar.npu{background:linear-gradient(90deg,rgba(110,243,196,.1),rgba(110,243,196,.55))}
+  .runner{position:absolute;top:50%;transform:translateY(-50%);left:0;font-size:20px;text-shadow:0 0 10px currentColor;transition:left 60ms linear;color:var(--danger);line-height:1}
+  .runner.npu{color:var(--accent);font-size:18px}
+  .finish-flag{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.7}
+  .lane-time{text-align:right;font-size:15px;font-weight:600;color:var(--text)}
+  .race-result{padding:18px;border-radius:10px;background:linear-gradient(135deg,rgba(110,243,196,.04),rgba(125,211,252,.04));border:1px dashed var(--line-2);min-height:70px;display:grid;place-items:center;text-align:center;transition:all .3s}
+  .race-result.won{border-color:var(--accent);border-style:solid;background:linear-gradient(135deg,rgba(110,243,196,.13),rgba(125,211,252,.08));box-shadow:0 0 30px rgba(110,243,196,.15) inset}
+  .race-win{font-size:24px;font-weight:800;letter-spacing:.5px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;color:transparent}
+  .race-speedup{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--muted);margin-top:6px}
+  .race-result.idle::before{content:"点击「开始比赛」观察 CPU 与端侧 NPU 在同一任务上的差距";color:var(--muted);font-size:12.5px}
+
+  /* ———— Morph (result materialization) ———— */
+  .morph{display:flex;flex-direction:column;gap:14px}
+  .morph-tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .mtab{padding:9px 14px;background:var(--panel-2);border:1px solid var(--line-2);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12.5px;font-family:inherit;transition:all .15s}
+  .mtab:hover{color:var(--text)}
+  .mtab.active{background:rgba(110,243,196,.08);border-color:var(--accent);color:var(--accent)}
+  .morph-body{display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:270px}
+  .morph-text,.morph-viz{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:20px 22px;position:relative}
+  .morph-text{font-size:13.5px;line-height:1.9}
+  .morph-text:empty::before{content:"—";color:var(--dim)}
+  .morph-viz{display:grid;place-items:center;overflow:hidden}
+  .viz-label{position:absolute;top:10px;left:14px;font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .bars{width:100%;display:flex;align-items:flex-end;justify-content:space-around;height:180px;gap:14px;padding:22px 6px 0}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%}
+  .bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end}
+  .bar-rect{width:100%;background:linear-gradient(180deg,var(--accent),var(--accent-2));border-radius:4px 4px 0 0;height:0;transition:height 800ms cubic-bezier(.3,.9,.3,1);position:relative;box-shadow:0 -4px 14px rgba(110,243,196,.35)}
+  .bar-rect .val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--accent);font-family:"JetBrains Mono",monospace;font-weight:600;opacity:0;transition:opacity .3s .7s;white-space:nowrap}
+  .bar-rect.grown .val{opacity:1}
+  .bar-label{font-size:11px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+  .tl-wrap{width:100%;padding:0 12px}
+  .tl-line{position:relative;height:2px;background:var(--line-2);margin:60px 16px}
+  .tl-line::before{content:"";position:absolute;top:-1px;bottom:-1px;left:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width 1.3s ease-out;border-radius:2px;box-shadow:0 0 10px rgba(110,243,196,.5)}
+  .tl-line.grow::before{width:100%}
+  .tl-step{position:absolute;top:50%;transform:translate(-50%,-50%) scale(0);opacity:0;transition:all .35s}
+  .tl-step.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  .tl-step .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent);margin:0 auto}
+  .tl-step .label{font-size:11.5px;color:var(--text);position:absolute;left:50%;transform:translateX(-50%);top:18px;white-space:nowrap}
+  .tl-step:nth-child(even) .label{top:auto;bottom:18px}
+  .dt{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;margin-top:16px}
+  .dt th,.dt td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}
+  .dt th{background:var(--panel-2);color:var(--muted);font-weight:500;font-size:11px;letter-spacing:.3px;text-transform:uppercase;border-bottom:1px solid var(--line-2)}
+  .dt td{opacity:0;animation:fadeCell .35s forwards;color:var(--text)}
+  .dt td.diff{background:rgba(245,180,84,.12);color:var(--amber);font-weight:600;position:relative}
+  .dt td.diff::after{content:"";position:absolute;top:50%;right:8px;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber)}
+  @keyframes fadeCell{to{opacity:1}}
+
+  /* ———— Feature 07: content extraction ———— */
+  .erase-demo{display:grid;grid-template-columns:1fr 120px 1fr;gap:18px;align-items:center}
+  .erase-stage{
+    min-height:320px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);
+    position:relative;overflow:hidden;padding:18px;
+  }
+  .erase-stage::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(125,211,252,.03),transparent 34%,rgba(110,243,196,.03));
+    pointer-events:none;
+  }
+  .erase-caption{position:absolute;top:12px;left:14px;font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .erase-sheet{
+    position:absolute;inset:52px 26px 24px;border-radius:10px;background:#f4efe5;overflow:hidden;
+    box-shadow:0 20px 36px rgba(0,0,0,.24);
+  }
+  .erase-grid{
+    position:absolute;inset:0;
+    background-image:linear-gradient(rgba(60,72,88,.08) 1px, transparent 1px),linear-gradient(90deg, rgba(60,72,88,.08) 1px, transparent 1px);
+    background-size:24px 24px;
+  }
+  .erase-noise,.erase-watermark,.erase-stamp,.erase-doodle,.erase-core{
+    position:absolute;transition:opacity .7s ease, transform .7s ease, filter .7s ease;
+  }
+  .erase-noise{
+    inset:0;background:
+      radial-gradient(circle at 15% 18%, rgba(80,40,20,.11) 0 8px, transparent 8px),
+      radial-gradient(circle at 80% 24%, rgba(80,40,20,.09) 0 5px, transparent 5px),
+      radial-gradient(circle at 72% 76%, rgba(80,40,20,.1) 0 7px, transparent 7px),
+      radial-gradient(circle at 30% 70%, rgba(80,40,20,.08) 0 4px, transparent 4px);
+  }
+  .erase-watermark{
+    top:116px;left:-24px;right:-24px;text-align:center;
+    font-size:54px;color:rgba(140,88,44,.12);font-weight:700;transform:rotate(-18deg);letter-spacing:2px;
+  }
+  .erase-stamp{
+    top:22px;right:22px;padding:10px 16px;border:2px solid rgba(174,55,55,.45);color:rgba(174,55,55,.58);
+    border-radius:8px;font-size:18px;font-weight:700;transform:rotate(8deg);
+  }
+  .erase-doodle{
+    bottom:22px;left:26px;width:110px;height:34px;border-bottom:3px solid rgba(67,86,118,.35);border-radius:50%;
+    transform:rotate(-6deg);
+  }
+  .erase-core{
+    top:30px;left:30px;right:30px;bottom:30px;border-radius:8px;padding:20px 22px;
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));
+  }
+  .erase-title{font-size:23px;color:#253347;font-weight:700}
+  .erase-list{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+  .erase-line{height:10px;border-radius:999px;background:rgba(48,66,86,.26)}
+  .erase-line.w60{width:60%}.erase-line.w72{width:72%}.erase-line.w84{width:84%}.erase-line.w90{width:90%}
+  .erase-callout{
+    margin-top:22px;padding:12px 14px;border-radius:8px;background:rgba(110,243,196,.14);color:#214b42;
+    font-size:14px;font-weight:600;display:inline-block;
+  }
+  .erase-stage.erased .erase-noise,
+  .erase-stage.erased .erase-watermark,
+  .erase-stage.erased .erase-stamp,
+  .erase-stage.erased .erase-doodle{
+    opacity:0;transform:translateY(-18px) scale(.95);filter:blur(8px);
+  }
+  .erase-stage.erased .erase-core{
+    box-shadow:0 0 0 2px rgba(110,243,196,.55),0 0 22px rgba(110,243,196,.22);
+    background:linear-gradient(180deg,rgba(110,243,196,.15),rgba(255,255,255,.08));
+  }
+  .erase-rail{display:flex;justify-content:center}
+  .erase-btn{
+    width:96px;height:96px;border-radius:14px;border:1px solid rgba(110,243,196,.35);
+    background:linear-gradient(180deg,rgba(110,243,196,.12),rgba(125,211,252,.08));color:var(--text);
+    font-size:13px;font-weight:600;cursor:pointer;display:grid;place-items:center;text-align:center;line-height:1.4;
+    box-shadow:0 0 0 1px rgba(110,243,196,.12) inset;transition:all .2s;
+  }
+  .erase-btn:hover{transform:translateY(-2px);border-color:var(--accent);color:var(--accent)}
+  .erase-btn.busy{pointer-events:none;opacity:.85}
+
+  /* ———— Feature 08: PDF layer peel ———— */
+  .pdflayer-wrap{display:flex;flex-direction:column;gap:14px}
+  .pdflayer-tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .pdflayer-tab{
+    padding:8px 14px;border-radius:8px;border:1px solid var(--line-2);background:var(--panel-2);
+    color:var(--muted);font-size:12.5px;cursor:pointer;transition:all .15s;
+  }
+  .pdflayer-tab.active{color:var(--accent);border-color:var(--accent);background:rgba(110,243,196,.08)}
+  .pdflayer-stage{
+    min-height:360px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);
+    padding:22px;display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center;
+  }
+  .pdflayer-book{
+    height:310px;position:relative;perspective:1400px;
+  }
+  .pdflayer-page{
+    position:absolute;inset:0;border-radius:10px;background:#f7f4ec;transform-origin:left center;
+    transition:transform .6s cubic-bezier(.3,.9,.3,1),opacity .35s ease,filter .35s ease;
+    box-shadow:0 20px 42px rgba(0,0,0,.28);overflow:hidden;border:1px solid rgba(0,0,0,.06);
+  }
+  .pdflayer-page[data-kind="image"]{background:linear-gradient(180deg,#e9e2d2,#dcd1bb)}
+  .pdflayer-page[data-kind="structure"]{background:linear-gradient(180deg,#eef3f7,#dde7ef)}
+  .pdflayer-book[data-active="text"] .pdflayer-page[data-kind="text"]{transform:translateX(0) rotateY(0);opacity:1;z-index:3}
+  .pdflayer-book[data-active="text"] .pdflayer-page[data-kind="image"]{transform:translateX(20px) rotateY(-7deg);opacity:.72;z-index:2}
+  .pdflayer-book[data-active="text"] .pdflayer-page[data-kind="structure"]{transform:translateX(38px) rotateY(-12deg);opacity:.36;z-index:1}
+  .pdflayer-book[data-active="image"] .pdflayer-page[data-kind="text"]{transform:translateX(-48px) rotateY(28deg);opacity:.18;z-index:1}
+  .pdflayer-book[data-active="image"] .pdflayer-page[data-kind="image"]{transform:translateX(0) rotateY(0);opacity:1;z-index:3}
+  .pdflayer-book[data-active="image"] .pdflayer-page[data-kind="structure"]{transform:translateX(26px) rotateY(-8deg);opacity:.52;z-index:2}
+  .pdflayer-book[data-active="structure"] .pdflayer-page[data-kind="text"]{transform:translateX(-62px) rotateY(36deg);opacity:.14;z-index:1}
+  .pdflayer-book[data-active="structure"] .pdflayer-page[data-kind="image"]{transform:translateX(-24px) rotateY(18deg);opacity:.24;z-index:2}
+  .pdflayer-book[data-active="structure"] .pdflayer-page[data-kind="structure"]{transform:translateX(0) rotateY(0);opacity:1;z-index:3}
+  .pdflayer-page .pl-head{padding:18px 20px 10px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#5d6775}
+  .pdflayer-page .pl-body{padding:0 20px 20px;height:calc(100% - 44px)}
+  .pl-text-title{height:12px;width:48%;background:#233347;border-radius:999px;margin-bottom:16px}
+  .pl-text-line{height:8px;background:rgba(35,51,71,.24);border-radius:999px;margin-bottom:10px}
+  .pl-text-line.w55{width:55%}.pl-text-line.w68{width:68%}.pl-text-line.w78{width:78%}.pl-text-line.w92{width:92%}
+  .pl-image-sheet{
+    height:100%;border-radius:8px;background:
+      linear-gradient(180deg,rgba(255,255,255,.28),transparent 34%),
+      radial-gradient(circle at 70% 22%, rgba(114,82,44,.3), transparent 22%),
+      linear-gradient(135deg,#dbd2bf,#eee6d8 55%,#ccbfa8);
+    position:relative;overflow:hidden;
+  }
+  .pl-image-sheet::before,.pl-image-sheet::after{
+    content:"";position:absolute;border:1px dashed rgba(77,66,48,.34);border-radius:6px;
+  }
+  .pl-image-sheet::before{left:20px;right:24px;top:20px;height:78px}
+  .pl-image-sheet::after{left:26px;right:60px;bottom:24px;height:112px}
+  .pl-struct-box{
+    position:absolute;border:2px solid rgba(61,108,156,.58);background:rgba(61,108,156,.08);border-radius:6px;
+  }
+  .pl-struct-box span{position:absolute;top:-16px;left:0;font-size:10px;color:#3d6c9c;font-family:"JetBrains Mono",monospace}
+  .pdflayer-side{display:flex;flex-direction:column;gap:12px}
+  .pdflayer-card{
+    border:1px solid var(--line);border-radius:10px;background:var(--panel-2);padding:14px 16px;
+  }
+  .pdflayer-card h4{font-size:14px;margin-bottom:6px}
+  .pdflayer-card p{color:var(--muted);font-size:12.5px;line-height:1.7}
+  .pdflayer-chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .pdflayer-chip{
+    padding:5px 10px;border-radius:999px;font-size:11px;border:1px solid var(--line-2);color:var(--text);background:var(--bg-2);
+  }
+
+  /* ———— Feature 09: doc diff ———— */
+  .docdiff-wrap{display:flex;flex-direction:column;gap:14px}
+  .docdiff-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .docdiff-head p{color:var(--muted);font-size:13px}
+  .docdiff-btn{
+    padding:9px 14px;border-radius:8px;border:1px solid rgba(125,211,252,.38);
+    background:linear-gradient(180deg,rgba(125,211,252,.14),rgba(110,243,196,.06));color:var(--text);cursor:pointer;font-weight:600;
+    transition:all .15s;
+  }
+  .docdiff-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .docdiff-main{display:grid;grid-template-columns:1fr 300px 1fr;gap:16px;align-items:start}
+  .docdiff-doc{
+    min-height:360px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:18px;position:relative;
+  }
+  .docdiff-doc h4{font-size:13px;color:var(--accent);margin-bottom:12px;font-family:"JetBrains Mono",monospace;letter-spacing:.4px}
+  .docdiff-paper{
+    height:300px;border-radius:10px;background:#f6f1e6;position:relative;overflow:hidden;box-shadow:0 18px 34px rgba(0,0,0,.24);
+  }
+  .docdiff-block{
+    position:absolute;left:22px;right:22px;height:10px;border-radius:999px;background:rgba(35,51,71,.22);
+  }
+  .docdiff-block.small{right:110px}
+  .docdiff-stamp{
+    position:absolute;right:20px;top:18px;padding:8px 12px;border-radius:8px;border:2px solid rgba(153,62,62,.4);color:rgba(153,62,62,.55);
+    transform:rotate(8deg);font-size:15px;font-weight:700;
+  }
+  .docdiff-rect{
+    position:absolute;border:2px solid transparent;border-radius:6px;background:rgba(245,180,84,.06);opacity:.15;
+    transition:all .28s ease;
+  }
+  .docdiff-rect.hot{opacity:1;box-shadow:0 0 0 1px currentColor inset,0 0 16px currentColor}
+  .docdiff-rect.sev-high{color:var(--danger);border-color:rgba(239,104,120,.8);background:rgba(239,104,120,.16)}
+  .docdiff-rect.sev-mid{color:var(--amber);border-color:rgba(245,180,84,.84);background:rgba(245,180,84,.16)}
+  .docdiff-center{
+    min-height:360px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:14px;position:relative;
+  }
+  .docdiff-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .docdiff-summary{position:relative;z-index:2;display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .docdiff-item{
+    border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:12px 13px;cursor:pointer;transition:all .15s;
+  }
+  .docdiff-item:hover,.docdiff-item.active{border-color:var(--accent);transform:translateY(-1px)}
+  .docdiff-item h5{font-size:12.5px;margin-bottom:5px}
+  .docdiff-item p{font-size:11.5px;color:var(--muted);line-height:1.6}
+  .docdiff-meta{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--muted);margin-top:5px}
+
+  footer{text-align:center;color:var(--dim);font-size:11.5px;margin-top:24px;letter-spacing:.5px}
+
+  /* ———— Feature A: smart follow-up chain ———— */
+  .followup-row{
+    border-top:1px dashed var(--line);padding:10px 16px 14px;
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:0;
+  }
+  .followup-row:empty{display:none}
+  .fu-label{font-size:10.5px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-right:2px}
+  .fu-chip{
+    padding:6px 12px;border-radius:999px;font-size:12px;cursor:pointer;color:var(--text);
+    background:linear-gradient(180deg,rgba(125,211,252,.10),rgba(110,243,196,.06));
+    border:1px solid rgba(125,211,252,.35);transition:all .15s;
+    font-family:inherit;
+  }
+  .fu-chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 3px 10px rgba(110,243,196,.18)}
+  .fu-chip[disabled]{opacity:.55;cursor:progress}
+  .fu-chip.loading{position:relative;color:var(--muted);border-style:dashed}
+  .fu-chip.loading::after{
+    content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+    margin-left:6px;background:var(--accent);animation:pulse 1s infinite;vertical-align:middle;
+  }
+  .fu-chip .fu-src{font-size:9.5px;color:var(--muted);margin-left:6px;font-family:"JetBrains Mono",monospace;letter-spacing:.3px}
+
+  /* ———— Feature B: achievement badges ———— */
+  .badge-tray{
+    display:flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line-2);
+    border-radius:999px;background:var(--panel-2);
+  }
+  .badge-tray .bt-label{font-size:10px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-right:2px}
+  .b-item{
+    width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+    background:rgba(110,243,196,0);border:1px solid var(--line);color:var(--dim);
+    transition:all .25s;cursor:help;position:relative;
+  }
+  .b-item.unlocked{
+    background:radial-gradient(circle at 30% 30%,rgba(110,243,196,.45),rgba(110,243,196,.08));
+    border-color:var(--accent);color:var(--text);
+    box-shadow:0 0 10px rgba(110,243,196,.35);
+  }
+  .b-item.just-unlocked{animation:badgePop .7s cubic-bezier(.3,1.5,.4,1)}
+  @keyframes badgePop{
+    0%{transform:scale(.4);opacity:0}
+    55%{transform:scale(1.35);opacity:1}
+    100%{transform:scale(1)}
+  }
+  .b-item .b-tt{
+    position:absolute;top:calc(100% + 8px);right:0;white-space:nowrap;
+    background:var(--panel);border:1px solid var(--line-2);border-radius:8px;
+    padding:7px 11px;font-size:11.5px;color:var(--text);
+    opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;
+    box-shadow:0 6px 20px rgba(0,0,0,.35);
+  }
+  .b-item .b-tt .b-tt-desc{color:var(--muted);font-size:10.5px;margin-top:2px;letter-spacing:.3px}
+  .b-item:hover .b-tt{opacity:1}
+
+  .badge-pop{
+    position:fixed;top:78px;right:40px;z-index:200;
+    background:linear-gradient(135deg,rgba(110,243,196,.20),rgba(125,211,252,.12));
+    border:1px solid var(--accent);border-radius:12px;padding:14px 18px;
+    display:flex;align-items:center;gap:12px;
+    box-shadow:0 10px 40px rgba(110,243,196,.35),0 0 30px rgba(110,243,196,.25) inset;
+    transform:translateX(20px);opacity:0;transition:all .35s cubic-bezier(.2,1,.3,1);
+    backdrop-filter:blur(8px);
+  }
+  .badge-pop.show{transform:translateX(0);opacity:1}
+  .badge-pop .bp-ico{font-size:26px;line-height:1;filter:drop-shadow(0 0 6px var(--accent))}
+  .badge-pop .bp-name{font-size:13px;font-weight:700;color:var(--text)}
+  .badge-pop .bp-sub{font-size:11px;color:var(--accent);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+  .badge-pop .bp-desc{font-size:11.5px;color:var(--muted);margin-top:3px}
+
+  /* ———— Feature C: Point-to-Ask region overlay ———— */
+  .preview{position:relative}
+  .region-hint{
+    position:absolute;top:8px;right:10px;z-index:6;pointer-events:none;
+    font-size:10.5px;color:var(--muted);letter-spacing:.3px;
+    padding:3px 9px;border-radius:999px;
+    background:rgba(13,17,23,.75);border:1px solid var(--line-2);
+    opacity:0;transition:opacity .25s,color .2s,border-color .2s;font-family:"JetBrains Mono",monospace;
+  }
+  .region-hint b{color:var(--accent);font-weight:700;font-family:"JetBrains Mono",monospace}
+  .preview:hover .region-hint{opacity:.85}
+  .preview.region-mode .region-hint{
+    opacity:1;color:var(--accent);border-color:var(--accent);
+    background:rgba(110,243,196,.10);box-shadow:0 0 10px rgba(110,243,196,.25);
+  }
+  .region-hint.warn{
+    opacity:1;color:var(--amber);border-color:rgba(245,180,84,.45);
+    background:rgba(245,180,84,.10);box-shadow:none;
+  }
+  .region-overlay{
+    position:absolute;inset:0;z-index:8;cursor:crosshair;
+    user-select:none;-webkit-user-select:none;
+    display:none;
+  }
+  .preview.region-mode .region-overlay{display:block}
+  .preview.region-mode{box-shadow:inset 0 0 0 1.5px rgba(110,243,196,.55)}
+  .region-overlay.dragging{cursor:crosshair}
+  .region-rect{
+    position:absolute;border:1.5px dashed var(--accent);
+    background:rgba(110,243,196,.08);
+    box-shadow:0 0 0 9999px rgba(7,9,13,.42);
+    border-radius:3px;pointer-events:none;z-index:9;
+  }
+  .region-rect::before{
+    content:attr(data-sz);
+    position:absolute;top:-20px;left:0;font-size:10px;
+    color:var(--accent);font-family:"JetBrains Mono",monospace;
+    background:var(--panel);padding:1px 6px;border-radius:4px;
+    border:1px solid var(--accent);white-space:nowrap;
+  }
+  .region-popover{
+    position:absolute;z-index:12;min-width:220px;max-width:280px;
+    background:var(--panel);border:1px solid var(--accent);border-radius:10px;
+    padding:10px;box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 20px rgba(110,243,196,.22);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .region-popover .rp-head{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;
+    padding-bottom:6px;border-bottom:1px solid var(--line);
+  }
+  .region-popover .rp-close{
+    background:none;border:none;color:var(--muted);cursor:pointer;
+    font-size:14px;padding:0 4px;line-height:1;
+  }
+  .region-popover .rp-close:hover{color:var(--text)}
+  .region-qchip{
+    text-align:left;padding:8px 10px;border-radius:7px;
+    background:var(--bg-2);border:1px solid var(--line-2);
+    color:var(--text);font-size:12.5px;font-family:inherit;cursor:pointer;
+    transition:all .12s;
+  }
+  .region-qchip:hover{border-color:var(--accent);background:rgba(110,243,196,.08);color:var(--accent);transform:translateX(2px)}
+  .region-inline-ask{
+    margin-top:2px;padding-top:8px;border-top:1px dashed var(--line);
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .region-inline-ask textarea{
+    width:100%;min-height:72px;resize:none;
+    padding:10px 11px;border-radius:8px;
+    background:var(--bg-2);border:1px solid var(--line-2);
+    color:var(--text);font-size:12.5px;line-height:1.55;font-family:inherit;
+  }
+  .region-inline-ask textarea:focus{
+    outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,243,196,.10);
+  }
+  .region-inline-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .region-inline-tip{
+    font-size:10.5px;color:var(--muted);letter-spacing:.2px;
+  }
+  .region-send{
+    padding:7px 12px;border-radius:8px;border:1px solid rgba(110,243,196,.35);
+    background:rgba(110,243,196,.08);color:var(--accent);
+    font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;
+  }
+  .region-send:hover{background:rgba(110,243,196,.14);border-color:var(--accent)}
+  .region-send:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ———— Feature E: confidence heatmap ———— */
+  .heatmap-layer{
+    position:absolute;inset:0;z-index:3;pointer-events:none;
+    opacity:0;transition:opacity .35s;
+  }
+  .heatmap-layer.on{opacity:1}
+  .heat-region{
+    position:absolute;border-radius:4px;
+    mix-blend-mode:screen;
+    transition:box-shadow .2s, filter .2s;
+  }
+  .heat-region.hi{background:radial-gradient(ellipse at center,rgba(110,243,196,.55),rgba(110,243,196,.08) 75%);border:1px solid rgba(110,243,196,.5)}
+  .heat-region.mid{background:radial-gradient(ellipse at center,rgba(245,180,84,.55),rgba(245,180,84,.08) 75%);border:1px solid rgba(245,180,84,.6)}
+  .heat-region.lo{background:radial-gradient(ellipse at center,rgba(239,104,120,.6),rgba(239,104,120,.1) 75%);border:1px solid rgba(239,104,120,.65)}
+  .heat-region.glow{filter:drop-shadow(0 0 10px currentColor) brightness(1.3);z-index:4}
+  .heat-region .hr-score{
+    position:absolute;top:-16px;left:0;font-size:9.5px;
+    font-family:"JetBrains Mono",monospace;color:inherit;
+    background:rgba(7,9,13,.85);padding:1px 5px;border-radius:3px;letter-spacing:.3px;
+  }
+  .heat-region.hi .hr-score{color:var(--accent)}
+  .heat-region.mid .hr-score{color:var(--amber)}
+  .heat-region.lo .hr-score{color:var(--danger)}
+
+  .conf-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:3px 9px;border-radius:999px;font-size:11px;
+    border:1px solid var(--line-2);background:var(--panel-2);color:var(--muted);
+    font-family:"JetBrains Mono",monospace;cursor:pointer;
+    transition:all .15s;
+  }
+  .conf-badge .cb-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .conf-badge.good{color:var(--accent);border-color:rgba(110,243,196,.4)}
+  .conf-badge.mid{color:var(--amber);border-color:rgba(245,180,84,.4)}
+  .conf-badge.bad{color:var(--danger);border-color:rgba(239,104,120,.4)}
+  .conf-badge.active{background:rgba(110,243,196,.1);box-shadow:0 0 10px rgba(110,243,196,.2)}
+  .conf-badge:hover{border-color:currentColor}
+
+  .conf-warn{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 12px;margin-bottom:10px;
+    background:rgba(245,180,84,.08);border:1px solid rgba(245,180,84,.35);
+    border-radius:8px;font-size:12px;color:var(--amber);
+  }
+  .low-conf{
+    background:rgba(245,180,84,.12);border-bottom:1px dashed var(--amber);
+    padding:0 2px;border-radius:3px;cursor:help;
+  }
+  .low-conf.bad{background:rgba(239,104,120,.14);border-color:var(--danger);color:var(--danger)}
+
+  /* ———— Feature F: language correction pill ———— */
+  .lang-pill-row{
+    padding:8px 16px 0;display:flex;gap:8px;align-items:center;min-height:0;
+  }
+  .lang-pill-row:empty{display:none}
+  .lang-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:3px 10px;border-radius:999px;font-size:11px;
+    background:var(--panel-2);border:1px solid var(--line-2);
+    color:var(--muted);font-family:"JetBrains Mono",monospace;letter-spacing:.3px;
+    transition:all .25s;
+  }
+  .lang-pill .lp-flag{font-size:13px;line-height:1}
+  .lang-pill.ok{color:var(--accent);border-color:rgba(110,243,196,.4);background:rgba(110,243,196,.06)}
+  .lang-pill.correcting{
+    color:var(--amber);border-color:var(--amber);background:rgba(245,180,84,.1);
+    animation:langFlash 1s ease-in-out infinite;
+  }
+  .lang-pill.corrected{
+    color:var(--accent);border-color:var(--accent);background:rgba(110,243,196,.14);
+    box-shadow:0 0 10px rgba(110,243,196,.35);
+  }
+  @keyframes langFlash{50%{opacity:.55}}
+
+  /* ———— Tier-1 shared: icon buttons ———— */
+  .icon-btn{
+    width:32px;height:32px;border-radius:8px;border:1px solid var(--line-2);
+    background:var(--panel-2);color:var(--text);cursor:pointer;font-size:15px;
+    display:inline-grid;place-items:center;transition:all .15s;font-family:inherit;
+    position:relative;
+  }
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .icon-btn .ib-count{
+    position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;
+    border-radius:999px;background:var(--accent);color:#062015;
+    font-size:9.5px;padding:0 4px;display:grid;place-items:center;
+    font-family:"JetBrains Mono",monospace;font-weight:700;
+  }
+
+  /* ———— Feature G: conversation context strip ———— */
+  .conv-strip{
+    display:flex;align-items:center;gap:10px;padding:8px 16px;
+    border-top:1px solid var(--line);background:rgba(125,211,252,.03);
+    font-size:11.5px;color:var(--muted);
+  }
+  .conv-strip:empty{display:none}
+  .conv-strip .cs-turn{color:var(--accent-2);font-family:"JetBrains Mono",monospace;letter-spacing:.3px}
+  .conv-strip .cs-dots{display:flex;gap:3px}
+  .conv-strip .cs-dots .d{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.6}
+  .conv-strip .cs-reset{
+    margin-left:auto;padding:3px 10px;border-radius:999px;
+    background:var(--bg-2);border:1px solid var(--line-2);color:var(--muted);
+    font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s;
+  }
+  .conv-strip .cs-reset:hover{border-color:var(--danger);color:var(--danger)}
+
+  /* ———— Feature I: export buttons ———— */
+  .result-toolbar{
+    position:absolute;top:8px;right:10px;display:flex;gap:6px;z-index:5;
+    opacity:0;transition:opacity .2s;
+  }
+  .result-wrap{position:relative}
+  .result-wrap:hover .result-toolbar,.result-toolbar.show{opacity:1}
+  .rt-btn{
+    padding:4px 9px;border-radius:6px;font-size:10.5px;cursor:pointer;
+    background:rgba(13,17,23,.85);border:1px solid var(--line-2);color:var(--text);
+    font-family:"JetBrains Mono",monospace;letter-spacing:.3px;backdrop-filter:blur(4px);
+    transition:all .15s;
+  }
+  .rt-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .rt-btn.copied{border-color:var(--accent);color:var(--accent);background:rgba(110,243,196,.14)}
+
+  /* ———— Feature H: history drawer ———— */
+  .drawer-mask{
+    position:fixed;inset:0;background:rgba(7,9,13,.5);backdrop-filter:blur(3px);
+    z-index:180;opacity:0;pointer-events:none;transition:opacity .25s;
+  }
+  .drawer-mask.show{opacity:1;pointer-events:auto}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;width:420px;max-width:92vw;z-index:190;
+    background:var(--panel);border-left:1px solid var(--line);
+    transform:translateX(100%);transition:transform .35s cubic-bezier(.3,1,.3,1);
+    display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.55);
+  }
+  .drawer.show{transform:translateX(0)}
+  .drawer-head{
+    padding:18px 22px;border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .drawer-head h3{font-size:14px;font-weight:600}
+  .drawer-head .dh-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:"JetBrains Mono",monospace}
+  .drawer-body{flex:1;overflow-y:auto;padding:12px 16px}
+  .drawer-foot{
+    padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;
+    background:var(--bg-2);
+  }
+  .drawer-foot button{flex:1;padding:7px 10px;border-radius:7px;font-size:11.5px;cursor:pointer;background:var(--panel-2);border:1px solid var(--line-2);color:var(--muted);font-family:inherit}
+  .drawer-foot button:hover{border-color:var(--danger);color:var(--danger)}
+  .hist-item{
+    padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;cursor:pointer;transition:all .15s;background:var(--bg-2);
+  }
+  .hist-item:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .hist-item .hi-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px}
+  .hist-item .hi-sample{font-size:10.5px;color:var(--accent);font-family:"JetBrains Mono",monospace;letter-spacing:.3px;text-transform:uppercase}
+  .hist-item .hi-time{font-size:10.5px;color:var(--dim);font-family:"JetBrains Mono",monospace}
+  .hist-item .hi-q{font-size:12.5px;color:var(--text);font-weight:500;margin-bottom:4px}
+  .hist-item .hi-a{font-size:11.5px;color:var(--muted);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hist-empty{text-align:center;color:var(--muted);padding:40px 20px;font-size:13px}
+
+  /* ———— Feature J: settings modal ———— */
+  .modal-mask{
+    position:fixed;inset:0;background:rgba(7,9,13,.6);backdrop-filter:blur(4px);
+    z-index:200;display:none;align-items:center;justify-content:center;
+  }
+  .modal-mask.show{display:flex;animation:fadeIn .2s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal{
+    width:460px;max-width:92vw;background:var(--panel);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55);
+    animation:modalIn .25s cubic-bezier(.3,1,.3,1);
+  }
+  @keyframes modalIn{from{transform:translateY(20px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+  .modal-head{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal-head h3{font-size:14px;font-weight:600}
+  .modal-body{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+  .form-row{display:flex;flex-direction:column;gap:5px}
+  .form-row label{font-size:11.5px;color:var(--muted);letter-spacing:.3px}
+  .form-row label .hint{color:var(--dim);font-size:10.5px;margin-left:6px;font-family:"JetBrains Mono",monospace}
+  .form-row input,.form-row select{
+    padding:9px 11px;background:var(--bg-2);border:1px solid var(--line-2);
+    border-radius:7px;color:var(--text);font-size:12.5px;font-family:inherit;
+  }
+  .form-row input[readonly]{color:var(--muted);background:var(--bg);cursor:not-allowed}
+  .form-row input:focus,.form-row select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(110,243,196,.12)}
+  .form-row .row-inline{display:flex;gap:10px}
+  .form-row .row-inline input{flex:1}
+  .modal-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;background:var(--bg-2)}
+  .modal-foot .left{display:flex;gap:6px}
+  .btn-sm{padding:8px 14px;border-radius:7px;font-size:12px;cursor:pointer;border:1px solid var(--line-2);background:var(--panel-2);color:var(--text);font-family:inherit}
+  .btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-sm.primary{background:linear-gradient(180deg,#6ef3c4,#3dd9a8);color:#062015;border:none;font-weight:600;box-shadow:0 4px 14px rgba(110,243,196,.22)}
+  .btn-sm.primary:hover{transform:translateY(-1px);color:#062015}
+  .btn-sm.danger{color:var(--danger);border-color:rgba(239,104,120,.35)}
+  .btn-sm.danger:hover{border-color:var(--danger)}
+</style>
+</head>
+<body>
+
+<!-- ======== BOOT OVERLAY ======== -->
+<div id="boot">
+  <div class="boot-box">
+    <div class="boot-title">SnapExtract · Cold Start</div>
+    <div class="boot-step" data-t="100">
+      <span class="tick"></span><span>端口自检 · 7860 available</span>
+    </div>
+    <div class="boot-step" data-t="280">
+      <span class="tick"></span><span>NPU 运行时加载 · Qualcomm QNN</span>
+    </div>
+    <div class="boot-step" data-t="560">
+      <span class="tick"></span><span>视觉理解模型就绪 · 3B params</span>
+    </div>
+    <div class="boot-step" data-t="820">
+      <span class="tick"></span><span>样例库装载 · 5 类 / 12 个</span>
+    </div>
+    <div class="boot-ready">Ready to Demo</div>
+    <div class="boot-time mono">cold start: <span id="bootTime">1.24</span>s</div>
+  </div>
+</div>
+
+<!-- ======== HEADER ======== -->
+<header>
+  <div class="brand">
+    <div class="logo">S</div>
+    <div class="brand-txt">
+      <h1>SnapExtract</h1>
+      <p>基于骁龙端侧 NPU 的视觉理解 Demo · 主线：快</p>
+    </div>
+  </div>
+  <div class="h-right">
+    <span class="badge"><span class="dot"></span>Local NPU · 0 outbound</span>
+    <span class="badge warn"><span class="dot"></span>⚡ First token <span class="mono">287ms</span></span>
+    <span class="badge"><span class="dot"></span>cold start <span class="mono">1.24s</span></span>
+    <div class="badge-tray" id="badgeTray" aria-label="achievements">
+      <span class="bt-label">成就</span>
+    </div>
+    <button class="icon-btn" id="historyBtn" title="历史记录 (H)">🕘<span class="ib-count" id="histCount" style="display:none">0</span></button>
+    <button class="icon-btn" id="settingsBtn" title="设置">⚙</button>
+  </div>
+</header>
+
+<!-- ======== History drawer ======== -->
+<div class="drawer-mask" id="drawerMask"></div>
+<aside class="drawer" id="historyDrawer">
+  <div class="drawer-head">
+    <div>
+      <h3>历史记录</h3>
+      <div class="dh-meta" id="histMeta">最近 0 次</div>
+    </div>
+    <button class="icon-btn" id="histClose" title="关闭 (Esc)">×</button>
+  </div>
+  <div class="drawer-body" id="histList"></div>
+  <div class="drawer-foot">
+    <button id="histClear">清空历史</button>
+    <button id="histExport">导出 JSON</button>
+  </div>
+</aside>
+
+<!-- ======== Settings modal ======== -->
+<div class="modal-mask" id="settingsMask">
+  <div class="modal" id="settingsModal">
+    <div class="modal-head">
+      <h3>⚙ 设置</h3>
+      <button class="icon-btn" id="setClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>模型名 <span class="hint">runtime override</span></label>
+        <input type="text" id="setModel" placeholder="MiniMax-M2.1-highspeed">
+      </div>
+      <div class="form-row">
+        <div class="row-inline">
+          <div class="form-row" style="flex:1">
+            <label>Temperature <span class="hint">0–1</span></label>
+            <input type="number" id="setTemp" min="0" max="1" step="0.05" placeholder="0.3">
+          </div>
+          <div class="form-row" style="flex:1">
+            <label>Max tokens <span class="hint">128–4096</span></label>
+            <input type="number" id="setMaxTok" min="64" max="8192" step="32" placeholder="1024">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>语言偏好</label>
+        <select id="setLang">
+          <option value="auto">自动（跟随输入）</option>
+          <option value="zh">强制中文</option>
+          <option value="en">Force English</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>API Base <span class="hint">proxy 配置 · 只读</span></label>
+        <input type="text" id="setApiBase" readonly>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="left">
+        <button class="btn-sm danger" id="setReset">恢复默认</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" id="setCancel">取消</button>
+        <button class="btn-sm primary" id="setSave">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== FEATURE 1: 闪击工作台 ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">01</span>闪击工作台 · 流式输出 + NPU 脉冲</h2>
+    <span class="kicker">Feature · Streaming + Live NPU Telemetry</span>
+  </div>
+  <div class="sec-body">
+    <div class="ws">
+      <!-- sample list -->
+      <div class="sample-list">
+        <div class="sample uploaded" id="uploadedSampleCard" style="display:none" data-s="upload">
+          <div><div class="tt" id="uploadedSampleName">自定义素材</div><div class="dd" id="uploadedSampleDesc">等待上传</div></div>
+        </div>
+        <div class="sample active" data-s="pdf">
+          <div><div class="tt">学术论文 PDF</div><div class="dd">12 页 · 文本型</div></div>
+        </div>
+        <div class="sample" data-s="table">
+          <div><div class="tt">财报表格</div><div class="dd">季度营收</div></div>
+        </div>
+        <div class="sample" data-s="flow">
+          <div><div class="tt">流程图</div><div class="dd">订单处理</div></div>
+        </div>
+        <div class="sample" data-s="formula">
+          <div><div class="tt">公式图</div><div class="dd">傅里叶变换</div></div>
+        </div>
+        <div class="sample" data-s="image">
+          <div><div class="tt">场景图</div><div class="dd">产品照片</div></div>
+        </div>
+      </div>
+
+      <!-- canvas -->
+      <div class="canvas">
+        <div class="canvas-head">
+          <span id="canvasTitle">sample · academic-paper-001.pdf</span>
+          <div class="canvas-head-right">
+            <label class="canvas-upload-btn" id="canvasUploadBtn" for="filePicker">选择文件</label>
+            <input class="file-input-native" type="file" id="filePicker" accept=".png,.jpg,.jpeg,.webp,.gif,.bmp,.pdf,.txt,.md,.csv,.json">
+            <button type="button" class="conf-badge" id="confBadge" title="切换置信度热力图" style="display:none">
+              <span class="cb-dot"></span><span id="confText">—</span>
+            </button>
+            <span class="tag" id="canvasTag">PDF · 12p</span>
+          </div>
+        </div>
+        <div class="preview" id="preview">
+          <span class="region-hint" id="regionHint">按 <b>R</b> 进入圈选模式</span>
+          <!-- preview content injected by JS -->
+        </div>
+        <div class="upload-status" id="uploadStatus">当前为 <strong>预置样例</strong>。你也可以上传自己的文件验证主链路。</div>
+        <div class="prompt-row">
+          <input class="prompt-input" id="prompt" value="用 3 句话概括这份 PDF 的核心结论">
+          <button class="btn" id="goBtn">⚡ 闪击解析</button>
+        </div>
+        <div class="lang-pill-row" id="langPillRow"></div>
+        <div class="result-wrap">
+          <div class="result-toolbar" id="resultToolbar" style="display:none">
+            <button class="rt-btn" id="copyMdBtn" type="button">📋 MD</button>
+            <button class="rt-btn" id="exportPngBtn" type="button">🖼 PNG</button>
+          </div>
+          <div class="result mono" id="result"></div>
+        </div>
+        <div class="conv-strip" id="convStrip"></div>
+        <div class="followup-row" id="followupRow"></div>
+      </div>
+
+      <!-- NPU pulse -->
+      <div class="pulse">
+        <div class="pulse-title"><span>NPU · Live Telemetry</span><span class="live">LIVE</span></div>
+
+        <div class="metric">
+          <div class="metric-label"><span>Tokens per second</span><span id="tpsPeak" class="mono">peak 52.1</span></div>
+          <div class="metric-val accent mono"><span id="tps">0.0</span><span class="u">tok/s</span></div>
+          <svg class="sparkline" id="spark" viewBox="0 0 280 46" preserveAspectRatio="none">
+            <polyline id="sparkLine" fill="none" stroke="#6ef3c4" stroke-width="1.5"/>
+            <polyline id="sparkFill" fill="url(#sparkGrad)" stroke="none" opacity=".35"/>
+            <defs>
+              <linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#6ef3c4"/>
+                <stop offset="100%" stop-color="#6ef3c4" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label"><span>First-token latency</span><span class="mono" id="ttft">—</span></div>
+          <div class="metric-val mono"><span id="ttftVal">—</span><span class="u">ms</span></div>
+          <div class="metric-sub">目标 &lt; 400ms · 端侧基线</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label"><span>NPU utilization</span><span id="npuPct" class="mono">0%</span></div>
+          <div class="bar"><div class="bar-fill" id="npuBar"></div></div>
+          <div class="metric-sub">Qualcomm Hexagon · 8 HMX tiles</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label"><span>Token usage / wall time</span><span id="tokMeta" class="mono">est.</span></div>
+          <div class="metric-val mono" style="font-size:18px"><span id="tok">0</span> / <span id="wall">0.00</span>s</div>
+          <div class="metric-sub mono" id="tokBreakdown">in 0 · cached 0 · out 0 · total 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chip-row" style="margin-top:14px">
+      <span class="chip" onclick="fillPrompt('列出 PDF 里所有的关键指标数字')">📈 列出关键数字</span>
+      <span class="chip" onclick="fillPrompt('作者的主要观点是什么？用 bullet 列出')">🎯 主要观点</span>
+      <span class="chip" onclick="fillPrompt('这份材料适合什么场景下使用？')">💡 使用场景</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 2: 答案 ↔ 素材 联动 ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">02</span>答案 ↔ 素材 双向高亮</h2>
+    <span class="kicker">Feature · Grounded Answer · 0ms Linking</span>
+  </div>
+  <div class="sec-body">
+    <div class="link-demo">
+      <div class="link-pane">
+        <h3>流程图预览</h3>
+        <svg viewBox="0 0 340 300" style="width:100%;height:auto">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#2b3647"/>
+            </marker>
+          </defs>
+          <g>
+            <rect class="flow-node" data-n="n1" x="110" y="15"  width="120" height="40" rx="8"/>
+            <text class="flow-label" x="170" y="40" text-anchor="middle">下单</text>
+
+            <rect class="flow-node" data-n="n2" x="110" y="85"  width="120" height="40" rx="8"/>
+            <text class="flow-label" x="170" y="110" text-anchor="middle">风控审核</text>
+
+            <rect class="flow-node" data-n="n3" x="10"  y="155" width="120" height="40" rx="8"/>
+            <text class="flow-label" x="70"  y="180" text-anchor="middle">人工复核</text>
+
+            <rect class="flow-node" data-n="n4" x="210" y="155" width="120" height="40" rx="8"/>
+            <text class="flow-label" x="270" y="180" text-anchor="middle">发货</text>
+
+            <rect class="flow-node" data-n="n5" x="110" y="225" width="120" height="40" rx="8"/>
+            <text class="flow-label" x="170" y="250" text-anchor="middle">完成</text>
+
+            <path class="flow-arrow" d="M170,55 L170,85"/>
+            <path class="flow-arrow" d="M150,125 L80,155"/>
+            <path class="flow-arrow" d="M190,125 L260,155"/>
+            <path class="flow-arrow" d="M90,195 L150,225"/>
+            <path class="flow-arrow" d="M250,195 L190,225"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="link-pane">
+        <h3>结构化答案（悬停联动）</h3>
+        <div class="link-ans">
+          这是一条电商订单处理流程，共 <span class="ch" data-n="n1 n2 n3 n4 n5">5 个节点</span>。
+          用户在<span class="ch" data-n="n1">「下单」</span>后，系统进入<span class="ch" data-n="n2">「风控审核」</span>。
+          若风险较高，流程会分流至<span class="ch" data-n="n3">「人工复核」</span>，否则直接进入<span class="ch" data-n="n4">「发货」</span>。
+          两条分支最终都会汇合到<span class="ch" data-n="n5">「完成」</span>状态。
+        </div>
+        <div class="chip-row" style="margin-top:16px">
+          <span class="chip">• 悬停文字：预览中对应节点发光</span>
+          <span class="chip">• 点击节点：答案中对应短语高亮</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 3: 公式翻转卡 ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">03</span>公式双面翻转 · 点击即复制</h2>
+    <span class="kicker">Feature · Render ⇌ LaTeX Source</span>
+  </div>
+  <div class="sec-body">
+    <div class="flip-demo">
+      <div class="flip-card" id="flipCard" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face">
+            <span class="corner">Rendered</span>
+            <div id="formulaRender"></div>
+            <span class="corner" style="top:auto;bottom:10px;left:14px;right:auto">点击翻面看 LaTeX →</span>
+          </div>
+          <div class="flip-face back">
+            <span class="corner">LaTeX Source</span>
+<code>F(\omega) = \int_{-\infty}^{+\infty} f(t)\, e^{-i\omega t}\, dt</code>
+            <button class="copy" onclick="event.stopPropagation();copyLatex(this)">复制</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-info">
+        <h3>傅里叶变换 · 一次识别，即插即用</h3>
+        <p>端侧模型识别完成后，答案已经是 LaTeX。前端同步渲染，一次点击翻面取源码——
+        可直接粘贴到 Word、Notion、Typora，无需二次转换。</p>
+        <div class="flip-time">
+          <div>
+            <div class="n mono accent" style="color:var(--accent)">312<span style="font-size:13px;color:var(--muted)">ms</span></div>
+            <div class="l">端侧识别</div>
+          </div>
+          <div>
+            <div class="n mono">1<span style="font-size:13px;color:var(--muted)">click</span></div>
+            <div class="l">取用 LaTeX</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 4: 隐私雷达 ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">04</span>隐私雷达 · 端侧断言</h2>
+    <span class="kicker">Feature · Verifiable End-Side Claim</span>
+  </div>
+  <div class="sec-body">
+    <div class="radar-demo">
+      <div class="radar">
+        <svg viewBox="0 0 240 240">
+          <defs>
+            <linearGradient id="radGrad" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0%" stop-color="#6ef3c4" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#6ef3c4" stop-opacity=".55"/>
+            </linearGradient>
+          </defs>
+          <circle class="radar-ring" cx="120" cy="120" r="110"/>
+          <circle class="radar-ring" cx="120" cy="120" r="75"/>
+          <circle class="radar-ring" cx="120" cy="120" r="40"/>
+          <line class="radar-ring" x1="120" y1="10" x2="120" y2="230"/>
+          <line class="radar-ring" x1="10"  y1="120" x2="230" y2="120"/>
+          <path class="radar-sweep" d="M120,120 L120,10 A110,110 0 0 1 225,148 z"/>
+          <circle cx="120" cy="120" r="4" fill="#6ef3c4"/>
+        </svg>
+        <div class="radar-center">
+          <div class="n mono">0</div>
+          <div class="l">OUTBOUND HITS</div>
+        </div>
+      </div>
+      <div class="radar-info">
+        <h3>本轮演示 · 0 次外网连接</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.75">
+          所有视觉推理都在骁龙 NPU 上本地完成，文件不离开设备。
+          后台每 500ms 轮询系统 socket 统计，评委可当场验证。
+        </p>
+        <div class="radar-log mono" id="radarLog">
+<span class="t">[00:00.12]</span> <span class="ok">local-infer</span>  qnn://hexagon  in-process<br>
+<span class="t">[00:00.28]</span> <span class="ok">local-read </span>  /samples/academic.pdf<br>
+<span class="t">[00:00.31]</span> <span class="ok">local-npu  </span>  4200 MAC cycles<br>
+<span class="t">[00:00.59]</span> <span class="ok">local-infer</span>  first-token emitted<br>
+<span class="t">[00:01.12]</span> <span class="ok">local-infer</span>  finished<br>
+<span class="t">[00:01.12]</span> outbound connections: <span class="ok">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 5: Race PK ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">05</span>CPU vs NPU · 同场 PK</h2>
+    <span class="kicker">Feature · End-Side Acceleration Showdown</span>
+  </div>
+  <div class="sec-body">
+    <div class="race">
+      <div class="race-head">
+        <div class="race-prompt">🎯 同一任务：<strong style="color:var(--text)">对 4×5 财报表格抽取 Q3 营收与毛利率</strong></div>
+        <button class="btn" id="raceBtn">🏁 开始比赛</button>
+      </div>
+      <div class="lane">
+        <div>
+          <div class="lane-name">💻 CPU baseline</div>
+          <div class="lane-sub mono">x86 · 8 cores · FP32</div>
+        </div>
+        <div class="track">
+          <div class="track-bar" id="cpuBar"></div>
+          <div class="runner" id="cpuRunner">●</div>
+          <div class="finish-flag">🏁</div>
+        </div>
+        <div class="lane-time mono"><span id="cpuTime">0.00</span>s</div>
+      </div>
+      <div class="lane">
+        <div>
+          <div class="lane-name">⚡ NPU on-device</div>
+          <div class="lane-sub mono">Qualcomm Hexagon · INT8</div>
+        </div>
+        <div class="track">
+          <div class="track-bar npu" id="npuRaceBar"></div>
+          <div class="runner npu" id="npuRunner">⚡</div>
+          <div class="finish-flag">🏁</div>
+        </div>
+        <div class="lane-time mono"><span id="npuTime">0.00</span>s</div>
+      </div>
+      <div class="race-result idle" id="raceResult"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 6: Result morph ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">06</span>结果物化 · 文字长成图</h2>
+    <span class="kicker">Feature · Answer auto-morphs to visualization</span>
+  </div>
+  <div class="sec-body">
+    <div class="morph">
+      <div class="morph-tabs">
+        <button class="mtab active" data-m="bar">📊 数字 → 柱状图</button>
+        <button class="mtab" data-m="time">⏱ 步骤 → 时间轴</button>
+        <button class="mtab" data-m="diff">🔀 对比 → 差异表</button>
+      </div>
+      <div class="morph-body">
+        <div class="morph-text" id="morphText"></div>
+        <div class="morph-viz" id="morphViz"><span class="viz-label">visualization</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 07: Magic erase ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">07</span>魔法擦除 · 纯内容提取</h2>
+    <span class="kicker">Feature · Background Removal Showcase</span>
+  </div>
+  <div class="sec-body">
+    <div class="erase-demo">
+      <div class="erase-stage" id="eraseBefore">
+        <span class="erase-caption">source layer</span>
+        <div class="erase-sheet">
+          <div class="erase-grid"></div>
+          <div class="erase-noise"></div>
+          <div class="erase-watermark">CONFIDENTIAL</div>
+          <div class="erase-stamp">DRAFT</div>
+          <div class="erase-doodle"></div>
+          <div class="erase-core">
+            <div class="erase-title">Vendor Settlement</div>
+            <div class="erase-list">
+              <div class="erase-line w90"></div>
+              <div class="erase-line w84"></div>
+              <div class="erase-line w72"></div>
+              <div class="erase-line w92"></div>
+              <div class="erase-line w60"></div>
+            </div>
+            <div class="erase-callout">Net Amount  ¥128,400</div>
+          </div>
+        </div>
+      </div>
+      <div class="erase-rail">
+        <button class="erase-btn" id="eraseBtn" type="button">提取<br>主体</button>
+      </div>
+      <div class="erase-stage" id="eraseAfter">
+        <span class="erase-caption">extracted content</span>
+        <div class="erase-sheet">
+          <div class="erase-core">
+            <div class="erase-title">Vendor Settlement</div>
+            <div class="erase-list">
+              <div class="erase-line w90"></div>
+              <div class="erase-line w84"></div>
+              <div class="erase-line w72"></div>
+              <div class="erase-line w92"></div>
+              <div class="erase-line w60"></div>
+            </div>
+            <div class="erase-callout">Net Amount  ¥128,400</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 08: PDF peel layers ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">08</span>PDF 撕开式分层</h2>
+    <span class="kicker">Feature · Text vs Image vs Structure</span>
+  </div>
+  <div class="sec-body">
+    <div class="pdflayer-wrap">
+      <div class="pdflayer-tabs" id="pdfLayerTabs">
+        <button class="pdflayer-tab active" type="button" data-layer="text">文本层</button>
+        <button class="pdflayer-tab" type="button" data-layer="image">图像层</button>
+        <button class="pdflayer-tab" type="button" data-layer="structure">结构层</button>
+      </div>
+      <div class="pdflayer-stage">
+        <div class="pdflayer-book" id="pdfLayerBook" data-active="text">
+          <div class="pdflayer-page" data-kind="text">
+            <div class="pl-head">text layer</div>
+            <div class="pl-body">
+              <div class="pl-text-title"></div>
+              <div class="pl-text-line w92"></div>
+              <div class="pl-text-line w78"></div>
+              <div class="pl-text-line w68"></div>
+              <div class="pl-text-line w92"></div>
+              <div class="pl-text-line w84"></div>
+              <div class="pl-text-line w55"></div>
+              <div class="pl-text-line w92" style="margin-top:18px"></div>
+              <div class="pl-text-line w72"></div>
+              <div class="pl-text-line w68"></div>
+            </div>
+          </div>
+          <div class="pdflayer-page" data-kind="image">
+            <div class="pl-head">image layer</div>
+            <div class="pl-body">
+              <div class="pl-image-sheet"></div>
+            </div>
+          </div>
+          <div class="pdflayer-page" data-kind="structure">
+            <div class="pl-head">structure layer</div>
+            <div class="pl-body" style="position:relative">
+              <div class="pl-struct-box" style="left:20px;top:18px;right:34px;height:28px"><span>title</span></div>
+              <div class="pl-struct-box" style="left:20px;top:62px;right:28px;height:72px"><span>paragraph</span></div>
+              <div class="pl-struct-box" style="left:20px;top:150px;right:96px;height:44px"><span>figure</span></div>
+              <div class="pl-struct-box" style="left:20px;top:210px;right:28px;height:62px"><span>table</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="pdflayer-side">
+          <div class="pdflayer-card">
+            <h4 id="pdfLayerTitle">文本层更适合摘要与问答</h4>
+            <p id="pdfLayerDesc">当 PDF 自带文本层时，系统能更稳定地定位段落、标题和关键句，适合快速总结、提炼重点和做精确问答。</p>
+          </div>
+          <div class="pdflayer-card">
+            <h4>能力边界提示</h4>
+            <div class="pdflayer-chiprow">
+              <span class="pdflayer-chip">Text PDF · 稳定</span>
+              <span class="pdflayer-chip">Image PDF · 依赖 OCR</span>
+              <span class="pdflayer-chip">Structure · 解释性更强</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURE 09: multi-doc diff ======== -->
+<section>
+  <div class="sec-head">
+    <h2><span class="num">09</span>多文档对比模式</h2>
+    <span class="kicker">Feature · High-Value Business Diff</span>
+  </div>
+  <div class="sec-body">
+    <div class="docdiff-wrap">
+      <div class="docdiff-head">
+        <p>两份合同并排比对，差异区域与摘要联动出现，让评委一眼看到真实业务价值。</p>
+        <button class="docdiff-btn" id="docDiffBtn" type="button">开始对比</button>
+      </div>
+      <div class="docdiff-main" id="docDiffMain">
+        <div class="docdiff-doc">
+          <h4>Contract A</h4>
+          <div class="docdiff-paper" id="docDiffLeftPaper">
+            <div class="docdiff-stamp">SIGNED</div>
+            <div class="docdiff-block" style="top:26px"></div>
+            <div class="docdiff-block small" style="top:54px"></div>
+            <div class="docdiff-block" style="top:98px"></div>
+            <div class="docdiff-block" style="top:122px"></div>
+            <div class="docdiff-block small" style="top:146px"></div>
+            <div class="docdiff-block" style="top:194px"></div>
+            <div class="docdiff-block" style="top:220px"></div>
+            <div class="docdiff-block small" style="top:246px"></div>
+          </div>
+        </div>
+        <div class="docdiff-center">
+          <svg class="docdiff-svg" id="docDiffSvg" viewBox="0 0 300 360" preserveAspectRatio="none"></svg>
+          <div class="docdiff-summary" id="docDiffSummary"></div>
+        </div>
+        <div class="docdiff-doc">
+          <h4>Contract B</h4>
+          <div class="docdiff-paper" id="docDiffRightPaper">
+            <div class="docdiff-stamp" style="color:rgba(168,92,38,.58);border-color:rgba(168,92,38,.4)">REV.2</div>
+            <div class="docdiff-block" style="top:26px"></div>
+            <div class="docdiff-block small" style="top:54px"></div>
+            <div class="docdiff-block" style="top:98px"></div>
+            <div class="docdiff-block" style="top:122px"></div>
+            <div class="docdiff-block small" style="top:146px"></div>
+            <div class="docdiff-block" style="top:194px"></div>
+            <div class="docdiff-block" style="top:220px"></div>
+            <div class="docdiff-block small" style="top:246px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>SnapExtract Demo · 决赛主线「快」 · 2026</footer>
+
+<script>
+/* ================ BOOT SEQUENCE ================ */
+(function boot(){
+  const steps = document.querySelectorAll('.boot-step');
+  steps.forEach((s,i)=>{
+    const t = +s.dataset.t;
+    setTimeout(()=>s.classList.add('on'),t);
+    setTimeout(()=>{s.classList.remove('on');s.classList.add('ok')},t+220);
+  });
+  setTimeout(()=>{
+    document.querySelector('.boot-ready').classList.add('show');
+    document.querySelector('.boot-time').classList.add('show');
+  },1150);
+  setTimeout(()=>document.getElementById('boot').classList.add('done'),1800);
+})();
+
+/* ================ KaTeX formula ================ */
+window.addEventListener('load', ()=>{
+  if(window.katex){
+    katex.render(
+      "F(\\omega) = \\int_{-\\infty}^{+\\infty} f(t)\\, e^{-i\\omega t}\\, dt",
+      document.getElementById('formulaRender'),
+      {throwOnError:false, displayMode:true}
+    );
+  }
+});
+
+/* ================ Sample switch ================ */
+const SAMPLES = {
+  pdf:{
+    title:"sample · academic-paper-001.pdf", tag:"PDF · 12p",
+    svg:`<svg viewBox="0 0 260 200">
+      <rect x="15" y="10" width="230" height="180" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <rect x="30" y="25" width="140" height="10" rx="2" fill="#6ef3c4" opacity=".7"/>
+      <rect x="30" y="42" width="200" height="5" rx="2" fill="#4b5563"/>
+      <rect x="30" y="52" width="180" height="5" rx="2" fill="#4b5563"/>
+      <rect x="30" y="62" width="195" height="5" rx="2" fill="#4b5563"/>
+      <rect x="30" y="82" width="80" height="50" rx="3" fill="#0d1117" stroke="#2b3647"/>
+      <text x="70" y="112" text-anchor="middle" fill="#7d8999" font-size="10">Fig 1</text>
+      <rect x="120" y="82" width="105" height="5" rx="2" fill="#4b5563"/>
+      <rect x="120" y="92" width="90"  height="5" rx="2" fill="#4b5563"/>
+      <rect x="120" y="102" width="105" height="5" rx="2" fill="#4b5563"/>
+      <rect x="120" y="112" width="80"  height="5" rx="2" fill="#4b5563"/>
+      <rect x="30" y="145" width="195" height="5" rx="2" fill="#4b5563"/>
+      <rect x="30" y="155" width="170" height="5" rx="2" fill="#4b5563"/>
+      <rect x="30" y="165" width="195" height="5" rx="2" fill="#4b5563"/>
+    </svg>`,
+    prompt:"用 3 句话概括这份 PDF 的核心结论",
+    answer:[
+      "本文提出了一种基于端侧 NPU 的多模态蒸馏方案，可在 3B 参数规模下达到接近 7B 的视觉理解表现。",
+      "实验显示，在 5 类典型视觉文档（图片、PDF、公式、流程图、表格）上，端侧推理平均首字延迟 < 400ms。",
+      "相比云端方案，本地部署在带宽受限与隐私敏感场景下具备显著优势。"
+    ]
+  },
+  table:{
+    title:"sample · q3-finance.png", tag:"Table · 4x5",
+    svg:`<svg viewBox="0 0 280 180">
+      <g font-family="monospace" font-size="11" fill="#e6edf3">
+        <rect x="10" y="10" width="260" height="30" fill="#1a2230" stroke="#2b3647"/>
+        <text x="30" y="30">季度</text><text x="95" y="30">营收</text><text x="160" y="30">毛利率</text><text x="225" y="30">同比</text>
+        <rect x="10" y="40" width="260" height="28" fill="#121821" stroke="#2b3647"/>
+        <text x="30" y="58">Q1</text><text x="95" y="58">¥12.4亿</text><text x="160" y="58">38.2%</text><text x="225" y="58">+12%</text>
+        <rect x="10" y="68" width="260" height="28" fill="#121821" stroke="#2b3647"/>
+        <text x="30" y="86">Q2</text><text x="95" y="86">¥15.1亿</text><text x="160" y="86">41.0%</text><text x="225" y="86">+18%</text>
+        <rect x="10" y="96" width="260" height="28" fill="rgba(110,243,196,.1)" stroke="#6ef3c4"/>
+        <text x="30" y="114">Q3</text><text x="95" y="114" fill="#6ef3c4">¥18.7亿</text><text x="160" y="114">43.5%</text><text x="225" y="114">+24%</text>
+        <rect x="10" y="124" width="260" height="28" fill="#121821" stroke="#2b3647"/>
+        <text x="30" y="142">Q4E</text><text x="95" y="142">¥21.0亿</text><text x="160" y="142">44.0%</text><text x="225" y="142">+22%</text>
+      </g>
+    </svg>`,
+    prompt:"Q3 的营收和毛利率分别是多少？",
+    answer:[
+      "Q3 营收为 ¥18.7 亿，同比 +24%；",
+      "毛利率达到 43.5%，相比 Q1 的 38.2% 提升了 5.3 个百分点。",
+      "该季度为全年增速最快的一季。"
+    ]
+  },
+  flow:{
+    title:"sample · order-flow.png", tag:"Flow · 5 nodes",
+    svg:`<svg viewBox="0 0 340 260">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#2b3647"/>
+        </marker>
+      </defs>
+      <rect x="110" y="10" width="120" height="36" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <text x="170" y="33" text-anchor="middle" fill="#e6edf3" font-size="12">下单</text>
+      <rect x="110" y="75" width="120" height="36" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <text x="170" y="98" text-anchor="middle" fill="#e6edf3" font-size="12">风控审核</text>
+      <rect x="10" y="140" width="120" height="36" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <text x="70" y="163" text-anchor="middle" fill="#e6edf3" font-size="12">人工复核</text>
+      <rect x="210" y="140" width="120" height="36" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <text x="270" y="163" text-anchor="middle" fill="#e6edf3" font-size="12">发货</text>
+      <rect x="110" y="205" width="120" height="36" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <text x="170" y="228" text-anchor="middle" fill="#e6edf3" font-size="12">完成</text>
+      <path d="M170,46 L170,75" fill="none" stroke="#2b3647" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <path d="M150,111 L80,140" fill="none" stroke="#2b3647" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <path d="M190,111 L260,140" fill="none" stroke="#2b3647" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <path d="M90,176 L150,205" fill="none" stroke="#2b3647" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <path d="M250,176 L190,205" fill="none" stroke="#2b3647" stroke-width="1.5" marker-end="url(#arr2)"/>
+    </svg>`,
+    prompt:"这张流程图描述的是什么业务？主要节点有哪些？",
+    answer:[
+      "这是一个电商订单处理流程，共包含 5 个关键节点。",
+      "主干路径：下单 → 风控审核 → 发货 → 完成；",
+      "支线：高风险订单会进入「人工复核」再汇合到「完成」。"
+    ]
+  },
+  formula:{
+    title:"sample · fourier-transform.png", tag:"Formula",
+    svg:`<svg viewBox="0 0 260 130">
+      <rect x="10" y="20" width="240" height="90" rx="6" fill="#1a2230" stroke="#2b3647"/>
+      <text x="130" y="75" text-anchor="middle" fill="#e6edf3" font-family="serif" font-style="italic" font-size="22">
+        F(ω) = ∫ f(t) e⁻ⁱωᵗ dt
+      </text>
+    </svg>`,
+    prompt:"识别这个公式，输出可编辑格式",
+    answer:[
+      "识别结果：傅里叶变换定义式。",
+      "LaTeX: F(\\omega) = \\int_{-\\infty}^{+\\infty} f(t)\\, e^{-i\\omega t}\\, dt",
+      "已渲染，点击公式卡片可翻面取源码。"
+    ]
+  },
+  image:{
+    title:"sample · product-shot.jpg", tag:"Image",
+    svg:`<svg viewBox="0 0 260 180">
+      <defs>
+        <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#1a3a5a"/><stop offset="1" stop-color="#0d1117"/>
+        </linearGradient>
+      </defs>
+      <rect x="10" y="10" width="240" height="160" rx="6" fill="url(#sky)" stroke="#2b3647"/>
+      <circle cx="200" cy="50" r="18" fill="#f5b454" opacity=".9"/>
+      <rect x="40" y="100" width="60" height="60" rx="8" fill="#6ef3c4" opacity=".85"/>
+      <rect x="110" y="85" width="50" height="75" rx="8" fill="#7dd3fc" opacity=".85"/>
+      <rect x="170" y="115" width="55" height="45" rx="8" fill="#ef6878" opacity=".7"/>
+      <text x="130" y="170" text-anchor="middle" fill="#7d8999" font-size="9">scene mock</text>
+    </svg>`,
+    prompt:"图里有哪些物体？主色调是什么？",
+    answer:[
+      "图中共识别出 3 个几何物体（绿色立方、蓝色长方、红色块），以及右上角一个暖色光源。",
+      "主色调偏冷蓝，辅色为薄荷绿与暖橙。",
+      "整体光线柔和，适合产品展示。"
+    ]
+  }
+};
+
+const UPLOAD_SAMPLE_KEY = 'upload';
+const FILE_TYPE_PRESETS = {
+  image: {
+    tag: 'IMAGE · local',
+    prompt: '请描述这张图片里的主体、场景和关键细节',
+    system: '你是 SnapExtract 的端侧视觉助手，正在理解一张用户上传的图片。请用简洁中文总结主体、场景和关键细节。'
+  },
+  pdf: {
+    tag: 'PDF · local',
+    prompt: '请概括这份 PDF 的核心内容，并提取 3 个重点',
+    system: '你是 SnapExtract 的端侧视觉助手，正在解析一份用户上传的 PDF。请用简洁中文总结核心内容，并提取 3 个重点。'
+  },
+  text: {
+    tag: 'TEXT · local',
+    prompt: '请总结这份文件的主要内容，并给出可执行结论',
+    system: '你是 SnapExtract 的端侧视觉助手，正在阅读一份用户上传的文本文件。请用简洁中文总结主要内容，并给出可执行结论。'
+  },
+  generic: {
+    tag: 'FILE · local',
+    prompt: '请根据文件类型给出可用的理解与提问建议',
+    system: '你是 SnapExtract 的端侧视觉助手，当前只拿到了文件元信息。请根据文件类型给出合理的理解方向与提问建议。'
+  }
+};
+
+let currentSample = 'pdf';
+let uploadedSample = null;
+let uploadedFilePayload = null;
+let uploadInProgress = false;
+let uploadedBlobUrl = null;
+let hasUploadedFile = false;
+
+function getEmptyUploadMarkup(){
+  return `
+    <div class="preview-empty">
+      <label class="upload-dropzone" id="uploadDropzone" for="filePicker">
+        <div class="up-title">拖拽或选择文件</div>
+        <div class="up-desc">将 PDF、图片或文本文件拖到这里，主屏会直接切换到文件渲染结果。上传后再进入提问与流式解析。</div>
+        <div class="up-meta">DROP FILE HERE · OR CLICK TO BROWSE</div>
+      </label>
+    </div>
+  `;
+}
+
+function bindPreviewDropzone(){
+  const preview = document.getElementById('preview');
+  const dropzone = document.getElementById('uploadDropzone');
+  if(!dropzone) return;
+
+  preview.addEventListener('dragover', (e)=>{
+    e.preventDefault();
+    preview.classList.add('dragover');
+  });
+  preview.addEventListener('dragleave', ()=>{
+    preview.classList.remove('dragover');
+  });
+  preview.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    preview.classList.remove('dragover');
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    handleFile(file).catch(handleUploadError);
+  });
+}
+
+function showEmptyUploadState(){
+  currentSample = '';
+  document.getElementById('canvasTitle').textContent = 'upload your file';
+  document.getElementById('canvasTag').textContent = 'WAITING';
+  document.getElementById('preview').innerHTML = getEmptyUploadMarkup();
+  document.getElementById('uploadStatus').className = 'upload-status';
+  document.getElementById('uploadStatus').innerHTML = '先上传文件，再开始提问与解析。';
+  document.getElementById('prompt').value = '';
+  document.getElementById('prompt').placeholder = '上传文件后再输入问题';
+  document.getElementById('prompt').disabled = true;
+  document.getElementById('goBtn').disabled = true;
+  document.getElementById('result').innerHTML = '';
+  document.getElementById('result').classList.remove('error');
+  bindPreviewDropzone();
+  resetPulse();
+}
+
+function handleUploadError(err){
+  console.error('[SnapExtract] upload failed:', err);
+  revokeUploadedBlobUrl();
+  uploadedFilePayload = null;
+  uploadedSample = null;
+  uploadInProgress = false;
+  hasUploadedFile = false;
+  document.getElementById('uploadedSampleCard').style.display = 'none';
+  document.querySelectorAll('.sample').forEach(x=>x.classList.remove('active'));
+  showEmptyUploadState();
+  const uploadStatus = document.getElementById('uploadStatus');
+  uploadStatus.className = 'upload-status error';
+  uploadStatus.innerHTML = '上传失败，请重新拖拽或选择文件。';
+}
+
+function loadSample(key){
+  const s = key === UPLOAD_SAMPLE_KEY ? uploadedSample : SAMPLES[key];
+  if(!s) return;
+  currentSample = key;
+  hasUploadedFile = key === UPLOAD_SAMPLE_KEY;
+  if(key === UPLOAD_SAMPLE_KEY){
+    activateUploadSample();
+  }else{
+    activatePresetSample(key);
+  }
+  document.getElementById('canvasTitle').textContent = s.title;
+  document.getElementById('canvasTag').textContent = s.tag;
+  document.getElementById('preview').innerHTML = s.svg;
+  document.getElementById('prompt').value = s.prompt;
+  document.getElementById('prompt').placeholder = '';
+  document.getElementById('prompt').disabled = false;
+  document.getElementById('result').innerHTML = '';
+  document.getElementById('result').classList.remove('error');
+  const uploadStatus = document.getElementById('uploadStatus');
+  if(key === UPLOAD_SAMPLE_KEY){
+    uploadStatus.className = 'upload-status ok';
+    uploadStatus.innerHTML = `已载入 <strong>${escapeHtml(s.title.replace(/^upload · /,''))}</strong>，现在可以直接点击“闪击解析”。`;
+  }else{
+    uploadStatus.className = 'upload-status';
+    uploadStatus.innerHTML = '当前为预置样例。选择文件后，主屏会切换到你的文件预览态。';
+  }
+  // reset pulse
+  resetPulse();
+  // Reset conversation + toolbar when sample changes
+  conversation = {sampleKey: key, turns:[]};
+  if(typeof renderConvStrip === 'function') renderConvStrip();
+  const tb = document.getElementById('resultToolbar');
+  if(tb) tb.style.display = 'none';
+}
+document.querySelectorAll('.sample').forEach(el=>{
+  el.addEventListener('click',()=>{
+    loadSample(el.dataset.s);
+  });
+});
+
+function fillPrompt(p){ document.getElementById('prompt').value = p; }
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, (m)=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
+
+function formatBytes(bytes){
+  if(!bytes) return '0 B';
+  const units = ['B','KB','MB','GB'];
+  let value = bytes;
+  let idx = 0;
+  while(value >= 1024 && idx < units.length - 1){
+    value /= 1024;
+    idx += 1;
+  }
+  return `${value.toFixed(value >= 10 || idx === 0 ? 0 : 1)} ${units[idx]}`;
+}
+
+function inferFileType(file){
+  const type = (file.type || '').toLowerCase();
+  const name = file.name.toLowerCase();
+  if(type.startsWith('image/') || /\.(png|jpe?g|webp|gif|bmp|svg)$/.test(name)) return 'image';
+  if(type === 'application/pdf' || name.endsWith('.pdf')) return 'pdf';
+  if(type.startsWith('text/') || /\.(txt|md|csv|json)$/i.test(name)) return 'text';
+  return 'generic';
+}
+
+function makeFileCard(file, kind){
+  const note = {
+    image: '已加载本地图像预览，可直接验证流式输出、状态切换与结果区联动。',
+    pdf: '当前演示页不做 PDF 页内渲染，但会在后端抽取文本后参与真实回答。',
+    text: '当前演示页不直接渲染全文，但文件内容会随提问一起发给后端。',
+    generic: '当前文件类型仅展示元信息卡片，可用于测试上传入口和异常兜底文案。'
+  }[kind];
+  return `
+    <div class="file-card">
+      <div class="fc-type">${kind}</div>
+      <div class="fc-name">${escapeHtml(file.name)}</div>
+      <div class="fc-meta">size · ${formatBytes(file.size)}<br>mime · ${escapeHtml(file.type || 'unknown')}</div>
+      <div class="fc-note">${note}</div>
+    </div>
+  `;
+}
+
+function revokeUploadedBlobUrl(){
+  if(uploadedBlobUrl){
+    URL.revokeObjectURL(uploadedBlobUrl);
+    uploadedBlobUrl = null;
+  }
+}
+
+function setUploadMeta(text){
+  const status = document.getElementById('uploadStatus');
+  if(status){
+    status.innerHTML = text;
+  }
+}
+
+function activateUploadSample(){
+  document.querySelectorAll('.sample').forEach(x=>x.classList.remove('active'));
+  const uploadedCard = document.getElementById('uploadedSampleCard');
+  uploadedCard.style.display = 'flex';
+  uploadedCard.classList.add('active');
+}
+
+function activatePresetSample(key){
+  document.getElementById('uploadedSampleCard').classList.remove('active');
+  document.querySelectorAll('.sample[data-s]').forEach(x=>{
+    if(x.id === 'uploadedSampleCard') return;
+    x.classList.toggle('active', x.dataset.s === key);
+  });
+}
+
+function readFileAsBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(String(reader.result).split(',')[1] || '');
+    reader.onerror = ()=> reject(reader.error || new Error('read failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleFile(file){
+  if(!file) return;
+  revokeUploadedBlobUrl();
+  uploadInProgress = true;
+  hasUploadedFile = false;
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true;
+  const uploadStatus = document.getElementById('uploadStatus');
+  uploadStatus.className = 'upload-status';
+  uploadStatus.innerHTML = `正在处理 <strong>${escapeHtml(file.name)}</strong> …`;
+  const kind = inferFileType(file);
+  const preset = FILE_TYPE_PRESETS[kind];
+  const base64 = await readFileAsBase64(file);
+  uploadedFilePayload = {
+    file_name: file.name,
+    file_type: file.type || '',
+    file_bytes_b64: base64
+  };
+  activateUploadSample();
+  document.getElementById('uploadedSampleName').textContent = file.name;
+  document.getElementById('uploadedSampleDesc').textContent = `${preset.tag} · ${formatBytes(file.size)}`;
+
+  const finalizeUpload = (svgMarkup) => {
+    uploadedSample = {
+      title: `upload · ${file.name}`,
+      tag: preset.tag,
+      svg: svgMarkup,
+      prompt: preset.prompt,
+      system: preset.system,
+      answer: [
+        `已接入本地文件：${file.name}。`,
+        kind === 'pdf'
+          ? '该 PDF 会先在本地代理侧抽取文本，再进入真实回答链路。'
+          : kind === 'text'
+            ? '该文本文件内容会随提问一起发送到后端参与回答。'
+            : '当前回答链路可用于验证新增前端功能在真实流式输出下的整体顺滑度。',
+        kind === 'image'
+          ? '当前后端尚未接入图片多模态理解，所以图片会得到明确的能力边界提示。'
+          : '如需更完整能力，可继续把视觉理解/OCR/结构化解析接到同一工作台。'
+      ]
+    };
+    loadSample(UPLOAD_SAMPLE_KEY);
+    uploadInProgress = false;
+    btn.disabled = false;
+  };
+
+  if(kind === 'pdf'){
+    uploadedBlobUrl = URL.createObjectURL(file);
+    finalizeUpload(`<iframe src="${uploadedBlobUrl}#toolbar=0&navpanes=0&scrollbar=0" title="${escapeHtml(file.name)}"></iframe>`);
+    return;
+  }
+
+  if(kind === 'image'){
+    const reader = new FileReader();
+    reader.onload = () => {
+      finalizeUpload(`<img src="${reader.result}" alt="${escapeHtml(file.name)}">`);
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  if(kind === 'text'){
+    try{
+      const text = await file.text();
+      finalizeUpload(`<pre>${escapeHtml(text.slice(0, 12000))}</pre>`);
+      return;
+    }catch(_){}
+  }
+
+  finalizeUpload(makeFileCard(file, kind));
+}
+
+const filePicker = document.getElementById('filePicker');
+filePicker.addEventListener('change', (e)=>{
+  const file = e.target.files && e.target.files[0];
+  handleFile(file).catch(handleUploadError);
+  filePicker.value = '';
+});
+
+/* ================ Streaming + NPU pulse simulation ================ */
+const tpsEl = document.getElementById('tps');
+const tpsPeakEl = document.getElementById('tpsPeak');
+const ttftEl = document.getElementById('ttft');
+const ttftValEl = document.getElementById('ttftVal');
+const npuBar = document.getElementById('npuBar');
+const npuPct = document.getElementById('npuPct');
+const tokEl = document.getElementById('tok');
+const tokMetaEl = document.getElementById('tokMeta');
+const tokBreakdownEl = document.getElementById('tokBreakdown');
+const wallEl = document.getElementById('wall');
+const sparkLine = document.getElementById('sparkLine');
+const sparkFill = document.getElementById('sparkFill');
+const resultEl = document.getElementById('result');
+
+let sparkBuf = new Array(40).fill(0);
+function pushSpark(v){
+  sparkBuf.shift(); sparkBuf.push(v);
+  const max = Math.max(...sparkBuf, 60);
+  const pts = sparkBuf.map((y,i)=> `${(i/(sparkBuf.length-1))*280},${46 - (y/max)*42}`).join(' ');
+  sparkLine.setAttribute('points', pts);
+  sparkFill.setAttribute('points', pts + ` 280,46 0,46`);
+}
+function resetPulse(){
+  sparkBuf = new Array(40).fill(0); pushSpark(0);
+  tpsEl.textContent='0.0'; ttftEl.textContent='—'; ttftValEl.textContent='—';
+  tpsPeakEl.textContent='peak 0.0';
+  npuBar.style.width='0%'; npuPct.textContent='0%';
+  tokMetaEl.textContent='est.';
+  tokBreakdownEl.textContent='in 0 · cached — · out 0 · total 0';
+  tokEl.textContent='0'; wallEl.textContent='0.00';
+}
+
+let streaming = false;
+document.getElementById('goBtn').addEventListener('click', runInference);
+
+function runInference(){
+  if(streaming || uploadInProgress || !hasUploadedFile) return;
+  streaming = true;
+  resetPulse();
+  resultEl.innerHTML = '';
+  // Clear feature E/F state for this turn
+  const heat = document.querySelector('.heatmap-layer'); if(heat) heat.remove();
+  const cb = document.getElementById('confBadge'); if(cb) cb.style.display = 'none';
+  langResetForTurn(document.getElementById('prompt').value.trim());
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true; btn.textContent = '⚡ 扫描中…';
+
+  runXrayScan(()=>{
+    btn.textContent = '推理中…';
+    doStream();
+  });
+}
+
+const RUNTIME_HOST = window.location.hostname || '127.0.0.1';
+const PROXY_BASE = `http://${RUNTIME_HOST}:8765`;
+const PROXY_URL = `${PROXY_BASE}/chat`;
+const SYSTEM_PROMPT = {
+  pdf:    "你是 SnapExtract 的端侧视觉助手，正在解析一份 PDF 文档。用 3 句话以内概括核心结论，使用简洁中文。",
+  table:  "你是 SnapExtract 的端侧视觉助手，正在解析一张财务表格。精确定位字段数值并用简洁中文回答。",
+  flow:   "你是 SnapExtract 的端侧视觉助手，正在解析一张流程图。识别主要节点并用中文概括主线。",
+  formula:"你是 SnapExtract 的端侧视觉助手，正在识别一个数学公式。输出公式含义，并给出可直接粘贴的 LaTeX。",
+  image:  "你是 SnapExtract 的端侧视觉助手，正在理解一张图片。用简洁中文描述物体、场景与主色调。"
+};
+
+async function doStream(){
+  const btn = document.getElementById('goBtn');
+  const current = currentSample === UPLOAD_SAMPLE_KEY ? uploadedSample : SAMPLES[currentSample];
+  if(!current){
+    resultEl.innerHTML = '<span class="src-tag mock">● ERROR</span>请先选择样例或上传文件。';
+    btn.disabled = false;
+    btn.textContent = '⚡ 闪击解析';
+    streaming = false;
+    return;
+  }
+  const prompt = document.getElementById('prompt').value.trim() || current.prompt;
+  const t0 = performance.now();
+  let tokensOut = 0, firstEmitted = false, lastTps = 0, peakTps = 0;
+  let usageTotals = null;
+  let renderedText = '';
+  let renderQueue = '';
+  let renderTimer = null;
+  let finalizeRequested = false;
+
+  // NPU ramp animation (shared by live & mock)
+  let npuTarget = 0;
+  const npuTick = setInterval(()=>{
+    npuTarget += (Math.random()*8-1);
+    npuTarget = Math.max(62, Math.min(96, npuTarget));
+    const cur = parseFloat(npuBar.style.width)||0;
+    const next = cur + (npuTarget - cur) * 0.25;
+    npuBar.style.width = next.toFixed(1)+'%';
+    npuPct.textContent = next.toFixed(0)+'%';
+  }, 90);
+
+  const estimateTokens = (text)=>{
+    const cjkCount = (text.match(/[\u3400-\u9FFF]/g) || []).length;
+    const latinWords = (text.match(/[A-Za-z0-9_]+/g) || []).length;
+    const punctuation = (text.match(/[^\sA-Za-z0-9_\u3400-\u9FFF]/g) || []).length;
+    return Math.max(0, cjkCount + latinWords + Math.ceil(punctuation * 0.35));
+  };
+
+  const normalizeInt = (value)=>{
+    return Number.isFinite(value) ? Math.max(0, Math.round(value)) : null;
+  };
+
+  const getUsageBreakdown = ()=>{
+    const estimatedOutputTokens = estimateTokens(renderedText);
+    const promptTokens = normalizeInt(usageTotals && usageTotals.prompt_tokens);
+    const cachedPromptTokens = normalizeInt(
+      usageTotals && (
+        usageTotals.cached_prompt_tokens ??
+        usageTotals.input_cached_tokens ??
+        usageTotals.cache_read_input_tokens ??
+        usageTotals.cache_creation_input_tokens
+      )
+    );
+    const completionTokens = normalizeInt(usageTotals && usageTotals.completion_tokens);
+    const totalTokens = normalizeInt(usageTotals && usageTotals.total_tokens);
+    const usageSource = usageTotals && usageTotals.usage_source;
+    return {
+      input: promptTokens ?? 0,
+      cached: cachedPromptTokens,
+      output: completionTokens ?? estimatedOutputTokens,
+      total: totalTokens ?? ((promptTokens ?? 0) + estimatedOutputTokens),
+      estimatedOutputTokens,
+      hasUsage: !!usageTotals,
+      usageSource,
+    };
+  };
+
+  const renderVisibleText = ()=>{
+    const pre = resultEl.innerHTML.replace(/<span class="caret"><\/span>$/,'');
+    const base = pre.replace(/<span class="src-tag [^"]+">[^<]+<\/span>/, (m)=>m);
+    const parts = base.split(/(<span class="src-tag [^"]+">[^<]+<\/span>)/).filter(Boolean);
+    const tag = parts[0] && parts[0].includes('src-tag') ? parts[0] : '';
+    const body = renderedText.replace(/\n/g,'<br>');
+    resultEl.innerHTML = tag + body + '<span class="caret"></span>';
+  };
+
+  const updateMetrics = ()=>{
+    const wall = (performance.now()-t0)/1000;
+    const usage = getUsageBreakdown();
+    tokensOut = usage.total;
+    wallEl.textContent = wall.toFixed(2);
+    tokEl.textContent = String(tokensOut);
+    tokMetaEl.textContent = usage.usageSource === 'estimated'
+      ? 'estimated usage'
+      : usage.usageSource === 'mixed'
+        ? 'live + est.'
+        : usage.hasUsage
+          ? 'live usage'
+          : 'est. output';
+    tokBreakdownEl.textContent = `in ${usage.input} · cached ${usage.cached ?? '—'} · out ${usage.output} · total ${usage.total}`;
+    lastTps = usage.estimatedOutputTokens / Math.max(wall,0.01);
+    peakTps = Math.max(peakTps, lastTps);
+    tpsEl.textContent = Math.min(lastTps, 80).toFixed(1);
+    tpsPeakEl.textContent = `peak ${Math.min(peakTps, 80).toFixed(1)}`;
+    pushSpark(lastTps);
+  };
+
+  const maybeFinalize = ()=>{
+    if(!finalizeRequested || renderQueue.length > 0) return;
+    if(renderTimer){
+      clearInterval(renderTimer);
+      renderTimer = null;
+    }
+    clearInterval(npuTick);
+    npuBar.style.width='12%';
+    npuPct.textContent='12%';
+    tpsEl.textContent = Math.min(lastTps, 80).toFixed(1);
+    const c = resultEl.querySelector('.caret'); if(c) c.remove();
+    btn.disabled = false;
+    btn.textContent = '⚡ 闪击解析';
+    streaming = false;
+  };
+
+  const ensureRenderLoop = ()=>{
+    if(renderTimer) return;
+    renderTimer = setInterval(()=>{
+      if(!renderQueue.length){
+        maybeFinalize();
+        return;
+      }
+      const nextLen = Math.min(renderQueue.length, 1 + Math.floor(Math.random()*3));
+      renderedText += renderQueue.slice(0, nextLen);
+      renderQueue = renderQueue.slice(nextLen);
+      renderVisibleText();
+      updateMetrics();
+      maybeFinalize();
+    }, 18);
+  };
+
+  const appendChunk = (chunk)=>{
+    if(!firstEmitted){
+      firstEmitted = true;
+      const el = performance.now() - t0;
+      ttftEl.textContent = el.toFixed(0)+'ms';
+      ttftValEl.textContent = el.toFixed(0);
+    }
+    renderQueue += chunk;
+    ensureRenderLoop();
+  };
+
+  const applyUsage = (usage)=>{
+    if(!usage || typeof usage !== 'object') return;
+    usageTotals = usage;
+    updateMetrics();
+  };
+
+  let streamErrored = false;
+  let liveUsed = false;
+  const finalize = (opts)=>{
+    finalizeRequested = true;
+    maybeFinalize();
+    const errored = !!(opts && opts.errored) || streamErrored;
+    // Hook: achievements + follow-ups (run once maybeFinalize clears streaming)
+    setTimeout(()=>{
+      try{
+        onInferenceComplete({
+          sampleKey: currentSample,
+          prompt,
+          answer: renderedText,
+          errored,
+          liveUsed,
+          ttftMs: ttftValEl.textContent === '—' ? null : parseFloat(ttftValEl.textContent),
+        });
+      }catch(e){ console.warn('[post-infer hook]', e); }
+    }, 40);
+  };
+
+  // Reset conversation if sample changed
+  if(conversation.sampleKey !== currentSample){
+    conversation = {sampleKey: currentSample, turns:[]};
+  }
+  // ———— Try live proxy first (with language drift detection + single retry) ————
+  const baseSystem = current.system || SYSTEM_PROMPT[currentSample] || "";
+  const zhReinforced = '【必须使用简体中文回答；禁止使用英文、拼音或混合语言。】\n' + baseSystem;
+  let proxyOk = false;
+  for(let attempt = 0; attempt < 2; attempt++){
+    const usingOverride = attempt > 0;
+    const sysText = usingOverride ? zhReinforced : baseSystem;
+    const reqBody = {prompt, system: sysText};
+    // Multi-turn: if we have prior turns, send as messages array (proxy supports it)
+    if(conversation.turns.length > 0){
+      reqBody.messages = conversationMessages(sysText, prompt);
+    }
+    if(currentSample === UPLOAD_SAMPLE_KEY && uploadedFilePayload){
+      Object.assign(reqBody, uploadedFilePayload);
+    }
+    applySettingsToPayload(reqBody);
+    const controller = new AbortController();
+    let drifted = false;
+    try{
+      const resp = await fetch(PROXY_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(reqBody),
+        signal: controller.signal,
+      });
+      if(!resp.ok) throw new Error('proxy HTTP '+resp.status);
+      proxyOk = true;
+      resultEl.classList.remove('error');
+      liveUsed = true;
+      const tagHtml = usingOverride
+        ? '<span class="src-tag live">● LIVE · 已强制中文重发</span>'
+        : '<span class="src-tag live">● LIVE · via local proxy</span>';
+      resultEl.innerHTML = tagHtml + '<span class="caret"></span>';
+      // reset streaming text for this attempt
+      renderedText = '';
+      renderQueue = '';
+      firstEmitted = false;
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+      outer: while(true){
+        let readResult;
+        try{
+          readResult = await reader.read();
+        }catch(readErr){
+          if(drifted) break outer;
+          throw readErr;
+        }
+        if(readResult.done) break;
+        buf += decoder.decode(readResult.value, {stream:true});
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for(const line of lines){
+          if(!line.startsWith('data:')) continue;
+          const s = line.slice(5).trim();
+          if(!s || s === '[DONE]') continue;
+          try{
+            const o = JSON.parse(s);
+            if(o.t)   appendChunk(o.t);
+            if(o.usage) applyUsage(o.usage);
+            if(o.err) appendChunk('\n\n[upstream error] ' + o.err);
+          }catch(_){ /* ignore malformed */ }
+          if(!usingOverride && langCheckDrift(renderedText + renderQueue)){
+            drifted = true;
+            try{ controller.abort(); }catch(_){}
+            break outer;
+          }
+        }
+      }
+      if(drifted){
+        // flush render queue visually, then retry once with reinforced system
+        renderQueue = '';
+        continue;
+      }
+      finalize();
+      if(langCorrectionActive || usingOverride) langMarkCorrected();
+      return;
+    }catch(e){
+      if(drifted){ continue; }
+      if(e.name === 'AbortError'){ continue; }
+      if(proxyOk){
+        streamErrored = true;
+        resultEl.innerHTML += '<br><span class="src-tag mock">● STREAM ERROR</span>' + escapeHtml(e.message || String(e));
+        finalize({errored:true});
+        return;
+      }
+      console.warn('[SnapExtract] proxy offline → fallback to mock:', e.message);
+      break;
+    }
+  }
+  if(proxyOk) return;
+
+  if(currentSample === UPLOAD_SAMPLE_KEY){
+    resultEl.classList.add('error');
+    resultEl.innerHTML = '<span class="src-tag mock">● BACKEND OFFLINE</span>当前上传文件需要连接本地代理后才能生成真实结果，请先启动 `proxy.py` 后重试。';
+    streamErrored = true;
+    finalize({errored:true});
+    return;
+  }
+
+  // ———— Mock fallback ————
+  resultEl.classList.remove('error');
+  resultEl.innerHTML = '<span class="src-tag mock">● MOCK · proxy offline</span><span class="caret"></span>';
+  const fullText = current.answer.join('\n\n');
+  const ttft = 240 + Math.random()*120;
+  setTimeout(()=>{
+    let charIdx = 0;
+    const iv = setInterval(()=>{
+      if(charIdx >= fullText.length){ clearInterval(iv); finalize(); return; }
+      const step = 2 + Math.floor(Math.random()*3);
+      appendChunk(fullText.slice(charIdx, charIdx+step));
+      charIdx += step;
+    }, 55);
+  }, ttft);
+}
+
+/* ================ Bidirectional highlight (feature 2) ================ */
+(function linkup(){
+  const nodes = document.querySelectorAll('.flow-node');
+  const chips = document.querySelectorAll('.link-ans .ch');
+  function hot(ids, on){
+    const set = new Set(ids.split(/\s+/));
+    nodes.forEach(n => n.classList.toggle('hot', on && set.has(n.dataset.n)));
+    chips.forEach(c => {
+      const cs = new Set(c.dataset.n.split(/\s+/));
+      const overlap = [...set].some(x => cs.has(x));
+      c.classList.toggle('on', on && overlap);
+    });
+  }
+  chips.forEach(c=>{
+    c.addEventListener('mouseenter',()=>hot(c.dataset.n,true));
+    c.addEventListener('mouseleave',()=>hot(c.dataset.n,false));
+  });
+  nodes.forEach(n=>{
+    n.addEventListener('mouseenter',()=>hot(n.dataset.n,true));
+    n.addEventListener('mouseleave',()=>hot(n.dataset.n,false));
+  });
+})();
+
+/* ================ copy LaTeX ================ */
+function copyLatex(btn){
+  const latex = "F(\\omega) = \\int_{-\\infty}^{+\\infty} f(t)\\, e^{-i\\omega t}\\, dt";
+  navigator.clipboard?.writeText(latex);
+  const old = btn.textContent;
+  btn.textContent = '已复制 ✓';
+  setTimeout(()=>btn.textContent = old, 1200);
+}
+
+/* ================ X-ray scan ================ */
+const XRAY_BITS = {
+  pdf:['摘要','结论','3B','95%','NPU','引用','abstract'],
+  table:['Q3','18.7亿','43.5%','+24%','Q1','Q4E'],
+  flow:['下单','风控','审核','发货','完成'],
+  formula:['F(ω)','e^{-iωt}','dt','∫','f(t)','−∞'],
+  image:['立方','光源','冷蓝','3 物体','#6ef3c4']
+};
+function runXrayScan(done){
+  const preview = document.getElementById('preview');
+  const line = document.createElement('div');
+  line.className = 'scan-line';
+  preview.appendChild(line);
+  requestAnimationFrame(()=>line.classList.add('active'));
+  const bits = XRAY_BITS[currentSample] || ['...'];
+  const rect = preview.getBoundingClientRect();
+  const w = Math.max(120, rect.width - 140);
+  const h = Math.max(80, rect.height - 120);
+  bits.forEach((txt,i)=>{
+    setTimeout(()=>{
+      const p = document.createElement('div');
+      p.className = 'scan-particle';
+      p.textContent = txt;
+      p.style.left = (30 + Math.random()*w) + 'px';
+      p.style.top  = (50 + Math.random()*h) + 'px';
+      preview.appendChild(p);
+      setTimeout(()=>p.remove(),1350);
+    }, 120 + i*85);
+  });
+  setTimeout(()=>{ line.remove(); done(); }, 820);
+}
+
+/* ================ Race PK ================ */
+document.getElementById('raceBtn').addEventListener('click', runRace);
+function runRace(){
+  const btn = document.getElementById('raceBtn');
+  if(btn.disabled) return;
+  btn.disabled = true;
+  const r = document.getElementById('raceResult');
+  r.innerHTML = ''; r.classList.remove('won','idle');
+  // reset lanes
+  ['cpuBar','npuRaceBar'].forEach(id=>document.getElementById(id).style.width='0%');
+  document.getElementById('cpuRunner').style.left='0%';
+  document.getElementById('npuRunner').style.left='0%';
+  document.getElementById('cpuTime').textContent='0.00';
+  document.getElementById('npuTime').textContent='0.00';
+
+  const CPU_FIN = 4.62, NPU_FIN = 1.19;
+  const t0 = performance.now();
+  let cpuDone=false, npuDone=false, badgeShown=false;
+  const iv = setInterval(()=>{
+    const dt = (performance.now()-t0)/1000;
+    if(!cpuDone){
+      const p = Math.min(100, (dt/CPU_FIN)*100);
+      document.getElementById('cpuBar').style.width = p + '%';
+      document.getElementById('cpuRunner').style.left = 'calc('+p+'% - 12px)';
+      document.getElementById('cpuTime').textContent = Math.min(dt,CPU_FIN).toFixed(2);
+      if(p>=100) cpuDone=true;
+    }
+    if(!npuDone){
+      const p = Math.min(100, (dt/NPU_FIN)*100);
+      document.getElementById('npuRaceBar').style.width = p + '%';
+      document.getElementById('npuRunner').style.left = 'calc('+p+'% - 10px)';
+      document.getElementById('npuTime').textContent = Math.min(dt,NPU_FIN).toFixed(2);
+      if(p>=100){
+        npuDone=true;
+        if(!badgeShown){
+          badgeShown=true;
+          r.classList.add('won');
+          r.innerHTML = '<div><div class="race-win">⚡ NPU 先到终点</div><div class="race-speedup">端侧 NPU · <strong style="color:var(--accent)">'+(CPU_FIN/NPU_FIN).toFixed(2)+'× faster</strong> · CPU 还在跑…</div></div>';
+        }
+      }
+    }
+    if(cpuDone && npuDone){
+      clearInterval(iv);
+      r.innerHTML = '<div><div class="race-win">⚡ NPU · '+(CPU_FIN/NPU_FIN).toFixed(2)+'× faster</div><div class="race-speedup">NPU '+NPU_FIN.toFixed(2)+'s &nbsp;·&nbsp; CPU '+CPU_FIN.toFixed(2)+'s &nbsp;·&nbsp; saved '+(CPU_FIN-NPU_FIN).toFixed(2)+'s</div></div>';
+      setTimeout(()=>{ btn.disabled = false; btn.textContent = '🔁 再比一次'; }, 400);
+    }
+  }, 30);
+}
+
+/* ================ Morph (result materialization) ================ */
+const MORPH_DATA = {
+  bar:{
+    text:"Q1 营收 ¥12.4 亿，Q2 涨到 ¥15.1 亿，Q3 达到 ¥18.7 亿，Q4 预计 ¥21.0 亿。其中 Q3 同比 +24%，是全年增速最快的一季。",
+    build:function(){
+      const data = [['Q1',12.4],['Q2',15.1],['Q3',18.7],['Q4E',21.0]];
+      const max = 23;
+      const html = '<span class="viz-label">bar chart</span><div class="bars">' + data.map(function(d){
+        return '<div class="bar-col"><div class="bar-wrap"><div class="bar-rect" data-h="'+((d[1]/max)*100).toFixed(1)+'%"><span class="val">¥'+d[1]+'亿</span></div></div><div class="bar-label">'+d[0]+'</div></div>';
+      }).join('') + '</div>';
+      return {html:html, after:function(){
+        setTimeout(function(){
+          document.querySelectorAll('#morphViz .bar-rect').forEach(function(b,i){
+            setTimeout(function(){
+              b.style.height = b.dataset.h;
+              b.classList.add('grown');
+            }, i*140);
+          });
+        }, 60);
+      }};
+    }
+  },
+  time:{
+    text:"订单处理共 5 步：下单 → 风控 → 人工复核 → 发货 → 完成。整体 SLA 控制在 24 小时内。",
+    build:function(){
+      const steps = ['下单','风控','复核','发货','完成'];
+      const html = '<span class="viz-label">timeline</span><div class="tl-wrap"><div class="tl-line">' + steps.map(function(s,i){
+        return '<div class="tl-step" style="left:'+((i/(steps.length-1))*100)+'%"><div class="dot"></div><div class="label">'+s+'</div></div>';
+      }).join('') + '</div></div>';
+      return {html:html, after:function(){
+        setTimeout(function(){
+          document.querySelector('#morphViz .tl-line').classList.add('grow');
+          document.querySelectorAll('#morphViz .tl-step').forEach(function(s,i){
+            setTimeout(function(){ s.classList.add('on'); }, 180 + i*200);
+          });
+        }, 60);
+      }};
+    }
+  },
+  diff:{
+    text:"对比两版合同：主要差异集中在「支付周期」（30 天 → 45 天）与「违约金比例」（5% → 8%）两项，其余条款保持一致。",
+    build:function(){
+      const rows = [
+        ['支付周期','30 天','45 天',true],
+        ['违约金比例','5%','8%',true],
+        ['有效期','1 年','1 年',false],
+        ['签约地','上海','上海',false],
+        ['赔偿上限','合同总额','合同总额',false]
+      ];
+      let d = 0;
+      const html = '<span class="viz-label">diff table</span><table class="dt"><thead><tr><th>条款</th><th>版本 A</th><th>版本 B</th></tr></thead><tbody>' +
+        rows.map(function(r){
+          return '<tr>' + [0,1,2].map(function(i){
+            const cls = (i>0 && r[3]) ? 'diff' : '';
+            const delay = (d++ * 80);
+            return '<td class="'+cls+'" style="animation-delay:'+delay+'ms">'+r[i]+'</td>';
+          }).join('') + '</tr>';
+        }).join('') + '</tbody></table>';
+      return {html:html, after:function(){}};
+    }
+  }
+};
+let morphing = false;
+function runMorph(type){
+  if(morphing) return;
+  morphing = true;
+  document.querySelectorAll('.mtab').forEach(function(t){ t.classList.toggle('active', t.dataset.m===type); });
+  const d = MORPH_DATA[type];
+  const textEl = document.getElementById('morphText');
+  const vizEl = document.getElementById('morphViz');
+  vizEl.innerHTML = '<span class="viz-label">materializing…</span>';
+  textEl.innerHTML = '<span class="caret"></span>';
+  let i = 0;
+  const iv = setInterval(function(){
+    if(i >= d.text.length){
+      clearInterval(iv);
+      const c = textEl.querySelector('.caret'); if(c) c.remove();
+      const v = d.build();
+      vizEl.innerHTML = v.html;
+      v.after();
+      morphing = false;
+      return;
+    }
+    const step = 2 + Math.floor(Math.random()*2);
+    const chunk = d.text.slice(i, i+step);
+    i += step;
+    const pre = textEl.innerHTML.replace(/<span class="caret"><\/span>$/, '');
+    textEl.innerHTML = pre + chunk + '<span class="caret"></span>';
+  }, 38);
+}
+document.querySelectorAll('.mtab').forEach(function(t){ t.addEventListener('click', function(){ runMorph(t.dataset.m); }); });
+setTimeout(function(){ runMorph('bar'); }, 2400);
+
+/* ================ Feature 07: magic erase ================ */
+(function initEraseDemo(){
+  const btn = document.getElementById('eraseBtn');
+  const before = document.getElementById('eraseBefore');
+  const after = document.getElementById('eraseAfter');
+  if(!btn || !before || !after) return;
+
+  function reset(){
+    before.classList.remove('erased');
+    after.classList.remove('erased');
+  }
+
+  btn.addEventListener('click', ()=>{
+    btn.classList.add('busy');
+    btn.textContent = '提取中';
+    reset();
+    setTimeout(()=>before.classList.add('erased'), 80);
+    setTimeout(()=>after.classList.add('erased'), 260);
+    setTimeout(()=>{
+      btn.classList.remove('busy');
+      btn.textContent = '重播';
+    }, 980);
+  });
+})();
+
+/* ================ Feature 08: PDF peel layers ================ */
+(function initPdfLayers(){
+  const book = document.getElementById('pdfLayerBook');
+  const tabs = Array.from(document.querySelectorAll('#pdfLayerTabs .pdflayer-tab'));
+  const title = document.getElementById('pdfLayerTitle');
+  const desc = document.getElementById('pdfLayerDesc');
+  if(!book || !tabs.length || !title || !desc) return;
+
+  const COPY = {
+    text: {
+      title: '文本层更适合摘要与问答',
+      desc: '当 PDF 自带文本层时，系统能更稳定地定位段落、标题和关键句，适合快速总结、提炼重点和做精确问答。'
+    },
+    image: {
+      title: '图像层决定 OCR 压力',
+      desc: '当内容主要以扫描底图存在时，系统首先要把文字从图像里抠出来，清晰度、旋转和阴影都会直接影响结果稳定性。'
+    },
+    structure: {
+      title: '结构层让结果更可解释',
+      desc: '把标题、段落、图表和表格区域拆开后，评委更容易理解系统为什么能给出摘要、重点提取和问答结果。'
+    }
+  };
+
+  function setLayer(kind){
+    book.dataset.active = kind;
+    tabs.forEach(tab=>tab.classList.toggle('active', tab.dataset.layer === kind));
+    title.textContent = COPY[kind].title;
+    desc.textContent = COPY[kind].desc;
+  }
+
+  tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>setLayer(tab.dataset.layer));
+  });
+  setLayer('text');
+})();
+
+/* ================ Feature 09: multi-doc diff ================ */
+(function initDocDiff(){
+  const btn = document.getElementById('docDiffBtn');
+  const leftPaper = document.getElementById('docDiffLeftPaper');
+  const rightPaper = document.getElementById('docDiffRightPaper');
+  const summary = document.getElementById('docDiffSummary');
+  const svg = document.getElementById('docDiffSvg');
+  if(!btn || !leftPaper || !rightPaper || !summary || !svg) return;
+
+  const DIFFS = [
+    {id:'pay', title:'付款周期', before:'30 天', after:'45 天', severity:'high', left:{x:24,y:92,w:206,h:26}, right:{x:24,y:92,w:206,h:26}},
+    {id:'penalty', title:'违约金比例', before:'5%', after:'8%', severity:'high', left:{x:24,y:118,w:222,h:26}, right:{x:24,y:118,w:222,h:26}},
+    {id:'amount', title:'合同总额', before:'¥1,280,000', after:'¥1,360,000', severity:'mid', left:{x:24,y:188,w:222,h:26}, right:{x:24,y:188,w:222,h:26}},
+    {id:'date', title:'交付日期', before:'2026-05-20', after:'2026-06-05', severity:'mid', left:{x:24,y:214,w:222,h:26}, right:{x:24,y:214,w:222,h:26}}
+  ];
+
+  let hasRendered = false;
+
+  function makeRect(side, diff){
+    const el = document.createElement('div');
+    el.className = `docdiff-rect sev-${diff.severity}`;
+    const box = diff[side];
+    el.style.left = box.x + 'px';
+    el.style.top = box.y + 'px';
+    el.style.width = box.w + 'px';
+    el.style.height = box.h + 'px';
+    el.dataset.diffId = diff.id;
+    el.dataset.side = side;
+    return el;
+  }
+
+  function renderRects(){
+    leftPaper.querySelectorAll('.docdiff-rect').forEach(el=>el.remove());
+    rightPaper.querySelectorAll('.docdiff-rect').forEach(el=>el.remove());
+    DIFFS.forEach(diff=>{
+      leftPaper.appendChild(makeRect('left', diff));
+      rightPaper.appendChild(makeRect('right', diff));
+    });
+  }
+
+  function renderSummary(){
+    summary.innerHTML = '';
+    DIFFS.forEach((diff, index)=>{
+      const item = document.createElement('div');
+      item.className = 'docdiff-item';
+      item.dataset.diffId = diff.id;
+      item.innerHTML = `
+        <h5>${diff.title}</h5>
+        <p>${diff.before} → ${diff.after}</p>
+        <div class="docdiff-meta">severity · ${diff.severity}</div>
+      `;
+      item.addEventListener('mouseenter', ()=>highlight(diff.id));
+      item.addEventListener('mouseleave', ()=>highlight(null));
+      item.addEventListener('click', ()=>highlight(diff.id));
+      summary.appendChild(item);
+      setTimeout(()=>item.classList.add('active'), 180 + index * 150);
+      setTimeout(()=>item.classList.remove('active'), 980 + index * 150);
+    });
+  }
+
+  function drawLines(activeId){
+    svg.innerHTML = '';
+    DIFFS.forEach(diff=>{
+      const opacity = !activeId || activeId === diff.id ? 1 : 0.18;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const color = diff.severity === 'high' ? '#ef6878' : '#f5b454';
+      const x1 = 14;
+      const x2 = 286;
+      const y = diff.left.y + diff.left.h / 2 + 8;
+      line.setAttribute('d', `M ${x1} ${y} C 86 ${y}, 214 ${y}, ${x2} ${y}`);
+      line.setAttribute('fill', 'none');
+      line.setAttribute('stroke', color);
+      line.setAttribute('stroke-width', activeId === diff.id ? '3' : '2');
+      line.setAttribute('stroke-dasharray', '6 6');
+      line.setAttribute('opacity', opacity);
+      svg.appendChild(line);
+    });
+  }
+
+  function highlight(activeId){
+    document.querySelectorAll('.docdiff-rect').forEach(el=>{
+      el.classList.toggle('hot', !!activeId && el.dataset.diffId === activeId);
+    });
+    summary.querySelectorAll('.docdiff-item').forEach(el=>{
+      el.classList.toggle('active', !!activeId && el.dataset.diffId === activeId);
+    });
+    drawLines(activeId);
+  }
+
+  btn.addEventListener('click', ()=>{
+    renderRects();
+    renderSummary();
+    drawLines(null);
+    const leftRects = Array.from(leftPaper.querySelectorAll('.docdiff-rect'));
+    const rightRects = Array.from(rightPaper.querySelectorAll('.docdiff-rect'));
+    leftRects.concat(rightRects).forEach(el=>el.classList.remove('hot'));
+    leftRects.forEach((el, index)=>{
+      setTimeout(()=>el.classList.add('hot'), 120 + index * 180);
+      setTimeout(()=>el.classList.remove('hot'), 900 + index * 180);
+    });
+    rightRects.forEach((el, index)=>{
+      setTimeout(()=>el.classList.add('hot'), 220 + index * 180);
+      setTimeout(()=>el.classList.remove('hot'), 1000 + index * 180);
+    });
+    hasRendered = true;
+    btn.textContent = '重新对比';
+  });
+
+  if(!hasRendered){
+    renderRects();
+    renderSummary();
+    drawLines(null);
+    highlight(null);
+  }
+})();
+
+showEmptyUploadState();
+
+/* ================ Feature J: settings ================ */
+const SETTINGS_KEY = 'snap_settings_v1';
+const DEFAULT_SETTINGS = {
+  model: '',        // empty = use proxy default
+  temperature: null,
+  max_tokens: null,
+  lang: 'auto',
+};
+function loadSettings(){
+  try{ return Object.assign({}, DEFAULT_SETTINGS, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); }
+  catch(_){ return {...DEFAULT_SETTINGS}; }
+}
+function saveSettings(s){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }
+let settings = loadSettings();
+
+function openSettings(){
+  const mask = document.getElementById('settingsMask');
+  document.getElementById('setModel').value = settings.model || '';
+  document.getElementById('setTemp').value = settings.temperature ?? '';
+  document.getElementById('setMaxTok').value = settings.max_tokens ?? '';
+  document.getElementById('setLang').value = settings.lang || 'auto';
+  // Fetch api_base from proxy /health
+  const apiBaseEl = document.getElementById('setApiBase');
+  apiBaseEl.value = '— (proxy offline)';
+  fetch(`${PROXY_BASE}/health`).then(r=>r.json()).then(d=>{
+    apiBaseEl.value = (d.api_base || '') + (d.api_path || '') + ' · ' + (d.model || '');
+  }).catch(()=>{});
+  mask.classList.add('show');
+}
+function closeSettings(){ document.getElementById('settingsMask').classList.remove('show'); }
+
+document.getElementById('settingsBtn').addEventListener('click', openSettings);
+document.getElementById('setClose').addEventListener('click', closeSettings);
+document.getElementById('setCancel').addEventListener('click', closeSettings);
+document.getElementById('settingsMask').addEventListener('click', e=>{
+  if(e.target.id === 'settingsMask') closeSettings();
+});
+document.getElementById('setSave').addEventListener('click', ()=>{
+  const t = parseFloat(document.getElementById('setTemp').value);
+  const m = parseInt(document.getElementById('setMaxTok').value, 10);
+  settings = {
+    model: document.getElementById('setModel').value.trim(),
+    temperature: Number.isFinite(t) ? Math.max(0, Math.min(1, t)) : null,
+    max_tokens: Number.isFinite(m) ? Math.max(64, Math.min(8192, m)) : null,
+    lang: document.getElementById('setLang').value,
+  };
+  saveSettings(settings);
+  closeSettings();
+});
+document.getElementById('setReset').addEventListener('click', ()=>{
+  settings = {...DEFAULT_SETTINGS};
+  saveSettings(settings);
+  openSettings();
+});
+function applySettingsToPayload(body){
+  if(settings.model) body.model = settings.model;
+  if(settings.temperature !== null) body.temperature = settings.temperature;
+  if(settings.max_tokens !== null) body.max_tokens = settings.max_tokens;
+  if(settings.lang === 'zh'){
+    body.system = '【必须使用简体中文回答；禁止使用英文。】\n' + (body.system || '');
+  }else if(settings.lang === 'en'){
+    body.system = '【Respond in English only. Do not use Chinese.】\n' + (body.system || '');
+  }
+  return body;
+}
+
+/* ================ Feature G: conversation context ================ */
+let conversation = {sampleKey:null, turns:[]}; // turns: [{q, a}]
+function renderConvStrip(){
+  const strip = document.getElementById('convStrip');
+  const n = conversation.turns.length;
+  if(n === 0){ strip.innerHTML = ''; return; }
+  strip.innerHTML =
+    '<span class="cs-dots">' + Array(Math.min(n,5)).fill('<span class="d"></span>').join('') + '</span>'
+    + '<span>对话中 · 已追问 <span class="cs-turn">' + n + '</span> 轮 · 保留上下文</span>'
+    + '<button class="cs-reset" id="convReset">↻ 新对话</button>';
+  document.getElementById('convReset').addEventListener('click', resetConversation);
+}
+function resetConversation(){
+  conversation = {sampleKey: currentSample, turns:[]};
+  renderConvStrip();
+}
+function conversationMessages(systemText, nextPrompt){
+  const msgs = [{role:'system', content: systemText || ''}];
+  conversation.turns.forEach(t=>{
+    msgs.push({role:'user', content: t.q});
+    msgs.push({role:'assistant', content: t.a});
+  });
+  msgs.push({role:'user', content: nextPrompt});
+  return msgs;
+}
+function pushTurn(q, a){
+  conversation.turns.push({q:q, a:a});
+  if(conversation.turns.length > 8) conversation.turns.shift();
+  renderConvStrip();
+}
+
+/* ================ Feature I: export ================ */
+document.getElementById('copyMdBtn').addEventListener('click', copyMarkdown);
+document.getElementById('exportPngBtn').addEventListener('click', exportPng);
+function copyMarkdown(){
+  const sampleKey = currentSample === UPLOAD_SAMPLE_KEY ? 'upload' : currentSample;
+  const cur = currentSample === UPLOAD_SAMPLE_KEY ? uploadedSample : SAMPLES[currentSample];
+  const prompt = document.getElementById('prompt').value.trim();
+  const answer = resultEl.textContent.replace(/^●[^·]*·[^\n]*\n?/,'').trim();
+  const conf = CONFIDENCE_DATA[sampleKey];
+  const ttft = ttftValEl.textContent;
+  const wall = wallEl.textContent;
+  const tok = tokEl.textContent;
+  let md = '# SnapExtract · ' + (cur ? cur.title : 'Result') + '\n\n';
+  md += '**素材**：' + (cur ? cur.title : '-') + '  \n';
+  md += '**提问**：' + prompt + '\n\n';
+  md += '## 回答\n\n' + answer + '\n\n';
+  md += '---\n\n';
+  md += '- TTFT: `' + ttft + 'ms`  · Wall: `' + wall + 's`  · Tokens: `' + tok + '`\n';
+  if(conf) md += '- Confidence: `' + conf.overall.toFixed(1) + '%`\n';
+  md += '- 生成于: ' + new Date().toISOString() + '\n';
+  navigator.clipboard.writeText(md).then(()=>{
+    const b = document.getElementById('copyMdBtn');
+    b.classList.add('copied'); b.textContent = '✓ 已复制';
+    setTimeout(()=>{ b.classList.remove('copied'); b.textContent = '📋 MD'; }, 1500);
+  });
+}
+async function exportPng(){
+  const btn = document.getElementById('exportPngBtn');
+  if(!window.html2canvas){ alert('html2canvas 未加载'); return; }
+  btn.textContent = '⏳ 生成中…';
+  const target = document.querySelector('.ws');
+  try{
+    const canvas = await window.html2canvas(target, {
+      backgroundColor: '#07090d', scale: 2, logging:false, useCORS:true,
+    });
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'snapextract-' + Date.now() + '.png';
+    a.click();
+    btn.classList.add('copied');
+    btn.textContent = '✓ 已保存';
+  }catch(e){
+    console.error(e);
+    btn.textContent = '⚠ 失败';
+  }
+  setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = '🖼 PNG'; }, 1800);
+}
+
+/* ================ Feature H: history ================ */
+const HIST_KEY = 'snap_history_v1';
+const HIST_MAX = 20;
+function loadHistory(){
+  try{ return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); }catch(_){ return []; }
+}
+function saveHistory(h){ localStorage.setItem(HIST_KEY, JSON.stringify(h)); }
+let history = loadHistory();
+
+function pushHistory(entry){
+  history.unshift(entry);
+  if(history.length > HIST_MAX) history = history.slice(0, HIST_MAX);
+  saveHistory(history);
+  renderHistCount();
+}
+function renderHistCount(){
+  const c = document.getElementById('histCount');
+  if(!c) return;
+  if(history.length){ c.style.display = 'grid'; c.textContent = history.length; }
+  else c.style.display = 'none';
+}
+function renderHistList(){
+  const list = document.getElementById('histList');
+  const meta = document.getElementById('histMeta');
+  meta.textContent = '最近 ' + history.length + ' 次 · 仅存本地';
+  if(!history.length){ list.innerHTML = '<div class="hist-empty">还没有推理记录<br>运行一次 ⚡ 闪击解析 就会出现</div>'; return; }
+  list.innerHTML = history.map((h,i)=>{
+    const d = new Date(h.ts);
+    const t = d.toLocaleTimeString('zh-CN',{hour12:false}) + ' · ' + d.toLocaleDateString('zh-CN');
+    const ans = (h.answer||'').replace(/</g,'&lt;').slice(0,140);
+    return '<div class="hist-item" data-i="'+i+'">'
+      + '<div class="hi-head"><span class="hi-sample">'+ h.sampleKey +' · '+ (h.conf||'-') +'%</span><span class="hi-time">'+ t +'</span></div>'
+      + '<div class="hi-q">'+ (h.prompt||'').replace(/</g,'&lt;') +'</div>'
+      + '<div class="hi-a">'+ ans +'</div>'
+      + '</div>';
+  }).join('');
+  list.querySelectorAll('.hist-item').forEach(el=>{
+    el.addEventListener('click', ()=>restoreHistory(parseInt(el.dataset.i,10)));
+  });
+}
+function restoreHistory(i){
+  const h = history[i]; if(!h) return;
+  if(SAMPLES[h.sampleKey]){ loadSample(h.sampleKey); }
+  document.getElementById('prompt').value = h.prompt || '';
+  resultEl.innerHTML = '<span class="src-tag mock">● 历史记录 · ' + new Date(h.ts).toLocaleString('zh-CN') + '</span>' + (h.answer||'').replace(/\n/g,'<br>');
+  closeDrawer();
+}
+function openDrawer(){
+  renderHistList();
+  document.getElementById('drawerMask').classList.add('show');
+  document.getElementById('historyDrawer').classList.add('show');
+}
+function closeDrawer(){
+  document.getElementById('drawerMask').classList.remove('show');
+  document.getElementById('historyDrawer').classList.remove('show');
+}
+document.getElementById('historyBtn').addEventListener('click', openDrawer);
+document.getElementById('histClose').addEventListener('click', closeDrawer);
+document.getElementById('drawerMask').addEventListener('click', closeDrawer);
+document.getElementById('histClear').addEventListener('click', ()=>{
+  if(!confirm('清空全部历史记录？')) return;
+  history = []; saveHistory(history); renderHistCount(); renderHistList();
+});
+document.getElementById('histExport').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(history, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'snapextract-history-' + Date.now() + '.json';
+  a.click();
+});
+window.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){
+    closeDrawer();
+    closeSettings();
+  }
+});
+renderHistCount();
+
+/* ================ Feature E: confidence heatmap ================ */
+// Per-sample confidence simulation: regions in % of preview box + low-conf text patterns
+const CONFIDENCE_DATA = {
+  pdf: {
+    overall: 92.4,
+    regions: [
+      {x:8, y:6, w:60, h:10,  score:97, label:'title'},
+      {x:10, y:20, w:82, h:24, score:93, label:'abstract'},
+      {x:10, y:48, w:30, h:22, score:78, label:'figure-caption'},
+      {x:44, y:48, w:48, h:22, score:88, label:'body'},
+      {x:10, y:76, w:80, h:14, score:64, label:'footnote'}
+    ],
+    lowText: [
+      {text:'3B 参数规模', level:'mid'},
+      {text:'带宽受限', level:'low'}
+    ]
+  },
+  table: {
+    overall: 95.8,
+    regions: [
+      {x:4, y:5, w:92, h:18, score:98, label:'header'},
+      {x:4, y:24, w:92, h:16, score:96, label:'Q1'},
+      {x:4, y:41, w:92, h:16, score:97, label:'Q2'},
+      {x:4, y:58, w:92, h:16, score:99, label:'Q3 highlight'},
+      {x:4, y:75, w:92, h:16, score:82, label:'Q4E forecast'}
+    ],
+    lowText: [{text:'Q4E', level:'mid'}]
+  },
+  flow: {
+    overall: 88.2,
+    regions: [
+      {x:33, y:4, w:32, h:14, score:96, label:'下单'},
+      {x:33, y:29, w:32, h:14, score:91, label:'风控'},
+      {x:3,  y:54, w:34, h:14, score:72, label:'人工复核'},
+      {x:62, y:54, w:34, h:14, score:94, label:'发货'},
+      {x:33, y:79, w:32, h:14, score:93, label:'完成'}
+    ],
+    lowText: [{text:'人工复核', level:'mid'}]
+  },
+  formula: {
+    overall: 96.5,
+    regions: [
+      {x:5,  y:20, w:18, h:60, score:97, label:'F(ω)'},
+      {x:24, y:20, w:14, h:60, score:93, label:'='},
+      {x:38, y:20, w:18, h:60, score:92, label:'∫'},
+      {x:56, y:20, w:22, h:60, score:95, label:'f(t)'},
+      {x:78, y:20, w:18, h:60, score:88, label:'e^{-iωt} dt'}
+    ],
+    lowText: [{text:"e^{-i\\omega t}", level:'mid'}]
+  },
+  image: {
+    overall: 79.3,
+    regions: [
+      {x:72, y:18, w:18, h:18, score:86, label:'光源'},
+      {x:12, y:52, w:28, h:34, score:91, label:'绿色立方'},
+      {x:41, y:44, w:22, h:40, score:88, label:'蓝色长方'},
+      {x:64, y:60, w:24, h:26, score:58, label:'红色块(?)'},
+    ],
+    lowText: [{text:'红色块', level:'low'}, {text:'暖色光源', level:'mid'}]
+  },
+  upload: {
+    overall: 74.0,
+    regions: [{x:8, y:8, w:84, h:84, score:74, label:'full frame'}],
+    lowText: []
+  }
+};
+
+function levelClass(score){
+  if(score >= 90) return 'hi';
+  if(score >= 75) return 'mid';
+  return 'lo';
+}
+
+let heatmapVisible = false;
+function renderHeatmap(sampleKey){
+  const preview = document.getElementById('preview');
+  const old = preview.querySelector('.heatmap-layer');
+  if(old) old.remove();
+  const data = CONFIDENCE_DATA[sampleKey] || CONFIDENCE_DATA.upload;
+  const layer = document.createElement('div');
+  layer.className = 'heatmap-layer' + (heatmapVisible ? ' on' : '');
+  data.regions.forEach((r, i)=>{
+    const div = document.createElement('div');
+    div.className = 'heat-region ' + levelClass(r.score);
+    div.style.left = r.x + '%';
+    div.style.top = r.y + '%';
+    div.style.width = r.w + '%';
+    div.style.height = r.h + '%';
+    div.dataset.label = r.label;
+    div.innerHTML = '<span class="hr-score">' + r.score + '%</span>';
+    layer.appendChild(div);
+  });
+  preview.appendChild(layer);
+  // Update conf badge
+  const badge = document.getElementById('confBadge');
+  const text = document.getElementById('confText');
+  badge.style.display = 'inline-flex';
+  const ov = data.overall;
+  badge.classList.remove('good','mid','bad','active');
+  badge.classList.add(ov >= 90 ? 'good' : ov >= 75 ? 'mid' : 'bad');
+  if(heatmapVisible) badge.classList.add('active');
+  text.textContent = ov.toFixed(1) + '% · ' + (heatmapVisible ? '已显示' : '热力图');
+  return data;
+}
+
+function setHeatmapVisible(on){
+  heatmapVisible = !!on;
+  const layer = document.querySelector('.heatmap-layer');
+  const badge = document.getElementById('confBadge');
+  const text = document.getElementById('confText');
+  if(layer) layer.classList.toggle('on', heatmapVisible);
+  if(badge){
+    badge.classList.toggle('active', heatmapVisible);
+    const ov = parseFloat((text && text.textContent) || '0');
+    if(text) text.textContent = (isNaN(ov)?'—':ov.toFixed(1)+'%') + ' · ' + (heatmapVisible ? '已显示' : '热力图');
+  }
+}
+document.getElementById('confBadge').addEventListener('click', ()=>setHeatmapVisible(!heatmapVisible));
+
+function applyLowConfSpans(sampleKey){
+  const data = CONFIDENCE_DATA[sampleKey];
+  if(!data || !data.lowText || !data.lowText.length) return;
+  // Preserve leading src-tag and caret
+  const html = resultEl.innerHTML;
+  const m = html.match(/^(<span class="src-tag [^"]+">[^<]*<\/span>)?([\s\S]*?)(<span class="caret"><\/span>)?$/);
+  const tag = (m && m[1]) || '';
+  const caret = (m && m[3]) || '';
+  const warn = resultEl.querySelector('.conf-warn');
+  const warnHtml = warn ? warn.outerHTML : '';
+  let body = html.replace(tag, '').replace(caret, '');
+  if(warnHtml) body = body.replace(warnHtml, '');
+  data.lowText.forEach(item=>{
+    const safe = item.text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const cls = item.level === 'low' ? 'low-conf bad' : 'low-conf';
+    body = body.replace(new RegExp(safe,'g'), `<span class="${cls}" data-label="${escapeHtml(item.text)}">${item.text}</span>`);
+  });
+  resultEl.innerHTML = tag + warnHtml + body + caret;
+  // Hover bridge: low-conf span ↔ heatmap region
+  resultEl.querySelectorAll('.low-conf').forEach(span=>{
+    span.addEventListener('mouseenter', ()=>{
+      if(!heatmapVisible) setHeatmapVisible(true);
+      document.querySelectorAll('.heat-region').forEach(r=>r.classList.add('glow'));
+    });
+    span.addEventListener('mouseleave', ()=>{
+      document.querySelectorAll('.heat-region').forEach(r=>r.classList.remove('glow'));
+    });
+  });
+}
+
+function injectConfWarn(sampleKey){
+  const data = CONFIDENCE_DATA[sampleKey];
+  if(!data || data.overall >= 80) return;
+  const warn = document.createElement('div');
+  warn.className = 'conf-warn';
+  warn.innerHTML = '⚠️ 部分区域识别置信度较低（<span class="mono">' + data.overall.toFixed(1) + '%</span>），建议人工复核标记区域。';
+  const first = resultEl.firstChild;
+  resultEl.insertBefore(warn, first);
+}
+
+/* ================ Feature F: language correction pill ================ */
+function detectLang(s){
+  if(!s) return 'unknown';
+  const cjk = (s.match(/[\u4e00-\u9fff]/g)||[]).length;
+  const latin = (s.match(/[A-Za-z]/g)||[]).length;
+  if(cjk === 0 && latin === 0) return 'unknown';
+  if(cjk >= 2 && cjk >= latin * 0.35) return 'zh';
+  if(latin > 6 && cjk === 0) return 'en';
+  return 'mixed';
+}
+
+function renderLangPill(state){
+  const row = document.getElementById('langPillRow');
+  if(!row) return;
+  row.innerHTML = '';
+  if(!state) return;
+  const pill = document.createElement('span');
+  pill.className = 'lang-pill ' + (state.cls || '');
+  pill.innerHTML = '<span class="lp-flag">'+state.flag+'</span><span>'+state.text+'</span>';
+  row.appendChild(pill);
+}
+
+let langExpected = null;   // 'zh' | 'en' | null
+let langCorrected = false; // whether a correction was issued this turn
+let langCorrectionActive = false; // preventing re-trigger mid-correction
+
+function langResetForTurn(promptText){
+  langExpected = detectLang(promptText);
+  langCorrected = false;
+  langCorrectionActive = false;
+  if(langExpected === 'zh'){
+    renderLangPill({flag:'🇨🇳', text:'中文输入 → 期望中文输出', cls:'ok'});
+  }else if(langExpected === 'en'){
+    renderLangPill({flag:'🇬🇧', text:'EN input → EN output', cls:'ok'});
+  }else{
+    renderLangPill(null);
+  }
+}
+
+// Called mid-stream to sniff drift; returns true if correction should be triggered
+function langCheckDrift(accumulated){
+  if(langCorrectionActive || langCorrected) return false;
+  if(langExpected !== 'zh') return false;
+  if(accumulated.length < 40) return false;
+  const got = detectLang(accumulated);
+  if(got === 'en'){
+    renderLangPill({flag:'⚠️', text:'检测到 EN 输出 · 自动纠偏中…', cls:'correcting'});
+    langCorrectionActive = true;
+    return true;
+  }
+  return false;
+}
+
+function langMarkCorrected(){
+  langCorrected = true;
+  langCorrectionActive = false;
+  renderLangPill({flag:'✓', text:'已自动纠偏 · EN → ZH', cls:'corrected'});
+  setTimeout(()=>{
+    renderLangPill({flag:'🇨🇳', text:'中文输入 → 中文输出（已纠偏）', cls:'ok'});
+  }, 2600);
+}
+
+/* ================ Feature B: achievement badges ================ */
+const BADGES = {
+  lightning: {icon:'⚡', name:'闪电首字',   desc:'首字 token < 300ms'},
+  omni:      {icon:'🏆', name:'全素材通关', desc:'解析过全部 5 类预置样例'},
+  rock:      {icon:'🛡', name:'稳如磐石',   desc:'连续 3 次推理不报错'},
+  live:      {icon:'🔗', name:'接通现实',   desc:'通过本地代理获得一次真实回答'},
+  racer:     {icon:'🏁', name:'竞速之王',   desc:'完成一次 CPU vs NPU 对比'}
+};
+const BADGE_STATE_KEY = 'snap_badge_state_v1';
+const PRESET_SAMPLE_KEYS = ['pdf','table','flow','formula','image'];
+
+function loadBadgeState(){
+  try{
+    const raw = localStorage.getItem(BADGE_STATE_KEY);
+    if(!raw) return {unlocked:{}, samples:{}, consec:0};
+    const p = JSON.parse(raw);
+    return {unlocked:p.unlocked||{}, samples:p.samples||{}, consec:p.consec||0};
+  }catch(_){ return {unlocked:{}, samples:{}, consec:0}; }
+}
+function saveBadgeState(s){
+  try{ localStorage.setItem(BADGE_STATE_KEY, JSON.stringify(s)); }catch(_){}
+}
+let badgeState = loadBadgeState();
+
+function renderBadgeTray(justUnlockedId){
+  const tray = document.getElementById('badgeTray');
+  if(!tray) return;
+  tray.querySelectorAll('.b-item').forEach(el=>el.remove());
+  Object.keys(BADGES).forEach(id=>{
+    const b = BADGES[id];
+    const ok = !!badgeState.unlocked[id];
+    const el = document.createElement('span');
+    el.className = 'b-item' + (ok?' unlocked':'') + (id===justUnlockedId?' just-unlocked':'');
+    el.innerHTML = b.icon + '<span class="b-tt"><div>'+ b.name +'</div><div class="b-tt-desc">'+ (ok?b.desc:('未解锁 · '+b.desc)) +'</div></span>';
+    tray.appendChild(el);
+  });
+}
+function showBadgePopup(id){
+  const b = BADGES[id]; if(!b) return;
+  const old = document.querySelector('.badge-pop'); if(old) old.remove();
+  const pop = document.createElement('div');
+  pop.className = 'badge-pop';
+  pop.innerHTML = '<div class="bp-ico">'+b.icon+'</div>'
+                + '<div><div class="bp-sub">成就解锁</div><div class="bp-name">'+b.name+'</div><div class="bp-desc">'+b.desc+'</div></div>';
+  document.body.appendChild(pop);
+  requestAnimationFrame(()=>pop.classList.add('show'));
+  setTimeout(()=>{ pop.classList.remove('show'); setTimeout(()=>pop.remove(), 400); }, 3400);
+}
+function unlockBadge(id){
+  if(badgeState.unlocked[id]) return false;
+  badgeState.unlocked[id] = Date.now();
+  saveBadgeState(badgeState);
+  renderBadgeTray(id);
+  showBadgePopup(id);
+  return true;
+}
+renderBadgeTray();
+
+function onInferenceComplete(ctx){
+  // Update consecutive counter first
+  if(ctx.errored){
+    badgeState.consec = 0;
+  }else{
+    badgeState.consec = (badgeState.consec||0) + 1;
+    if(PRESET_SAMPLE_KEYS.includes(ctx.sampleKey)){
+      badgeState.samples[ctx.sampleKey] = true;
+    }
+  }
+  saveBadgeState(badgeState);
+
+  if(!ctx.errored){
+    if(ctx.ttftMs !== null && Number.isFinite(ctx.ttftMs) && ctx.ttftMs > 0 && ctx.ttftMs < 300){
+      unlockBadge('lightning');
+    }
+    if(ctx.liveUsed) unlockBadge('live');
+    if(badgeState.consec >= 3) unlockBadge('rock');
+    if(PRESET_SAMPLE_KEYS.every(k=>badgeState.samples[k])) unlockBadge('omni');
+    // Feature E: render heatmap data + mark low-confidence text spans
+    const confKey = ctx.sampleKey === UPLOAD_SAMPLE_KEY ? 'upload' : ctx.sampleKey;
+    let confScore = null;
+    try{
+      renderHeatmap(confKey);
+      injectConfWarn(confKey);
+      applyLowConfSpans(confKey);
+      confScore = (CONFIDENCE_DATA[confKey] && CONFIDENCE_DATA[confKey].overall) || null;
+    }catch(e){ console.warn('[conf heatmap]', e); }
+    // Feature G: record this turn in conversation memory
+    const answerText = (ctx.answer || '').trim();
+    if(answerText){
+      if(conversation.sampleKey !== ctx.sampleKey){
+        conversation = {sampleKey: ctx.sampleKey, turns:[]};
+      }
+      pushTurn(ctx.prompt, answerText);
+    }
+    // Feature H: write to history
+    pushHistory({
+      ts: Date.now(),
+      sampleKey: ctx.sampleKey,
+      prompt: ctx.prompt,
+      answer: answerText,
+      conf: confScore ? confScore.toFixed(1) : null,
+      ttft: ctx.ttftMs,
+      live: ctx.liveUsed,
+    });
+    // Feature I: show export toolbar
+    document.getElementById('resultToolbar').style.display = 'flex';
+    // Trigger follow-ups only on success
+    requestFollowups(ctx);
+  }else{
+    clearFollowups();
+  }
+}
+
+// Hook race into racer badge
+(function(){
+  const raceBtn = document.getElementById('raceBtn');
+  if(!raceBtn) return;
+  raceBtn.addEventListener('click', ()=>{
+    setTimeout(()=>unlockBadge('racer'), 4800);
+  });
+})();
+
+/* ================ Feature A: smart follow-up chain ================ */
+const FOLLOWUP_FALLBACK = {
+  pdf:    ['深入第 2 节的方法论','列出所有参考文献','对比相关工作的优劣'],
+  table:  ['哪一季度同比增速最快','预测 Q4 实际能否达成','毛利率变化的主因是什么'],
+  flow:   ['哪个节点最容易卡单','复核流程平均耗时多久','如果风控失败会怎样'],
+  formula:['给出逆变换的 LaTeX','这个公式在哪些领域常用','举一个具体计算示例'],
+  image:  ['估算物体之间的相对大小','光源方向与强度如何','最可能的拍摄场景'],
+  upload: ['从中提取 3 个关键点','生成一份摘要','这份材料的结构是什么']
+};
+const FOLLOWUP_SYSTEM = '你是追问生成器。根据用户的提问和助手的回答，输出严格 JSON 数组（不要 markdown 代码块、不要多余文字），包含 3 条不超过 18 个汉字的中文追问，围绕同一素材但探索不同角度。格式示例：["问题1","问题2","问题3"]';
+const FOLLOWUP_PROXY = PROXY_URL;
+
+function clearFollowups(){
+  const row = document.getElementById('followupRow');
+  if(row) row.innerHTML = '';
+}
+
+function renderFollowups(questions, source){
+  const row = document.getElementById('followupRow');
+  if(!row) return;
+  row.innerHTML = '';
+  const label = document.createElement('span');
+  label.className = 'fu-label';
+  label.textContent = '继续追问 ›';
+  row.appendChild(label);
+  questions.slice(0,3).forEach(q=>{
+    const btn = document.createElement('button');
+    btn.className = 'fu-chip';
+    btn.type = 'button';
+    btn.textContent = q;
+    if(source){
+      const s = document.createElement('span');
+      s.className = 'fu-src';
+      s.textContent = source;
+      btn.appendChild(s);
+    }
+    btn.addEventListener('click', ()=>{
+      if(streaming) return;
+      document.getElementById('prompt').value = q;
+      runInference();
+      row.querySelectorAll('.fu-chip').forEach(b=>b.disabled = true);
+    });
+    row.appendChild(btn);
+  });
+}
+
+function renderFollowupLoading(){
+  const row = document.getElementById('followupRow');
+  if(!row) return;
+  row.innerHTML = '';
+  const label = document.createElement('span');
+  label.className = 'fu-label';
+  label.textContent = '生成追问中';
+  row.appendChild(label);
+  for(let i=0;i<3;i++){
+    const d = document.createElement('span');
+    d.className = 'fu-chip loading';
+    d.textContent = '…';
+    row.appendChild(d);
+  }
+}
+
+function parseFollowupArray(text){
+  if(!text) return null;
+  const m = text.match(/\[[\s\S]*?\]/);
+  if(!m) return null;
+  try{
+    const arr = JSON.parse(m[0]);
+    if(!Array.isArray(arr)) return null;
+    const cleaned = arr.filter(x => typeof x === 'string' && x.trim().length > 0)
+                       .map(x => x.trim().replace(/^[\d\.\)\-\s]+/, ''))
+                       .slice(0, 3);
+    return cleaned.length >= 2 ? cleaned : null;
+  }catch(_){ return null; }
+}
+
+let followupAbort = null;
+async function requestFollowups(ctx){
+  if(followupAbort){ try{ followupAbort.abort(); }catch(_){} }
+  const controller = new AbortController();
+  followupAbort = controller;
+
+  const fallback = FOLLOWUP_FALLBACK[ctx.sampleKey] || FOLLOWUP_FALLBACK.upload;
+  renderFollowupLoading();
+
+  const userContent = `原问题：${ctx.prompt}\n\n助手回答：${ctx.answer || '(空)'}\n\n请基于以上素材给我 3 条追问。`;
+  const payload = { prompt: userContent, system: FOLLOWUP_SYSTEM };
+
+  try{
+    const resp = await fetch(FOLLOWUP_PROXY, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    if(!resp.ok) throw new Error('proxy HTTP '+resp.status);
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '', full = '';
+    while(true){
+      const {done, value} = await reader.read();
+      if(done) break;
+      buf += decoder.decode(value, {stream:true});
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for(const line of lines){
+        if(!line.startsWith('data:')) continue;
+        const s = line.slice(5).trim();
+        if(!s || s === '[DONE]') continue;
+        try{ const o = JSON.parse(s); if(o.t) full += o.t; }catch(_){}
+      }
+    }
+    const parsed = parseFollowupArray(full);
+    if(parsed){
+      renderFollowups(parsed, 'AI');
+      return;
+    }
+    renderFollowups(fallback, 'preset');
+  }catch(e){
+    if(e.name === 'AbortError') return;
+    renderFollowups(fallback, 'preset');
+  }
+}
+
+/* ================ Feature C: Point-to-Ask region selection ================ */
+const REGION_QS = {
+  pdf:    ['这段文字的结论是什么','在正文中定位这个图','用更通俗的话解释这部分'],
+  table:  ['读出这块单元格的数值','对比相邻列的差异','这段的趋势是涨还是跌'],
+  flow:   ['解释这个节点的作用','这个节点之后会发生什么','这个节点最容易在哪里出问题'],
+  formula:['这一项代表什么含义','单独给我这部分的 LaTeX','为什么公式里会出现这一项'],
+  image:  ['这个物体是什么','估算它的相对大小','它和场景的关系是什么'],
+  upload: ['解释这块区域','从这部分提取关键信息','用一句话总结这里']
+};
+
+(function initPointToAsk(){
+  const preview = document.getElementById('preview');
+  if(!preview) return;
+
+  let overlay = null;
+  let rect = null;
+  let startX = 0, startY = 0;
+  let dragging = false;
+  let suppressNext = false;
+
+  function getRegionCapability(){
+    if(!hasUploadedFile){
+      return {
+        enabled:false,
+        hint:'当前版本未接入预置样例的真实区域解析',
+      };
+    }
+    const tagText = (uploadedSample && uploadedSample.tag || '').toUpperCase();
+    if(tagText.includes('PDF') || tagText.includes('TEXT') || tagText.includes('FILE')){
+      return {
+        enabled:false,
+        hint:'当前上传素材仅支持整文件解析，区域识别暂未接入',
+      };
+    }
+    if(tagText.includes('IMAGE')){
+      return {
+        enabled:false,
+        hint:'图片区域识别待接入多模态裁剪链路后开放',
+      };
+    }
+    return {
+      enabled:false,
+      hint:'区域识别暂未开放',
+    };
+  }
+
+  function refreshRegionHint(){
+    const hint = document.getElementById('regionHint');
+    if(!hint) return;
+    const cap = getRegionCapability();
+    hint.classList.remove('warn');
+    if(cap.enabled){
+      hint.innerHTML = preview.classList.contains('region-mode')
+        ? '圈选模式 · 拖拽选区 · 按 <b>R</b>/<b>Esc</b> 退出'
+        : '按 <b>R</b> 进入圈选模式';
+      return;
+    }
+    hint.classList.add('warn');
+    hint.textContent = cap.hint;
+  }
+
+  function ensureOverlay(){
+    if(overlay) return overlay;
+    overlay = document.createElement('div');
+    overlay.className = 'region-overlay';
+    preview.appendChild(overlay);
+    overlay.addEventListener('pointerdown', onDown);
+    return overlay;
+  }
+
+  function clearPopover(){
+    const p = preview.querySelector('.region-popover');
+    if(p) p.remove();
+  }
+  function clearRect(){
+    if(rect){ rect.remove(); rect = null; }
+  }
+  function fullReset(){
+    clearPopover(); clearRect();
+    if(overlay) overlay.classList.remove('dragging');
+  }
+
+  function onDown(e){
+    const cap = getRegionCapability();
+    if(!cap.enabled){
+      refreshRegionHint();
+      return;
+    }
+    if(streaming) return;
+    if(suppressNext){ suppressNext = false; return; }
+    clearPopover();
+    clearRect();
+    const r = preview.getBoundingClientRect();
+    startX = e.clientX - r.left;
+    startY = e.clientY - r.top;
+    dragging = true;
+    overlay.classList.add('dragging');
+    rect = document.createElement('div');
+    rect.className = 'region-rect';
+    rect.style.left = startX + 'px';
+    rect.style.top = startY + 'px';
+    rect.style.width = '0px';
+    rect.style.height = '0px';
+    rect.setAttribute('data-sz', '0 × 0');
+    preview.appendChild(rect);
+    overlay.setPointerCapture && overlay.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  }
+  function onMove(e){
+    if(!dragging || !rect) return;
+    const r = preview.getBoundingClientRect();
+    const x = Math.max(0, Math.min(r.width,  e.clientX - r.left));
+    const y = Math.max(0, Math.min(r.height, e.clientY - r.top));
+    const L = Math.min(x, startX), T = Math.min(y, startY);
+    const W = Math.abs(x - startX), H = Math.abs(y - startY);
+    rect.style.left = L + 'px';
+    rect.style.top  = T + 'px';
+    rect.style.width  = W + 'px';
+    rect.style.height = H + 'px';
+    rect.setAttribute('data-sz', Math.round(W) + ' × ' + Math.round(H));
+  }
+  function onUp(e){
+    if(!dragging) return;
+    dragging = false;
+    overlay.classList.remove('dragging');
+    if(!rect) return;
+    const W = parseFloat(rect.style.width) || 0;
+    const H = parseFloat(rect.style.height) || 0;
+    if(W < 24 || H < 24){ clearRect(); return; }
+    showPopover(rect);
+  }
+  function showPopover(r){
+    clearPopover();
+    const L = parseFloat(r.style.left), T = parseFloat(r.style.top);
+    const W = parseFloat(r.style.width), H = parseFloat(r.style.height);
+    const prR = preview.getBoundingClientRect();
+    const sampleKey = currentSample === UPLOAD_SAMPLE_KEY ? 'upload' : currentSample;
+    const qs = REGION_QS[sampleKey] || REGION_QS.upload;
+    const pop = document.createElement('div');
+    pop.className = 'region-popover';
+    let popLeft = L + W + 10;
+    let popTop  = T;
+    if(popLeft + 240 > prR.width) popLeft = Math.max(8, L - 240 - 10);
+    if(popTop + 190 > prR.height) popTop = Math.max(8, prR.height - 200);
+    pop.style.left = popLeft + 'px';
+    pop.style.top  = popTop  + 'px';
+    pop.innerHTML = '<div class="rp-head"><span>圈选 ' + Math.round(W) + '×' + Math.round(H) + ' · 针对该区域提问</span><button class="rp-close" type="button">×</button></div>';
+    qs.forEach(q=>{
+      const b = document.createElement('button');
+      b.className = 'region-qchip';
+      b.type = 'button';
+      b.textContent = q;
+      b.addEventListener('click', ()=>askRegion(q, {L,T,W,H}));
+      pop.appendChild(b);
+    });
+    const inlineAsk = document.createElement('div');
+    inlineAsk.className = 'region-inline-ask';
+    inlineAsk.innerHTML = `
+      <textarea placeholder="直接输入你想针对这块区域问的问题"></textarea>
+      <div class="region-inline-foot">
+        <span class="region-inline-tip">Enter 提交，Shift+Enter 换行</span>
+        <button class="region-send" type="button">发送追问</button>
+      </div>
+    `;
+    const inlineInput = inlineAsk.querySelector('textarea');
+    const inlineSend = inlineAsk.querySelector('.region-send');
+    const submitInline = ()=>{
+      const text = inlineInput.value.trim();
+      if(!text) return;
+      askRegion(text, {L,T,W,H});
+    };
+    inlineInput.addEventListener('keydown', (ev)=>{
+      if(ev.key === 'Enter' && !ev.shiftKey){
+        ev.preventDefault();
+        submitInline();
+      }
+    });
+    inlineSend.addEventListener('click', submitInline);
+    pop.appendChild(inlineAsk);
+    pop.querySelector('.rp-close').addEventListener('click', fullReset);
+    // prevent pointerdown inside popover from starting a new drag
+    pop.addEventListener('pointerdown', (ev)=>{ ev.stopPropagation(); suppressNext = true; });
+    preview.appendChild(pop);
+    requestAnimationFrame(()=>inlineInput.focus());
+  }
+  function askRegion(q, r){
+    const cap = getRegionCapability();
+    if(!cap.enabled){
+      refreshRegionHint();
+      fullReset();
+      preview.classList.remove('region-mode');
+      return;
+    }
+    const tag = `[区域: ${Math.round(r.L)},${Math.round(r.T)} ${Math.round(r.W)}×${Math.round(r.H)}]`;
+    const input = document.getElementById('prompt');
+    const base = (q || '').trim();
+    input.value = base ? (base + ' ' + tag) : tag;
+    fullReset();
+    preview.classList.remove('region-mode');
+    refreshRegionHint();
+    runInference();
+  }
+
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+
+  function setRegionMode(on){
+    const cap = getRegionCapability();
+    if(on && !cap.enabled){
+      preview.classList.remove('region-mode');
+      fullReset();
+      refreshRegionHint();
+      return;
+    }
+    preview.classList.toggle('region-mode', !!on);
+    if(!on) fullReset();
+    refreshRegionHint();
+  }
+  function toggleRegionMode(){
+    setRegionMode(!preview.classList.contains('region-mode'));
+  }
+  window.addEventListener('keydown', (e)=>{
+    const tag = (e.target && e.target.tagName || '').toLowerCase();
+    const typing = tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable);
+    if(e.key === 'Escape'){
+      if(preview.classList.contains('region-mode')) setRegionMode(false);
+      else fullReset();
+      return;
+    }
+    if(typing) return;
+    if(e.key === 'r' || e.key === 'R'){
+      if(e.ctrlKey || e.metaKey || e.altKey) return;
+      e.preventDefault();
+      toggleRegionMode();
+    }
+  });
+
+  // Re-attach overlay whenever loadSample redraws preview innerHTML
+  const origLoadSample = window.loadSample || loadSample;
+  const attach = ()=>{ ensureOverlay(); };
+  // Observe DOM changes to re-inject overlay if preview innerHTML replaced
+  const mo = new MutationObserver(()=>{
+    if(!preview.querySelector('.region-overlay')){
+      overlay = null;
+      ensureOverlay();
+    }
+    refreshRegionHint();
+  });
+  mo.observe(preview, {childList:true});
+  attach();
+  refreshRegionHint();
+})();
+</script>
+</body>
+</html>

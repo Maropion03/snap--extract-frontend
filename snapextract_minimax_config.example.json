@@ -1,0 +1,13 @@
+{
+  "api_key": "YOUR_MINIMAX_API_KEY",
+  "api_base": "https://api.minimax.chat/v1",
+  "api_path": "/chat/completions",
+  "model": "MiniMax-M2.1-highspeed",
+  "fallback_models": [
+    "MiniMax-M2.1-highspeed",
+    "MiniMax-M2.1",
+    "MiniMax-M2"
+  ],
+  "port": 8765,
+  "system_prompt": "你是 SnapExtract 端侧视觉理解助手，用简洁中文回答。"
+}

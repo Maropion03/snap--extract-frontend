@@ -1,0 +1,1057 @@
+{
+  "contract": {
+    "lease_standard": {
+      "fields": {
+        "contract_type": "住房租赁合同",
+        "party_a": {
+          "name": "王某"
+        },
+        "party_b": {
+          "name": "李某"
+        },
+        "subject": "位于北京市朝阳区某路某号 2 室 1 厅住宅",
+        "total_amount": "144000",
+        "penalty_rate": "30%",
+        "compensation_cap": "不超过年租金",
+        "start_date": "2026-05-01",
+        "end_date": "2027-04-30",
+        "jurisdiction": "北京市朝阳区",
+        "clauses": [
+          {
+            "idx": 1,
+            "title": "租金及支付方式",
+            "risk": "low",
+            "party": "both",
+            "full": "月租金 12,000 元；押二付一"
+          },
+          {
+            "idx": 2,
+            "title": "违约金条款 30%",
+            "risk": "high",
+            "party": "a",
+            "full": "乙方提前退租需支付合同总价 30% 违约金"
+          },
+          {
+            "idx": 3,
+            "title": "押金退还",
+            "risk": "med",
+            "party": "a",
+            "full": "押金于退租后 30 个工作日内退还"
+          },
+          {
+            "idx": 4,
+            "title": "转租限制",
+            "risk": "med",
+            "party": "b",
+            "full": "未经甲方书面同意不得转租"
+          },
+          {
+            "idx": 5,
+            "title": "装修条款",
+            "risk": "low",
+            "party": "both",
+            "full": "不得损坏房屋结构"
+          },
+          {
+            "idx": 6,
+            "title": "电器维护",
+            "risk": "med",
+            "party": "b",
+            "full": "家电损坏由乙方维修"
+          },
+          {
+            "idx": 7,
+            "title": "物业费承担",
+            "risk": "low",
+            "party": "b",
+            "full": "物业费由乙方承担"
+          },
+          {
+            "idx": 8,
+            "title": "解除合同",
+            "risk": "high",
+            "party": "a",
+            "full": "甲方可单方面提前 30 天通知解除"
+          }
+        ],
+        "missing_clauses": [
+          "维修责任分摊明细",
+          "提前退租处理流程",
+          "不可抗力条款"
+        ]
+      },
+      "summary": "**风险摘要**\n本合同主体清晰，但 30% 违约金显著高于行业均值（10–20%），且甲方解除权过于宽松，整体倾向甲方。3 句话总结：(1) 违约金条款过高，建议谈判压低至 15%；(2) 缺失不可抗力条款，疫情等情形无保护；(3) 押金退还周期 30 天偏长，建议改为 15 天。\n\n**必谈判清单**\n1. 违约金 30% → 15%（行业平均）\n2. 单方解除权 → 改为双方协商\n3. 押金退还 30 天 → 15 天\n4. 补充不可抗力条款\n5. 转租限制 → 协商可分租给亲属\n\n**签字前自查 5 条**\n- 核对房产证与甲方姓名一致\n- 押金条款明确币种与利息\n- 添加房屋设施清单附件\n- 明确水电费抄表方式\n- 留存付款凭证\n"
+    },
+    "labor_with_risk": {
+      "fields": {
+        "contract_type": "劳动合同",
+        "party_a": {
+          "name": "XX 科技有限公司"
+        },
+        "party_b": {
+          "name": "张某"
+        },
+        "subject": "软件研发工程师岗位",
+        "total_amount": "年薪 25 万",
+        "penalty_rate": "年薪的 50%",
+        "compensation_cap": "未约定",
+        "start_date": "2026-04-01",
+        "end_date": "2029-03-31",
+        "jurisdiction": "用人单位所在地",
+        "clauses": [
+          {
+            "idx": 1,
+            "title": "试用期 6 个月",
+            "risk": "high",
+            "party": "b",
+            "full": "3 年合同试用期不得超过 6 个月"
+          },
+          {
+            "idx": 2,
+            "title": "竞业限制 24 月",
+            "risk": "high",
+            "party": "b",
+            "full": "离职后 24 个月内不得加入同业"
+          },
+          {
+            "idx": 3,
+            "title": "未约定补偿金",
+            "risk": "high",
+            "party": "b",
+            "full": "竞业期补偿金未约定（违法）"
+          },
+          {
+            "idx": 4,
+            "title": "加班费条款",
+            "risk": "med",
+            "party": "b",
+            "full": "已包含在月薪中（争议）"
+          },
+          {
+            "idx": 5,
+            "title": "年假",
+            "risk": "low",
+            "party": "both",
+            "full": "按法定标准"
+          },
+          {
+            "idx": 6,
+            "title": "保密义务",
+            "risk": "low",
+            "party": "both",
+            "full": "符合行业惯例"
+          }
+        ],
+        "missing_clauses": [
+          "竞业限制补偿金标准",
+          "加班费明确算法",
+          "解除合同的经济补偿"
+        ]
+      },
+      "summary": "**风险摘要**\n本合同对劳动者明显不利：竞业限制条款无补偿（违法）、试用期合规但加班费打包在月薪中（劳动法争议）。3 句话总结：(1) 竞业限制无补偿条款无效，可主张赔偿；(2) 加班费打包条款不合法，可在仲裁时主张；(3) 试用期 6 个月已是上限，不可再延长。\n\n**必谈判清单**\n1. 竞业限制补偿金 → 必须明确为离职前月薪 30%\n2. 加班费 → 与月薪分离，按 1.5/2/3 倍计算\n3. 解除合同的经济补偿 → 写入条款\n4. 竞业范围 → 限定在直接竞争对手\n\n**签字前自查 5 条**\n- 核对岗位职责书面附件\n- 保留 offer letter 与谈判邮件\n- 询问股权/期权条款\n- 询问绩效考核标准透明度\n- 截留合同副本\n"
+    },
+    "procurement_pro_a": {
+      "fields": {
+        "contract_type": "采购合同",
+        "party_a": {
+          "name": "XX 集团"
+        },
+        "party_b": {
+          "name": "YY 供应商"
+        },
+        "subject": "电子元器件采购 · 数量 10000 件",
+        "total_amount": "500000",
+        "penalty_rate": "每日 0.5%",
+        "compensation_cap": "不限",
+        "start_date": "2026-05-15",
+        "end_date": "2026-08-15",
+        "jurisdiction": "买方所在地仲裁",
+        "clauses": [
+          {
+            "idx": 1,
+            "title": "付款周期 90 天",
+            "risk": "high",
+            "party": "b",
+            "full": "货到验收合格 90 天内付款"
+          },
+          {
+            "idx": 2,
+            "title": "验收标准单方",
+            "risk": "high",
+            "party": "b",
+            "full": "验收标准由甲方单方确定"
+          },
+          {
+            "idx": 3,
+            "title": "每日违约金 0.5%",
+            "risk": "high",
+            "party": "b",
+            "full": "卖方违约金按日 0.5% 计"
+          },
+          {
+            "idx": 4,
+            "title": "无限赔偿",
+            "risk": "high",
+            "party": "b",
+            "full": "未约定赔偿上限"
+          },
+          {
+            "idx": 5,
+            "title": "质保 36 个月",
+            "risk": "med",
+            "party": "b",
+            "full": "质保期超行业惯例"
+          },
+          {
+            "idx": 6,
+            "title": "知识产权全归买方",
+            "risk": "med",
+            "party": "b",
+            "full": "相关 IP 全部转让"
+          }
+        ],
+        "missing_clauses": [
+          "付款超期甲方违约责任",
+          "不可抗力豁免",
+          "双方违约金对等条款",
+          "保密义务对等"
+        ]
+      },
+      "summary": "**风险摘要**\n该合同对乙方（卖方）极不友好：单方验收标准 + 90 天账期 + 无限赔偿 + 36 月质保 = 资金链高风险。3 句话总结：(1) 付款 90 天且无超期赔偿，乙方资金压力极大；(2) 单方验收 + 无赔偿上限，可能因验收争议导致全款损失；(3) 缺乏对等违约责任，谈判筹码少。\n\n**必谈判清单**\n1. 付款周期 90 天 → 30 天，并约定超期甲方违约金\n2. 验收标准 → 改为双方书面确认或第三方机构\n3. 赔偿上限 → 不超过合同总额 100%\n4. 违约金 → 双方对等\n5. 质保期 36 月 → 12 月\n\n**签字前自查 5 条**\n- 添加付款超期 7 天起算超期利息\n- 列明验收时间窗（≤7 个工作日）\n- 写入不可抗力条款\n- IP 仅限本合同标的物\n- 保留谈判过程的邮件证据\n"
+    }
+  },
+  "statement": {
+    "personal_monthly": {
+      "fields": {
+        "account_holder": "王**",
+        "account_no_masked": "**** **** **** 1234",
+        "period_start": "2026-04-01",
+        "period_end": "2026-04-30",
+        "total_in": "25800",
+        "total_out": "18342",
+        "categories": [
+          {
+            "name": "餐饮",
+            "amount": 3420,
+            "pct": 18.6
+          },
+          {
+            "name": "购物",
+            "amount": 5128,
+            "pct": 28
+          },
+          {
+            "name": "交通",
+            "amount": 1240,
+            "pct": 6.8
+          },
+          {
+            "name": "居住",
+            "amount": 5500,
+            "pct": 30
+          },
+          {
+            "name": "娱乐",
+            "amount": 1804,
+            "pct": 9.8
+          },
+          {
+            "name": "其他",
+            "amount": 1250,
+            "pct": 6.8
+          }
+        ],
+        "anomalies": [
+          {
+            "date": "2026-04-12",
+            "amount": 2999,
+            "desc": "境外消费 - SWITZERLAND",
+            "reason": "非常驻地大额消费"
+          },
+          {
+            "date": "2026-04-23",
+            "amount": 888,
+            "desc": "重复扣款 - 视频会员",
+            "reason": "同一商户当日两笔"
+          }
+        ],
+        "heat": [
+          {
+            "date": "2026-04-01",
+            "amount": 451
+          },
+          {
+            "date": "2026-04-02",
+            "amount": 42
+          },
+          {
+            "date": "2026-04-03",
+            "amount": 975
+          },
+          {
+            "date": "2026-04-04",
+            "amount": 76
+          },
+          {
+            "date": "2026-04-05",
+            "amount": 64
+          },
+          {
+            "date": "2026-04-06",
+            "amount": 397
+          },
+          {
+            "date": "2026-04-07",
+            "amount": 381
+          },
+          {
+            "date": "2026-04-08",
+            "amount": 884
+          },
+          {
+            "date": "2026-04-09",
+            "amount": 293
+          },
+          {
+            "date": "2026-04-10",
+            "amount": 995
+          },
+          {
+            "date": "2026-04-11",
+            "amount": 1185
+          },
+          {
+            "date": "2026-04-12",
+            "amount": 641
+          },
+          {
+            "date": "2026-04-13",
+            "amount": 722
+          },
+          {
+            "date": "2026-04-14",
+            "amount": 137
+          },
+          {
+            "date": "2026-04-15",
+            "amount": 191
+          },
+          {
+            "date": "2026-04-16",
+            "amount": 822
+          },
+          {
+            "date": "2026-04-17",
+            "amount": 735
+          },
+          {
+            "date": "2026-04-18",
+            "amount": 102
+          },
+          {
+            "date": "2026-04-19",
+            "amount": 2
+          },
+          {
+            "date": "2026-04-20",
+            "amount": 131
+          },
+          {
+            "date": "2026-04-21",
+            "amount": 422
+          },
+          {
+            "date": "2026-04-22",
+            "amount": 304
+          },
+          {
+            "date": "2026-04-23",
+            "amount": 431
+          },
+          {
+            "date": "2026-04-24",
+            "amount": 239
+          },
+          {
+            "date": "2026-04-25",
+            "amount": 519
+          },
+          {
+            "date": "2026-04-26",
+            "amount": 952
+          },
+          {
+            "date": "2026-04-27",
+            "amount": 921
+          },
+          {
+            "date": "2026-04-28",
+            "amount": 544
+          },
+          {
+            "date": "2026-04-29",
+            "amount": 247
+          },
+          {
+            "date": "2026-04-30",
+            "amount": 245
+          }
+        ]
+      },
+      "summary": "**总览**\n2026 年 4 月共收入 ¥25,800，支出 ¥18,342，结余 ¥7,458。3 句话总结：(1) 居住与购物占总支出 58%；(2) 4 月 12 日境外消费 ¥2,999 异常；(3) 视频会员存在重复扣款，建议申诉。\n\n**最大支出 Top3**\n1. 居住 ¥5,500 (30.0%)\n2. 购物 ¥5,128 (28.0%)\n3. 餐饮 ¥3,420 (18.6%)\n\n**异常提示**\n- 04-12 ¥2,999 SWITZERLAND（非常驻地）\n- 04-23 ¥888 视频会员（重复扣款）\n"
+    },
+    "merchant_daily": {
+      "fields": {
+        "account_holder": "张**烧烤店",
+        "account_no_masked": "**** 5678",
+        "period_start": "2026-04-29",
+        "period_end": "2026-04-29",
+        "total_in": "8462",
+        "total_out": "380",
+        "categories": [
+          {
+            "name": "堂食",
+            "amount": 5100,
+            "pct": 60.3
+          },
+          {
+            "name": "外卖",
+            "amount": 2562,
+            "pct": 30.3
+          },
+          {
+            "name": "酒水",
+            "amount": 800,
+            "pct": 9.4
+          }
+        ],
+        "anomalies": [
+          {
+            "date": "2026-04-29 14:32",
+            "amount": 1280,
+            "desc": "单笔异常大额（团购退款）",
+            "reason": "非高峰时段大额"
+          }
+        ],
+        "heat": [
+          {
+            "date": "0:00",
+            "amount": 111
+          },
+          {
+            "date": "1:00",
+            "amount": 340
+          },
+          {
+            "date": "2:00",
+            "amount": 30
+          },
+          {
+            "date": "3:00",
+            "amount": 345
+          },
+          {
+            "date": "4:00",
+            "amount": 25
+          },
+          {
+            "date": "5:00",
+            "amount": 262
+          },
+          {
+            "date": "6:00",
+            "amount": 99
+          },
+          {
+            "date": "7:00",
+            "amount": 93
+          },
+          {
+            "date": "8:00",
+            "amount": 390
+          },
+          {
+            "date": "9:00",
+            "amount": 354
+          },
+          {
+            "date": "10:00",
+            "amount": 215
+          },
+          {
+            "date": "11:00",
+            "amount": 22
+          },
+          {
+            "date": "12:00",
+            "amount": 359
+          },
+          {
+            "date": "13:00",
+            "amount": 195
+          },
+          {
+            "date": "14:00",
+            "amount": 448
+          },
+          {
+            "date": "15:00",
+            "amount": 223
+          },
+          {
+            "date": "16:00",
+            "amount": 112
+          },
+          {
+            "date": "17:00",
+            "amount": 372
+          },
+          {
+            "date": "18:00",
+            "amount": 250
+          },
+          {
+            "date": "19:00",
+            "amount": 26
+          },
+          {
+            "date": "20:00",
+            "amount": 334
+          },
+          {
+            "date": "21:00",
+            "amount": 105
+          },
+          {
+            "date": "22:00",
+            "amount": 475
+          },
+          {
+            "date": "23:00",
+            "amount": 115
+          }
+        ]
+      },
+      "summary": "**总览**\n4 月 29 日总流水 ¥8,462，退款 ¥380。3 句话：(1) 堂食占比 60%，外卖增长平稳；(2) 14:32 出现异常退款 ¥1,280；(3) 18–21 点为高峰时段。"
+    }
+  },
+  "invoice": {
+    "vat_special": {
+      "fields": {
+        "invoices": [
+          {
+            "code": "1100174135",
+            "no": "00001234",
+            "date": "2026-04-01",
+            "buyer": "XX 集团",
+            "seller": "AA 公司",
+            "amount": "10000",
+            "tax": "1300",
+            "total": "11300",
+            "type": "增值税专票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "1100174135",
+            "no": "00001235",
+            "date": "2026-04-05",
+            "buyer": "XX 集团",
+            "seller": "BB 公司",
+            "amount": "8500",
+            "tax": "1105",
+            "total": "9605",
+            "type": "增值税专票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "1100174135",
+            "no": "00001234",
+            "date": "2026-04-08",
+            "buyer": "XX 集团",
+            "seller": "AA 公司",
+            "amount": "10000",
+            "tax": "1300",
+            "total": "11300",
+            "type": "增值税专票",
+            "compliance_status": "fail",
+            "issues": [
+              "发票号重复"
+            ]
+          },
+          {
+            "code": "1100174135",
+            "no": "00001236",
+            "date": "2026-04-12",
+            "buyer": "XX 集团",
+            "seller": "CC 公司",
+            "amount": "5400",
+            "tax": "702",
+            "total": "6102",
+            "type": "增值税专票",
+            "compliance_status": "warn",
+            "issues": [
+              "购买方税号缺失"
+            ]
+          },
+          {
+            "code": "1100174135",
+            "no": "00001237",
+            "date": "2026-04-20",
+            "buyer": "XX 集团",
+            "seller": "DD 公司",
+            "amount": "12000",
+            "tax": "1560",
+            "total": "13560",
+            "type": "增值税专票",
+            "compliance_status": "ok",
+            "issues": []
+          }
+        ]
+      },
+      "summary": "**总览**\n5 张发票合计 ¥51,867（含税）。3 张合规、1 张警告（税号缺失）、1 张失败（发票号重复）。\n\n**合规分布**\n- ✅ 合规：3 张（¥34,465）\n- ⚠️ 警告：1 张（¥6,102）\n- ❌ 失败：1 张（¥11,300）\n\n**需重新开具**\n- 00001234（与第 1 张重复，需作废重开）\n"
+    },
+    "electronic_combo": {
+      "fields": {
+        "invoices": [
+          {
+            "code": "el-001",
+            "no": "E20260401",
+            "date": "2026-04-01",
+            "buyer": "王某",
+            "seller": "高铁",
+            "amount": "553",
+            "tax": "0",
+            "total": "553",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "el-002",
+            "no": "E20260403",
+            "date": "2026-04-03",
+            "buyer": "王某",
+            "seller": "酒店",
+            "amount": "2400",
+            "tax": "144",
+            "total": "2544",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "el-003",
+            "no": "E20260405",
+            "date": "2026-04-05",
+            "buyer": "王某",
+            "seller": "打车",
+            "amount": "68",
+            "tax": "0",
+            "total": "68",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "el-004",
+            "no": "E20260408",
+            "date": "2026-04-08",
+            "buyer": "XX 集团",
+            "seller": "酒店",
+            "amount": "1280",
+            "tax": "76.8",
+            "total": "1356.8",
+            "type": "电子普票",
+            "compliance_status": "warn",
+            "issues": [
+              "抬头与申请人不一致"
+            ]
+          },
+          {
+            "code": "el-005",
+            "no": "E20260410",
+            "date": "2026-04-10",
+            "buyer": "王某",
+            "seller": "餐饮",
+            "amount": "320",
+            "tax": "0",
+            "total": "320",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "el-006",
+            "no": "E20260415",
+            "date": "2026-04-15",
+            "buyer": "王某",
+            "seller": "机票",
+            "amount": "1820",
+            "tax": "0",
+            "total": "1820",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "el-007",
+            "no": "E20260418",
+            "date": "2026-04-18",
+            "buyer": "王某",
+            "seller": "打车",
+            "amount": "42",
+            "tax": "0",
+            "total": "42",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          },
+          {
+            "code": "el-008",
+            "no": "E20260422",
+            "date": "2026-04-22",
+            "buyer": "王某",
+            "seller": "酒店",
+            "amount": "880",
+            "tax": "52.8",
+            "total": "932.8",
+            "type": "电子普票",
+            "compliance_status": "ok",
+            "issues": []
+          }
+        ]
+      },
+      "summary": "**总览**\n8 张电子发票合计 ¥7,635.6。7 张合规、1 张抬头不一致需更换。"
+    }
+  },
+  "resume": {
+    "resume_strong": {
+      "fields": {
+        "name": "李**",
+        "age": "29",
+        "education_top": "985 硕士",
+        "work_years": "5 年",
+        "current": "某独角兽 高级前端 P7",
+        "expected_salary": "45–55 万",
+        "skills": [
+          "React",
+          "TypeScript",
+          "Node.js",
+          "性能优化",
+          "可视化",
+          "微前端"
+        ],
+        "scores": {
+          "学历": 88,
+          "经验": 78,
+          "技术": 90,
+          "项目": 84,
+          "成就": 75
+        },
+        "timeline": [
+          {
+            "type": "edu",
+            "start": "2014-09",
+            "end": "2018-06",
+            "label": "本科 · 985"
+          },
+          {
+            "type": "edu",
+            "start": "2018-09",
+            "end": "2021-06",
+            "label": "硕士 · 985"
+          },
+          {
+            "type": "work",
+            "start": "2021-07",
+            "end": "2023-08",
+            "label": "A 公司 · 前端工程师"
+          },
+          {
+            "type": "work",
+            "start": "2023-09",
+            "end": "2026-04",
+            "label": "B 独角兽 · 高级前端"
+          }
+        ],
+        "weak_phrases": [],
+        "gaps": []
+      },
+      "summary": "**画像**\n985 硕士，5 年大厂前端经验，React/TS 深度专精，主导过可视化中台。3 句话：(1) 学历技术过硬；(2) 经验集中在中大型项目；(3) 期望薪资合理。\n\n**优势**\n- 985 硕士背景\n- 主导可视化中台\n- 性能优化专长\n\n**劣势**\n- 跨域经验偏少\n- 后端深度一般\n- 团队管理经验有限\n\n**适配岗位**\n- P7/P8 高级/资深前端\n- 数据可视化方向\n"
+    },
+    "resume_weak": {
+      "fields": {
+        "name": "王**",
+        "age": "27",
+        "education_top": "普通本科",
+        "work_years": "3 年",
+        "current": "某中厂 前端",
+        "expected_salary": "25–35 万",
+        "skills": [
+          "HTML",
+          "CSS",
+          "jQuery",
+          "React 学习中"
+        ],
+        "scores": {
+          "学历": 55,
+          "经验": 60,
+          "技术": 50,
+          "项目": 48,
+          "成就": 40
+        },
+        "timeline": [
+          {
+            "type": "edu",
+            "start": "2017-09",
+            "end": "2021-06",
+            "label": "本科 · 普通"
+          },
+          {
+            "type": "work",
+            "start": "2021-07",
+            "end": "2022-12",
+            "label": "A 创业 · 前端"
+          },
+          {
+            "type": "gap",
+            "start": "2023-01",
+            "end": "2023-06",
+            "label": "空窗 6 个月"
+          },
+          {
+            "type": "work",
+            "start": "2023-07",
+            "end": "2026-04",
+            "label": "B 公司 · 前端"
+          }
+        ],
+        "weak_phrases": [
+          {
+            "text": "负责整个前端架构搭建",
+            "suggestion": "参与前端项目搭建，独立完成 X / Y 模块"
+          },
+          {
+            "text": "精通 React",
+            "suggestion": "熟练使用 React，有 2 年项目经验"
+          },
+          {
+            "text": "解决了大量性能问题",
+            "suggestion": "通过 X 手段将首屏加载从 N 秒降到 M 秒"
+          }
+        ],
+        "gaps": [
+          {
+            "start": "2023-01",
+            "end": "2023-06",
+            "reason": "未说明"
+          }
+        ]
+      },
+      "summary": "**画像**\n3 年中厂前端，普通本科，简历存在 3 处水分词，期间有 6 个月空窗。3 句话：(1) 实际项目经验偏浅，存在夸大；(2) 技术栈陈旧（jQuery）；(3) 空窗期需在面试中说明。\n\n**优势**\n- 全职前端时长 ≥3 年\n- 期望薪资合理\n- 有创业公司经历\n\n**劣势**\n- 简历存在夸大表述\n- 6 个月空窗未说明\n- React 仅\"学习中\"\n\n**适配岗位**\n- 中初级前端 P5\n- 中小公司团队\n"
+    }
+  },
+  "paper": {
+    "en_ml_paper": {
+      "fields": {
+        "title": "Distilling On-Device Vision-Language Models for Edge NPUs",
+        "authors": [
+          "A. Smith",
+          "B. Liu",
+          "C. Chen"
+        ],
+        "venue": "NeurIPS 2025",
+        "year": "2025",
+        "abstract": "We propose a multi-stage distillation approach for vision-language models targeting edge NPUs...",
+        "three_findings": [
+          "A 3B distilled VLM matches 7B teacher on 5 visual document tasks",
+          "TTFT < 400ms on Snapdragon 8 Gen 3 NPU at INT4",
+          "Privacy + bandwidth advantages over cloud baselines"
+        ],
+        "sections": [
+          {
+            "level": 1,
+            "title": "Introduction",
+            "summary": "Edge NPU challenges + motivation"
+          },
+          {
+            "level": 1,
+            "title": "Method",
+            "summary": "3-stage distillation: vision encoder → cross-modal → instruction"
+          },
+          {
+            "level": 1,
+            "title": "Experiments",
+            "summary": "5 document tasks + ablation"
+          },
+          {
+            "level": 1,
+            "title": "Discussion",
+            "summary": "Limitations + privacy advantages"
+          }
+        ],
+        "innovations": [
+          "多阶段蒸馏框架",
+          "视觉 token 压缩 4x",
+          "INT4 量化无损"
+        ],
+        "limitations": [
+          "仅 5 类文档任务",
+          "长上下文 >2K 退化",
+          "无端云协同基线"
+        ],
+        "terms": [
+          {
+            "term": "TTFT",
+            "explain": "Time-To-First-Token，首字延迟"
+          },
+          {
+            "term": "INT4",
+            "explain": "4-bit 整数量化"
+          },
+          {
+            "term": "VLM",
+            "explain": "Vision-Language Model"
+          }
+        ]
+      },
+      "summary": "**三句话核心结论**\n1. 提出多阶段蒸馏：3B 模型在 5 类文档任务上达到 7B 教师 95% 性能。\n2. 端侧首字延迟 < 400ms（骁龙 8 Gen 3，INT4）。\n3. 在隐私敏感与离线场景具备显著带宽与隐私优势。\n\n**研究问题与方法**\n- 问题：边端 NPU 部署 7B+ VLM 不现实\n- 方法：视觉编码器→跨模态对齐→指令蒸馏 三阶段\n\n**局限**\n- 仅评估 5 类视觉文档\n- 长上下文 >2K 性能退化\n- 缺端云协同 baseline\n"
+    },
+    "cn_review": {
+      "fields": {
+        "title": "端侧多模态文档理解技术综述",
+        "authors": [
+          "张某",
+          "李某",
+          "王某"
+        ],
+        "venue": "计算机学报",
+        "year": "2026",
+        "abstract": "本文综述端侧多模态文档理解的近 3 年进展...",
+        "three_findings": [
+          "路线一：模型蒸馏占主导",
+          "路线二：稀疏激活兴起",
+          "路线三：视觉编码器复用"
+        ],
+        "sections": [
+          {
+            "level": 1,
+            "title": "引言",
+            "summary": "背景与意义"
+          },
+          {
+            "level": 1,
+            "title": "蒸馏路线",
+            "summary": "KD/MoE 综述"
+          },
+          {
+            "level": 1,
+            "title": "稀疏路线",
+            "summary": "MoE"
+          }
+        ],
+        "innovations": [
+          "首次系统对比 3 条路线",
+          "量化端侧 KPI"
+        ],
+        "limitations": [
+          "未覆盖 2026 Q1 之后的最新工作"
+        ],
+        "terms": [
+          {
+            "term": "MoE",
+            "explain": "Mixture of Experts"
+          }
+        ]
+      },
+      "summary": "**三句话**\n(1) 蒸馏占主流；(2) 稀疏激活兴起；(3) 视觉编码器复用提升能效。"
+    }
+  },
+  "notes": {
+    "math_blackboard": {
+      "fields": {
+        "subject": "高等数学 · 傅里叶变换",
+        "topics": [
+          {
+            "title": "傅里叶变换定义",
+            "points": [
+              "正变换",
+              "逆变换",
+              "线性性"
+            ]
+          },
+          {
+            "title": "常见性质",
+            "points": [
+              "位移",
+              "卷积定理",
+              "Parseval"
+            ]
+          }
+        ],
+        "formulas": [
+          {
+            "latex": "F(\\omega) = \\int_{-\\infty}^{+\\infty} f(t)\\, e^{-i\\omega t}\\, dt",
+            "explain": "傅里叶正变换"
+          },
+          {
+            "latex": "f(t) = \\frac{1}{2\\pi}\\int F(\\omega)\\, e^{i\\omega t}\\, d\\omega",
+            "explain": "逆变换"
+          }
+        ],
+        "cards": [
+          {
+            "q": "什么是傅里叶变换的物理意义？",
+            "a": "将时域信号分解为不同频率的正弦/余弦分量。"
+          },
+          {
+            "q": "写出 Parseval 定理",
+            "a": "∫|f(t)|²dt = (1/2π)∫|F(ω)|²dω"
+          }
+        ]
+      },
+      "summary": "**学科**\n高等数学 · 傅里叶变换章节\n\n**关键公式**\n1. 正变换：分解时域信号为频率分量\n2. 逆变换：从频谱还原时域\n\n**重点考点**\n- 卷积定理\n- Parseval 定理\n"
+    },
+    "handwritten_notes": {
+      "fields": {
+        "subject": "数据结构 · 树与图",
+        "topics": [
+          {
+            "title": "二叉树",
+            "points": [
+              "遍历",
+              "平衡 BST",
+              "AVL"
+            ]
+          },
+          {
+            "title": "图",
+            "points": [
+              "BFS",
+              "DFS",
+              "最短路"
+            ]
+          }
+        ],
+        "formulas": [],
+        "cards": [
+          {
+            "q": "AVL 树平衡因子定义",
+            "a": "左子树高度 - 右子树高度，取值 ∈ {-1, 0, 1}"
+          },
+          {
+            "q": "Dijkstra 算法时间复杂度",
+            "a": "优先队列实现 O((V+E)logV)"
+          },
+          {
+            "q": "BFS vs DFS 空间复杂度差异",
+            "a": "BFS O(V) 最坏，DFS O(树高)"
+          }
+        ]
+      },
+      "summary": "**学科**\n数据结构 · 树与图\n\n**重点**\n- 二叉树遍历（前/中/后/层序）\n- 图的 BFS/DFS\n- 最短路 Dijkstra/Floyd"
+    }
+  }
+}

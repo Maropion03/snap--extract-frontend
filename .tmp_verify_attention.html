@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8">
+<body style="margin:0"><iframe id="app" src="/snapextract_v3.html#/" style="position:fixed;inset:0;border:0;width:100%;height:100%"></iframe>
+<script>
+localStorage.setItem('snapextract_seen_splash','1');
+const t=setInterval(()=>{
+  const frame=document.getElementById('app');
+  const doc=frame.contentDocument;
+  if(!doc) return;
+  const item=doc.querySelector('[data-sample="attention"]');
+  if(item){ item.click(); clearInterval(t); }
+},300);
+</script>
+</body>

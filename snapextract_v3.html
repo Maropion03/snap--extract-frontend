@@ -503,15 +503,15 @@ body::before{
   font-size:10.5px;
 }
 .analysis-scene-mode #scene-workspace{
-  height:calc(100vh - 178px);
-  gap:12px;
+  height:calc(100vh - 154px);
+  gap:8px;
   align-items:stretch;
 }
 .analysis-scene-mode #scene-left-rail,
 .analysis-scene-mode #scene-main-rail{
   height:100%;
   min-height:0;
-  width:min(100%, 1180px);
+  width:min(100%, 1320px);
   margin:0 auto;
 }
 .analysis-scene-mode #scene-left-rail{
@@ -522,7 +522,7 @@ body::before{
 .analysis-scene-mode #scene-main-rail{
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:8px;
 }
 .analysis-scene-mode [data-component="MainFileCard"],
 .analysis-scene-mode [data-component="SupplementSlot"]{
@@ -760,6 +760,37 @@ body::before{
 .paper-field{
   position:relative;
 }
+.scene-spec-form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.scene-spec-row{
+  display:grid;
+  grid-template-columns:160px minmax(0, 1fr);
+  gap:16px;
+  align-items:stretch;
+}
+.scene-spec-label{
+  padding:8px 0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+  min-height:56px;
+}
+.scene-spec-label .k{
+  display:none;
+}
+.scene-spec-label .v{
+  font-size:15px;
+  line-height:1.35;
+  color:var(--t1);
+  font-weight:600;
+}
+.scene-spec-control{
+  min-width:0;
+}
 .paper-field-icon{
   position:absolute;
   left:14px;
@@ -807,12 +838,86 @@ body::before{
   margin-bottom:8px;
   width:100%;
 }
+.paper-context-form-actions.is-centered{
+  grid-template-columns:minmax(280px, 420px);
+  justify-content:center;
+}
 .paper-context-form-actions > .btn,
 .paper-context-form-actions > .cta{
   width:100%;
   min-width:0;
   min-height:44px;
   justify-content:center;
+}
+.paper-context-form.is-paper-brief{
+  gap:18px;
+}
+.paper-context-form.is-paper-brief .paper-form-hero{
+  padding-bottom:2px;
+}
+.paper-context-form.is-paper-brief .paper-form-badge{
+  width:36px;
+  height:36px;
+  border-radius:11px;
+}
+.paper-context-form.is-paper-brief .section-title{
+  font-size:11px;
+  letter-spacing:.16em;
+}
+.paper-context-form.is-paper-brief .paper-form-title{
+  font-size:16px;
+}
+.paper-context-form.is-paper-brief .paper-form-copy{
+  margin-top:4px;
+  max-width:none;
+  font-size:11px;
+  line-height:1.45;
+}
+.paper-context-form.is-paper-brief .scene-spec-form{
+  gap:12px;
+}
+.paper-context-form.is-paper-brief .scene-spec-row{
+  grid-template-columns:112px minmax(0, 1fr);
+  gap:12px;
+  align-items:start;
+}
+.paper-context-form.is-paper-brief .scene-spec-label{
+  min-height:auto;
+  padding:14px 0 0;
+  display:flex;
+  justify-content:flex-start;
+  align-items:flex-start;
+}
+.paper-context-form.is-paper-brief .scene-spec-label .v{
+  font-size:14px;
+  line-height:1.35;
+}
+.paper-context-form.is-paper-brief input,
+.paper-context-form.is-paper-brief textarea{
+  border-radius:14px;
+  font-size:12px;
+}
+.paper-context-form.is-paper-brief input{
+  height:52px;
+  padding-top:0;
+  padding-bottom:0;
+}
+.paper-context-form.is-paper-brief textarea{
+  min-height:108px;
+  padding-top:14px;
+}
+.paper-context-form.is-paper-brief .scene-form-hint{
+  margin-top:2px;
+  font-size:11px;
+}
+.paper-context-form.is-paper-brief .paper-context-form-actions{
+  gap:14px;
+  margin-top:0;
+}
+.paper-context-form.is-paper-brief .paper-context-form-actions > .btn,
+.paper-context-form.is-paper-brief .paper-context-form-actions > .cta{
+  min-height:48px;
+  border-radius:14px;
 }
 .scene-file-pick{
   display:flex;
@@ -1022,6 +1127,81 @@ body::before{
   font-size:13px;
   line-height:1.65;
   color:var(--t1);
+}
+.contract-dual-timeline{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding:4px 0;
+}
+.contract-dual-timeline::before{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  width:1px;
+  background:linear-gradient(180deg, rgba(255,122,24,.08), rgba(255,122,24,.28), rgba(255,45,135,.22), rgba(255,255,255,.05));
+}
+.contract-dual-row{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 84px minmax(0, 1fr);
+  gap:14px;
+  align-items:start;
+}
+.contract-dual-card{
+  padding:2px 0 10px;
+  min-height:auto;
+}
+.contract-dual-card.is-a{ text-align:right; }
+.contract-dual-card .party{
+  font:10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--t3);
+  margin-bottom:8px;
+}
+.contract-dual-card .main{
+  font-size:12.5px;
+  line-height:1.65;
+  color:var(--t1);
+  font-weight:500;
+}
+.contract-dual-card .sub{
+  margin-top:8px;
+  font-size:11px;
+  line-height:1.55;
+  color:var(--t3);
+}
+.contract-dual-axis{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  padding-top:2px;
+}
+.contract-dual-axis .dot{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg, rgba(255,122,24,.26), rgba(255,45,135,.18));
+  border:1px solid rgba(255,122,24,.26);
+  color:var(--t1);
+  font:11px/1 'JetBrains Mono', monospace;
+  box-shadow:0 12px 24px -18px rgba(255,122,24,.55);
+}
+.contract-dual-axis .time{
+  text-align:center;
+  font:10px/1.4 'JetBrains Mono', monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--t3);
 }
 .contract-summary-state{
   font:11px/1.3 'JetBrains Mono', monospace;
@@ -1265,6 +1445,70 @@ body::before{
 .paper-detail-body{
   padding:20px;
 }
+.paper-figure-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+.paper-figure-card{
+  border:1px solid var(--line-1);
+  border-radius:12px;
+  overflow:hidden;
+  background:rgba(255,255,255,.02);
+}
+.paper-figure-card img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  object-position:top center;
+  display:block;
+  background:#11151c;
+}
+.paper-figure-copy{
+  padding:10px 12px 12px;
+}
+.paper-figure-copy .k{
+  font:10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--t3);
+}
+.paper-figure-copy .v{
+  margin-top:6px;
+  font-size:12.5px;
+  line-height:1.55;
+  color:var(--t1);
+}
+.statement-metric-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+.statement-metric-card{
+  border:1px solid var(--line-1);
+  border-radius:12px;
+  background:rgba(255,255,255,.025);
+  padding:12px 13px;
+}
+.statement-metric-card .k{
+  font:10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--t3);
+}
+.statement-metric-card .v{
+  margin-top:8px;
+  font-size:22px;
+  line-height:1;
+  color:var(--t1);
+  font-weight:600;
+}
+.statement-metric-card .sub{
+  margin-top:8px;
+  font-size:11.5px;
+  line-height:1.55;
+  color:var(--t3);
+}
 .result-stage{
   border:1px solid var(--line-1);
   border-radius:12px;
@@ -1465,26 +1709,185 @@ body::before{
   font-size:11px;
   color:var(--t2);
 }
+.metric-summary{
+  margin:10px 0 14px;
+  padding:12px 14px;
+  border:1px solid rgba(255,122,24,.16);
+  border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,122,24,.08), rgba(255,45,135,.03));
+  font-size:12.5px;
+  line-height:1.65;
+  color:var(--t2);
+}
+.metric-summary b{ color:var(--t1); }
 .summary-shell{ display:grid; grid-template-columns:minmax(0,1fr) 220px; gap:18px; align-items:start; }
 .summary-cta{ display:flex; flex-direction:column; gap:10px; }
 .summary-cta .meta-chip{ justify-content:center; }
 .analysis-scene-mode #scene-workspace{
-  height:calc(100vh - 178px);
+  height:calc(100vh - 154px);
   min-height:0;
   display:block;
 }
 .analysis-scene-mode #scene-main-rail{
   height:100%;
   min-height:0;
-  width:min(100%, 1220px);
+  width:min(100%, 1320px);
   margin:0 auto;
+}
+.analysis-scene-mode #scene-workspace{
+  position:relative;
+}
+.scene-loading{
+  position:absolute;
+  inset:0;
+  z-index:14;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .18s ease, visibility .18s ease;
+  background:
+    linear-gradient(180deg, rgba(9,11,15,.72), rgba(9,11,15,.88)),
+    radial-gradient(circle at 18% 18%, rgba(255,122,24,.10), transparent 26%),
+    radial-gradient(circle at 82% 20%, rgba(255,45,135,.08), transparent 24%);
+  backdrop-filter: blur(8px) saturate(112%);
+  -webkit-backdrop-filter: blur(8px) saturate(112%);
+}
+.scene-loading.is-visible{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.scene-loading-card{
+  width:min(560px, 100%);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg, rgba(255,122,24,.08), rgba(255,45,135,.03) 34%, rgba(255,255,255,.02) 74%, rgba(255,255,255,.01)),
+    rgba(13,16,22,.96);
+  box-shadow:
+    0 28px 80px -34px rgba(0,0,0,.72),
+    0 22px 64px -38px rgba(255,122,24,.28),
+    inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.scene-loading-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.scene-loading-kicker,
+.scene-loading-status{
+  font:11px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.scene-loading-kicker{
+  color:var(--t2);
+}
+.scene-loading-status{
+  color:var(--ba);
+}
+.scene-loading-body{
+  padding:18px 16px 16px;
+}
+.scene-loading-title{
+  font-size:26px;
+  line-height:1.02;
+  color:var(--t1);
+  margin:0;
+}
+.scene-loading-desc{
+  margin:10px 0 0;
+  font-size:12.5px;
+  line-height:1.6;
+  color:var(--t2);
+  max-width:460px;
+}
+.scene-loading-meta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+.scene-loading-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  font:10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--t2);
+}
+.scene-loading-chip .dot{
+  width:6px;
+  height:6px;
+  border-radius:999px;
+  background:linear-gradient(135deg, rgba(255,122,24,.96), rgba(255,45,135,.92));
+  box-shadow:0 0 14px rgba(255,122,24,.38);
+}
+.scene-loading-rail{
+  position:relative;
+  height:8px;
+  margin-top:18px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.06);
+}
+.scene-loading-rail::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, rgba(255,122,24,.0), rgba(255,122,24,.82), rgba(255,45,135,.92), rgba(255,122,24,.0));
+  transform:translateX(-42%);
+  animation:sceneRailPass 1.15s linear infinite;
+}
+.scene-loading-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+  margin-top:14px;
+}
+.scene-loading-cell{
+  min-height:62px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;
+  background:rgba(255,255,255,.025);
+  padding:10px 11px;
+}
+.scene-loading-cell .k{
+  font:10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--t3);
+}
+.scene-loading-cell .v{
+  margin-top:8px;
+  font-size:13px;
+  line-height:1.35;
+  color:var(--t1);
+}
+@keyframes sceneRailPass{
+  0%{ transform:translateX(-42%); }
+  100%{ transform:translateX(118%); }
 }
 .analysis-scene-mode .scene-shell-card{
   height:100%;
   min-height:0;
   display:flex;
   flex-direction:column;
-  padding:20px 24px 26px;
+  padding:10px 16px 10px;
 }
 .analysis-scene-mode #res-body{
   flex:1;
@@ -1497,7 +1900,7 @@ body::before{
 .scene-two-step{
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:8px;
   height:100%;
   min-height:0;
 }
@@ -1506,7 +1909,7 @@ body::before{
   align-items:flex-start;
   justify-content:space-between;
   gap:18px;
-  padding:2px 2px 14px;
+  padding:0 0 8px;
   border-bottom:1px solid var(--line-1);
 }
 .scene-two-step-copy{
@@ -1541,13 +1944,13 @@ body::before{
   min-height:0;
   display:grid;
   grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
-  gap:14px;
+  gap:10px;
 }
 .scene-main-stage.is-single{
   grid-template-columns:minmax(0,1fr);
 }
 .scene-main-stage.is-single > .paper-context-form{
-  max-width:1180px;
+  max-width:1280px;
   width:100%;
   align-self:start;
 }
@@ -1563,10 +1966,10 @@ body::before{
   overflow:hidden;
 }
 .scene-stage-panel.pad{ padding:16px; }
-.scene-stage-panel.pad.compact{ padding:26px; }
+.scene-stage-panel.pad.compact{ padding:18px; }
 .scene-stage-panel.pad.compact.narrow{
   width:100%;
-  max-width:1180px;
+  max-width:1280px;
   margin:0 auto;
 }
 .scene-stage-panel .section-title{ margin-bottom:10px; }
@@ -1689,7 +2092,7 @@ body::before{
 .scene-result-shell{
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:8px;
   height:100%;
   min-height:0;
 }
@@ -1697,12 +2100,12 @@ body::before{
   gap:10px;
 }
 .paper-result-stage .scene-result-grid{
-  gap:14px;
+  gap:10px;
   align-content:start;
 }
 .paper-result-stage .scene-result-card{
-  min-height:220px;
-  padding:18px 18px;
+  min-height:0;
+  padding:14px 14px;
 }
 .paper-result-stage .scene-result-card .title{
   font-size:10px;
@@ -1743,7 +2146,8 @@ body::before{
   min-height:0;
   display:grid;
   grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
+  grid-auto-rows:minmax(0,1fr);
+  gap:10px;
 }
 .scene-result-card{
   position:relative;
@@ -1813,6 +2217,9 @@ body::before{
   min-height:0;
   overflow:auto;
 }
+.scene-result-card .body .field-row + .field-row{
+  margin-top:2px;
+}
 .scene-result-card .body > :first-child{
   margin-top:2px;
 }
@@ -1829,6 +2236,56 @@ body::before{
   margin-top:14px;
 }
 .scene-result-card .body li{ margin-bottom:6px; }
+.scene-result-card.is-loading{
+  border-color:rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,122,24,.08), rgba(255,45,135,.03)),
+    linear-gradient(180deg, rgba(255,255,255,.022), rgba(255,255,255,.01)),
+    var(--bg-1);
+}
+.scene-result-card.is-loading:hover{
+  border-color:rgba(255,255,255,.08);
+  box-shadow:0 16px 30px -28px rgba(0,0,0,.46);
+}
+.scene-result-card.is-loading:hover::before{
+  opacity:0;
+}
+.scene-loading-cardstack{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  height:100%;
+}
+.scene-loading-cardstack .line{
+  height:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.14), rgba(255,255,255,.06));
+  background-size:200% 100%;
+  animation:shimmer 1.4s linear infinite;
+}
+.scene-loading-cardstack .line.sm{ width:34%; }
+.scene-loading-cardstack .line.md{ width:62%; }
+.scene-loading-cardstack .line.lg{ width:88%; }
+.scene-loading-cardstack .line.full{ width:100%; }
+.scene-loading-cardstack .line.wide{ width:76%; }
+.scene-loading-cardstack .panel{
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;
+  background:rgba(255,255,255,.024);
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.scene-loading-chiprow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.scene-loading-chiprow .chip{
+  opacity:.92;
+}
 .scene-auto-pill{
   display:inline-flex;
   align-items:center;
@@ -1908,6 +2365,11 @@ body::before{
   .paper-result-topbar{ flex-direction:column; align-items:flex-start; }
   .paper-result-topbar .paper-form-chip,
   .paper-result-topbar .scene-step-badge{ width:100%; justify-content:center; }
+  .paper-figure-grid{ grid-template-columns:1fr; }
+  .statement-metric-grid{ grid-template-columns:1fr; }
+  .contract-dual-row{ grid-template-columns:1fr; gap:10px; }
+  .contract-dual-timeline::before{ display:none; }
+  .contract-dual-axis{ flex-direction:row; justify-content:flex-start; }
 }
 @media (min-width: 1024px){
   .analysis-scene-mode #scene-left-rail{ grid-column: span 7 / span 7; }
@@ -1924,6 +2386,7 @@ body::before{
   .scene-file-chip{ flex-direction:column; }
   .scene-file-chip .aside{ justify-content:flex-start; }
   .paper-context-form-actions{ flex-direction:column; align-items:stretch; }
+  .scene-spec-row{ grid-template-columns:1fr; gap:10px; }
 }
 
 /* view list */
@@ -2636,12 +3099,21 @@ body::before{
   background:linear-gradient(180deg, #14161b, #0d0e12);
   overflow:hidden;
 }
+.capture-mini-video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
 .capture-mini::before{
   content:"";
   position:absolute;
   inset:0;
   background-image:radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
   background-size:12px 12px;
+  z-index:1;
 }
 .capture-mini-box{
   position:absolute;
@@ -2649,6 +3121,7 @@ body::before{
   border:1.5px solid rgba(255,122,24,.92);
   background:linear-gradient(180deg, rgba(255,122,24,.18), rgba(255,45,135,.10));
   box-shadow:0 10px 28px -18px rgba(255,122,24,.88);
+  z-index:2;
 }
 .capture-mini-box::after{
   content:"";
@@ -2740,7 +3213,6 @@ body::before{
   background: var(--grad);
   border-color: transparent;
   box-shadow: var(--glow);
-  animation: ps-num-pulse 2.4s ease-in-out infinite;
 }
 .ps-step.is-done .ps-num{
   color: var(--ok);
@@ -2780,8 +3252,7 @@ body::before{
 
 /* ---- Workspace ---- */
 .parse-workspace{
-  display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr;
+  display: block;
   gap: var(--workspace-gap);
   height: 100%;
   min-height: 0;   /* allow children to shrink */
@@ -2893,7 +3364,7 @@ body::before{
 /* ---- 3 Panes ---- */
 .parse-3pane{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: minmax(0,1.24fr) minmax(0,.88fr) minmax(0,.88fr);
   gap: 12px;
   height: 100%;
   min-height: 0;
@@ -2972,8 +3443,23 @@ body::before{
   padding: 18px;
   position: relative;
 }
+.ppane-body.is-switching > *{
+  animation: paneContentOut .16s ease forwards;
+}
+.ppane-body > .pane-enter{
+  animation: paneContentIn .28s cubic-bezier(.22,.61,.36,1);
+  transform-origin: 50% 50%;
+}
 .ppane-body::-webkit-scrollbar{ width: 6px; }
 .ppane-body::-webkit-scrollbar-thumb{ background: var(--bg-3); border-radius: 999px; }
+@keyframes paneContentOut{
+  from{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+  to{ opacity:0; transform:translateY(8px) scale(.985); filter:blur(4px); }
+}
+@keyframes paneContentIn{
+  from{ opacity:0; transform:translateY(10px) scale(.985); filter:blur(6px); }
+  to{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+}
 
 .ppane-empty{
   height: 100%;
@@ -3441,6 +3927,60 @@ body::before{
   color:var(--t3);
   z-index:3;
 }
+.pane-scan-progress{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:48px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  z-index:3;
+}
+.pane-scan-progress .meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--t3);
+}
+.pane-scan-progress .meta b{
+  font-weight:500;
+  color:var(--t1);
+}
+.pane-scan-progress .bar{
+  position:relative;
+  height:7px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+}
+.pane-scan-progress .bar > span{
+  position:absolute;
+  inset:0 auto 0 0;
+  width:var(--p, 50%);
+  border-radius:999px;
+}
+.pane-scan-progress .bar > span::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+  animation:pane-bar-sweep 1.2s linear infinite;
+}
+.pane-scan-ocr .pane-scan-progress .bar > span{
+  background:linear-gradient(90deg, rgba(96,165,250,.76), rgba(125,211,252,.98));
+  box-shadow:0 0 14px rgba(96,165,250,.34);
+}
+.pane-scan-se .pane-scan-progress .bar > span{
+  background:linear-gradient(90deg, rgba(255,122,24,.9), rgba(255,45,135,.92));
+  box-shadow:0 0 16px rgba(255,122,24,.28);
+}
 .pane-scan-caption .rail{
   flex:1;
   height:4px;
@@ -3454,6 +3994,10 @@ body::before{
   width:34%;
   height:100%;
   animation:ocr-bar-progress 1.8s ease-in-out infinite;
+}
+@keyframes pane-bar-sweep{
+  from{ transform:translateX(-120%); }
+  to{ transform:translateX(160%); }
 }
 .pane-scan-ocr{
   background:
@@ -3790,35 +4334,8 @@ body::before{
 }
 .ppane-pdfpage{
   position:relative;
+  border-radius:8px;
 }
-.ppane-boxlayer{
-  position:absolute;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-}
-.ppane-docbox{
-  position:absolute;
-  pointer-events:auto;
-  --box-rgb: 34,211,238;
-  border:1.5px solid rgba(var(--box-rgb), .92);
-  background:rgba(var(--box-rgb), .08);
-  box-shadow:0 0 0 1px rgba(var(--box-rgb), .22), 0 0 18px -8px rgba(var(--box-rgb), .55);
-  border-radius:3px;
-  cursor:pointer;
-  transition:background .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
-}
-.ppane-docbox.kind-text{ --box-rgb: 34,211,238; }
-.ppane-docbox.kind-image{ --box-rgb: 250,204,21; }
-.ppane-docbox.kind-formula{ --box-rgb: 255,45,135; }
-.ppane-docbox:hover,
-.ppane-docbox.is-active{
-  background:rgba(var(--box-rgb), .14);
-  border-color:rgba(var(--box-rgb), 1);
-  box-shadow:0 0 0 1px rgba(var(--box-rgb), .3), 0 0 24px -6px rgba(var(--box-rgb), .75);
-  transform:translateY(-1px);
-}
-
 .ppane-md h1, .ppane-md h2, .ppane-md h3{ color:var(--t1); line-height:1.35; }
 .ppane-md h1{ font-size:16px; font-weight:600; margin:0 0 12px; }
 .ppane-md h2{ font-size:13px; font-weight:600; margin:14px 0 8px; }
@@ -4011,8 +4528,8 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
         <div class="ps-step is-locked" data-step="2">
           <span class="ps-num">02</span>
           <span class="ps-text">
-            <span class="ps-name">解析对照</span>
-            <span class="ps-hint">未解析 / Tesseract / SnapExtract</span>
+            <span class="ps-name">视觉解析</span>
+            <span class="ps-hint">原文 / 视觉证据 / 结构化输出</span>
           </span>
         </div>
         <div class="ps-line" data-line="2-3"></div>
@@ -4027,17 +4544,6 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
 
       <!-- ===== Workspace: sidebar + 3 panes ===== -->
       <div class="parse-workspace">
-
-        <!-- Sidebar -->
-        <aside class="parse-sidebar">
-          <input type="file" id="parse-sidebar-upload-input" class="hidden" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff,.gif,.webp,.heic,.doc,.docx,.ppt,.pptx" />
-
-          <div class="ps-block ps-block-grow">
-            <div class="ps-block-title">Demo Files</div>
-            <ul id="parse-samples" class="ps-list ps-list-scroll"></ul>
-          </div>
-        </aside>
-
         <!-- 3 panes -->
         <div class="parse-3pane">
 
@@ -4051,18 +4557,14 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
               <span class="ppane-head-note">Raw Source</span>
             </div>
             <div class="ppane-toolbar">
-              <button class="iconbtn" disabled><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
-              <button class="iconbtn" disabled><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
               <span class="font-mono text-[11px] text-t3"><span id="pane-raw-page">1 / 1</span></span>
-              <button class="iconbtn" disabled><i data-lucide="zoom-in" class="w-3.5 h-3.5"></i></button>
-              <button class="iconbtn" disabled><i data-lucide="zoom-out" class="w-3.5 h-3.5"></i></button>
-              <span class="ppane-title ml-auto">RAW · 未解析</span>
+              <span class="ppane-title ml-auto">桌面拖入 / 文件夹选择</span>
             </div>
             <div class="ppane-body" id="pane-raw-body">
               <label id="pane-raw-drop" class="ppane-drop">
                 <input type="file" id="pane-raw-input" class="hidden" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff,.gif,.webp,.heic,.doc,.docx,.ppt,.pptx" />
                 <div class="ppane-drop-icon"><i data-lucide="upload-cloud" class="w-7 h-7"></i></div>
-                <div class="ppane-drop-title">点击上传文件 / 拖拽文件到此处 / 截图后 Ctrl+V</div>
+                <div class="ppane-drop-title">桌面拖入 / 文件夹选择</div>
                 <div class="ppane-drop-hint">
                   支持的文件格式：PDF · PNG · JPG · JPEG ·<br/>
                   BMP · TIFF · JP2 · DIB · PPM · PGM · PBM ·<br/>
@@ -4088,8 +4590,17 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
             </div>
             <div class="ppane-body" id="pane-tess-body">
               <div class="ppane-empty">
-                <i data-lucide="cpu" class="w-6 h-6 opacity-50"></i>
-                <span>等待上传 · 通用 OCR 基线</span>
+                <div class="idle-visual ocr-idle" aria-hidden="true">
+                  <div class="ocr-card"></div>
+                  <div class="ocr-line"></div>
+                  <div class="ocr-line"></div>
+                  <div class="ocr-line"></div>
+                  <div class="ocr-line"></div>
+                  <div class="ocr-line"></div>
+                  <div class="ocr-scan"></div>
+                  <div class="ocr-corners"><span></span><span></span><span></span><span></span></div>
+                </div>
+                <div class="idle-caption">等待上传 · 视觉块提取与证据定位</div>
               </div>
             </div>
           </div>
@@ -4104,10 +4615,10 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
               <span class="ppane-head-note">Structured Parse</span>
             </div>
             <div class="ppane-toolbar">
-              <button class="ppane-tab is-active" data-tab="md-preview">MD-Preview</button>
-              <button class="ppane-tab" data-tab="md-raw">MD-Raw</button>
-              <button class="ppane-tab" data-tab="json">JSON</button>
-              <span class="ml-auto chip chip-brand" id="pane-se-tag"><span class="dot"></span>standby</span>
+              <span class="ppane-title">SNAPEXTRACT · STRUCTURED</span>
+              <span class="ppane-tab ml-auto is-active" data-tab="summary">Markdown</span>
+              <span class="ppane-tab" data-tab="json">JSON</span>
+              <span class="chip chip-brand" id="pane-se-tag"><span class="dot"></span>standby</span>
             </div>
             <!-- CTA bar (hidden until parse complete + type detected) -->
             <a class="ppane-cta hidden" id="pane-se-cta" href="#/scene/paper">
@@ -4119,39 +4630,22 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
             </a>
             <div class="ppane-body" id="pane-se-body">
               <div class="ppane-empty">
-                <i data-lucide="sparkles" class="w-6 h-6 opacity-50"></i>
-                <span>等待上传 · 端侧结构化解析</span>
+                <div class="idle-visual se-idle" aria-hidden="true">
+                  <div class="se-ring"></div>
+                  <div class="se-core"></div>
+                  <div class="se-scanline"></div>
+                  <span class="se-particle"></span>
+                  <span class="se-particle"></span>
+                  <span class="se-particle"></span>
+                  <span class="se-particle"></span>
+                </div>
+                <div class="idle-caption">等待上传 · 结构化字段与结论生成</div>
               </div>
             </div>
           </div>
 
         </div>
       </div>
-
-      <!-- ===== Diff bar ===== -->
-      <div class="parse-diffbar" id="parse-diffbar">
-        <div class="pdb-col">
-          <div class="pdb-title">未解析</div>
-          <div class="pdb-num" id="pdb-num-raw">0</div>
-          <div class="pdb-sub">字段</div>
-          <div class="pdb-extra">—</div>
-        </div>
-        <div class="pdb-sep"></div>
-        <div class="pdb-col">
-          <div class="pdb-title">Tesseract</div>
-          <div class="pdb-num" id="pdb-num-tess">—</div>
-          <div class="pdb-sub">字段</div>
-          <div class="pdb-extra" id="pdb-extra-tess">准确率 —</div>
-        </div>
-        <div class="pdb-sep"></div>
-        <div class="pdb-col is-snap">
-          <div class="pdb-title text-grad">SnapExtract</div>
-          <div class="pdb-num pdb-num-grad" id="pdb-num-se">—</div>
-          <div class="pdb-sub">字段</div>
-          <div class="pdb-extra" id="pdb-extra-se">准确率 —</div>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -4182,8 +4676,8 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
         <div class="ps-step is-done" data-step="2">
           <span class="ps-num">02</span>
           <span class="ps-text">
-            <span class="ps-name">解析对照</span>
-            <span class="ps-hint">未解析 / Tesseract / SnapExtract</span>
+            <span class="ps-name">视觉解析</span>
+            <span class="ps-hint">原文 / 视觉证据 / 结构化输出</span>
           </span>
         </div>
         <div class="ps-line is-fill" data-line="2-3"></div>
@@ -4215,6 +4709,37 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
             </div>
           </div>
           <div id="res-body"></div>
+        </div>
+      </div>
+      <div class="scene-loading" id="scene-loading" aria-hidden="true">
+        <div class="scene-loading-card">
+          <div class="scene-loading-head">
+            <div class="scene-loading-kicker">SCENE SWITCH</div>
+            <div class="scene-loading-status">LOADING…</div>
+          </div>
+          <div class="scene-loading-body">
+            <h2 class="scene-loading-title" id="scene-loading-title">场景切换中</h2>
+            <p class="scene-loading-desc" id="scene-loading-desc">正在载入新的分析面板与对应工作流。</p>
+            <div class="scene-loading-meta">
+              <span class="scene-loading-chip"><span class="dot"></span><span id="scene-loading-type">SCENE</span></span>
+              <span class="scene-loading-chip"><span class="dot"></span><span id="scene-loading-task">WORKFLOW</span></span>
+            </div>
+            <div class="scene-loading-rail"></div>
+            <div class="scene-loading-grid">
+              <div class="scene-loading-cell">
+                <div class="k">Stage</div>
+                <div class="v">切换分析上下文</div>
+              </div>
+              <div class="scene-loading-cell">
+                <div class="k">Panels</div>
+                <div class="v">重载字段 / 判断 / 总结</div>
+              </div>
+              <div class="scene-loading-cell">
+                <div class="k">Mode</div>
+                <div class="v">保留当前终端风格</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -4340,7 +4865,7 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
 <div id="splash" class="fixed inset-0 z-[60] hidden items-center justify-center p-4">
   <div class="splash-backdrop absolute inset-0" data-splash-close></div>
 
-  <div class="splash-panel relative w-full max-w-[1200px] max-h-[92vh] overflow-y-auto rounded-[16px]">
+  <div class="splash-panel relative w-full max-w-[1200px] max-h-[92vh] overflow-x-auto overflow-y-auto rounded-[16px]">
     <button class="splash-close iconbtn" data-splash-close title="关闭"><i data-lucide="x" class="w-4 h-4"></i></button>
 
     <!-- Hero block (migrated from home route) -->
@@ -4349,50 +4874,23 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
 
       <div class="relative grid grid-cols-12 gap-6 lg:gap-1 xl:gap-0 items-center min-h-[420px]">
         <div class="col-span-12 lg:col-span-5">
-          <div class="reveal" data-d="1">
-            <div class="inline-flex items-center gap-2 mb-7 px-3 py-1 rounded-full border border-line2 bg-bg2/60 backdrop-blur">
-              <span class="w-1.5 h-1.5 rounded-full bg-ba pulse"></span>
-              <span class="font-mono text-[11px] tracking-[0.18em] uppercase text-t2">v2.3 — 解析 / 分析</span>
-            </div>
-          </div>
           <h1 class="reveal text-[clamp(38px,4.8vw,64px)] leading-[1.06] font-medium tracking-[-0.03em]" data-d="2">
             高敏文档，<span class="text-grad whitespace-nowrap">从此不再上云</span>
           </h1>
-          <p class="reveal text-t2 mt-6 max-w-xl text-[15px] leading-relaxed" data-d="3">
-            面向 AI PC 的高敏文档智能处理工作台。一个统一内核，<br class="hidden md:inline"/>承载四个独立场景：<span class="text-t1">上传 · 理解 · 判断 · 带走</span>。
-          </p>
           <div class="reveal flex items-center gap-3 mt-9" data-d="4">
             <button id="splash-cta-enter" class="cta arrow-go" data-splash-close>
               立即体验 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
-            <button id="splash-cta-demo" class="btn">
-              <i data-lucide="play" class="w-3.5 h-3.5"></i> 看演示
-            </button>
-          </div>
-
-          <div class="reveal grid grid-cols-3 gap-8 mt-14 max-w-md" data-d="5">
-            <div>
-              <div class="numtile"><span class="count" data-target="38">0</span><span class="text-t3 text-[14px] ml-0.5">ms</span></div>
-              <div class="text-t3 text-[11px] font-mono uppercase tracking-wider mt-2">npu / page</div>
-            </div>
-            <div>
-              <div class="numtile"><span class="count" data-target="4">0</span></div>
-              <div class="text-t3 text-[11px] font-mono uppercase tracking-wider mt-2">scenarios</div>
-            </div>
-            <div>
-              <div class="numtile"><span class="count" data-target="0">0</span></div>
-              <div class="text-t3 text-[11px] font-mono uppercase tracking-wider mt-2">cloud upload</div>
-            </div>
           </div>
         </div>
 
-        <div class="col-span-12 lg:col-span-7 reveal -ml-0 lg:-ml-10 xl:-ml-14" data-d="3">
+        <div class="col-span-12 lg:col-span-7 reveal -ml-0 lg:-ml-10 xl:-ml-14 splash-media-col" data-d="3">
           <div class="hero-video-stage">
             <div class="hero-video-glow"></div>
             <div class="hero-video-shell">
               <video
                 class="hero-video"
-                src="./home_hero_demo.mp4"
+                src="./modal_capture_animation.mp4"
                 autoplay
                 muted
                 loop
@@ -4415,9 +4913,8 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
             <span><span style="color:var(--ba)">●</span> <span class="text-t1">端侧推理</span> · 本地完成</span>
             <span><span class="text-t1">隐私不出本机</span> · zero cloud upload</span>
             <span><span class="text-t1">4 类高敏场景</span> · 简历 · 合同 · 对账单 · 论文</span>
-            <span><span style="color:var(--bb)">●</span> <span class="text-t1">Hexagon NPU</span> · 38 ms / page</span>
-            <span><span class="text-t1">解析 → 判断 → 留存</span> · 单场景闭环</span>
-            <span><span style="color:var(--ok)">●</span> <span class="text-t1">上传 · 理解 · 判断 · 带走</span></span>
+            <span><span class="text-t1">上传 → 对照 → 判断</span> · 统一工作流</span>
+            <span><span style="color:var(--ok)">●</span> <span class="text-t1">更准识别</span> · 更直接业务结论</span>
             <span><span class="text-t1">端侧 AI</span> · 让 AI 真正放进设备</span>
           </span>
           <span class="flex items-center gap-12" aria-hidden="true">
@@ -4425,9 +4922,8 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
             <span><span style="color:var(--ba)">●</span> <span class="text-t1">端侧推理</span> · 本地完成</span>
             <span><span class="text-t1">隐私不出本机</span> · zero cloud upload</span>
             <span><span class="text-t1">4 类高敏场景</span> · 简历 · 合同 · 对账单 · 论文</span>
-            <span><span style="color:var(--bb)">●</span> <span class="text-t1">Hexagon NPU</span> · 38 ms / page</span>
-            <span><span class="text-t1">解析 → 判断 → 留存</span> · 单场景闭环</span>
-            <span><span style="color:var(--ok)">●</span> <span class="text-t1">上传 · 理解 · 判断 · 带走</span></span>
+            <span><span class="text-t1">上传 → 对照 → 判断</span> · 统一工作流</span>
+            <span><span style="color:var(--ok)">●</span> <span class="text-t1">更准识别</span> · 更直接业务结论</span>
             <span><span class="text-t1">端侧 AI</span> · 让 AI 真正放进设备</span>
           </span>
         </div>
@@ -4447,6 +4943,23 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
   opacity: 0; transform: translateY(16px) scale(.985);
   transition: opacity .35s cubic-bezier(.2,.7,.2,1), transform .4s cubic-bezier(.2,.7,.2,1);
   box-shadow: 0 30px 80px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+  overscroll-behavior: contain;
+  padding-bottom: 12px;
+  overflow-anchor: none;
+}
+.splash-media-col{
+  min-width: 0;
+}
+.splash-panel::-webkit-scrollbar{
+  width:8px;
+  height:8px;
+}
+.splash-panel::-webkit-scrollbar-thumb{
+  background:var(--bg-3);
+  border-radius:999px;
+}
+.splash-panel::-webkit-scrollbar-track{
+  background:transparent;
 }
 #splash.show{ display: flex; }
 #splash.show .splash-backdrop{ opacity: 1; }
@@ -4496,7 +5009,7 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
           <button class="iconbtn shrink-0" data-launch-close title="关闭"><i data-lucide="x" class="w-4 h-4"></i></button>
         </div>
         <div class="space-y-3">
-          <button id="picker-load-sample" class="btn w-full justify-between text-[13px]">
+          <button id="picker-load-sample" class="btn w-full justify-between text-[13px] hidden">
             <span class="inline-flex items-center gap-2"><i data-lucide="folder-open" class="w-4 h-4"></i>载入本地样例</span>
             <span class="text-t3 text-[11px] font-mono" id="picker-sample-label">sample</span>
           </button>
@@ -4753,9 +5266,9 @@ const SE = window.SE = {
     contract: {
       key:'contract', name:'合同', icon:'file-signature',
       tagline:'快速判断合同能不能签、哪些条款必须修订',
-      desc:'解析我方合同关键字段与风险条款，可补补充协议对照金额、责任与关键条款差异。',
-      main:   { name:'我方合同', icon:'file-text',     hint:'PDF · 我方拟签合同（主文件）' },
-      supp:   { name:'补充协议', icon:'files',         hint:'同项目补充协议 · 用于条款差异对照（可选）', desc:'补补充协议后追加：条款差异、责任对照、必谈判项' },
+      desc:'解析合同关键字段，并对比甲方版与乙方版的条款修改，直接收束到签署建议与履约时间线。',
+      main:   { name:'合同初稿', icon:'file-text',     hint:'PDF · 初始合同版本（主文件）' },
+      supp:   { name:'修改版合同', icon:'files',       hint:'另一方修改后的合同版本 · 用于条款前后对比（可选）', desc:'补修改版后追加：修改点前后对比、责任差异、必修订项' },
       outputs:[
         {fmt:'MD',   label:'风险报告',      ext:'md',   filename:'contract_risk.md'},
         {fmt:'PNG',  label:'红绿灯快照',    ext:'png',  filename:'risk_dashboard.png'},
@@ -4764,7 +5277,7 @@ const SE = window.SE = {
       views: [
         {key:'kv',       name:'关键信息卡片',     always:true},
         {key:'risks',    name:'条款风险红绿灯',   always:true},
-        {key:'diffs',    name:'主合同 / 补充协议对照',   condition:'supp'},
+        {key:'diffs',    name:'合同修改前后对比',       condition:'supp'},
         {key:'todo',     name:'待谈判事项清单',   always:true},
       ],
     },
@@ -4830,8 +5343,8 @@ const SE = window.SE = {
 /* PRD 2.2.3 fixed 6-step demo flow */
 const FLOW_STEPS = [
   {key:'raw',       name:'原始材料',         hint:'查看主文件预览'},
-  {key:'baseline',  name:'baseline 对照',     hint:'无解析 / Tesseract / SnapExtract 三段差异'},
-  {key:'supp',      name:'补充材料',         hint:'按场景补岗位信息 / 补充协议 / 流水 / 研究上下文'},
+  {key:'baseline',  name:'视觉解析',         hint:'原文 / 视觉证据 / 结构化输出'},
+  {key:'supp',      name:'补充材料',         hint:'按场景补岗位信息 / 修改版合同 / 流水 / 研究上下文'},
   {key:'parse',     name:'端侧解析',         hint:'preparing → extracting → summarizing'},
   {key:'output',    name:'结果物',           hint:'字段卡 + 重点判断 + 总结建议 + 导出'},
   {key:'persist',   name:'本地留存 / 公式识别',  hint:'本地缓存 + 框选公式识别'},
@@ -4970,7 +5483,7 @@ const MOCK = {
       party_b: { name:'深圳飞渡致成科技有限公司', repr:'受托方（乙方）', addr:'广东省深圳市' },
       subject: '深港科技创新合作区 BIM 平台',
       total_amount: hasSupp
-        ? { amount:197800, currency:'CNY', period:'三期支付 · 补充协议补齐付款触发时点' }
+        ? { amount:197800, currency:'CNY', period:'基于合同初稿与修改版对比生成' }
         : { amount:197800, currency:'CNY', period:'三期支付 · 主合同正文已约定 30% / 60% / 10%' },
       start_date: '签订后启动',
       end_date:   '建设 30 天 + 保修 6 个月',
@@ -4980,36 +5493,78 @@ const MOCK = {
         {no:'ACCEPT', title:'验收条款', summary:'甲方收到成果申请后 5 个工作日内完成初验；试运行 1 个月届满后 5 个工作日内完成终验。'},
         {no:'SERVICE', title:'服务与保修', summary:'主合同约定 6 个月保修期，售后服务为 7×24 小时响应，一般情况 48 小时内到场。'},
       ],
-      risk_points: [
-        {level:'warn', no:'付款', txt:'补充协议没有改动总金额和付款比例，只补充了每一期付款触发后的到账时点，需要确认是否作为正式执行口径。'},
-        {level:'warn', no:'验收', txt:'补充协议再次确认初验与终验时限，建议在签署说明中明确其属于正文补充说明，而不是新的独立验收标准。'},
-        {level:'warn', no:'服务', txt:'补充协议把 7×24 响应和 48 小时到场再次写明，签署时要确认与正文售后条款保持同一优先级。'},
-        {level:'warn', no:'差异', txt:'当前主合同正文已有核心条款，补充协议更适合作为追加说明；若后续继续增补，应避免出现第二套金额或交付口径。'},
+      risk_points: hasSupp ? [
+        {level:'warn', no:'PAY', txt:'甲方修改版把首期付款改成“初验通过后支付”，乙方版本仍要求“签约后支付”，付款触发条件冲突，不能直接签。'},
+        {level:'warn', no:'DELIVER', txt:'乙方把建设周期从 30 天改成 45 天，并追加“接口延迟顺延”说明，甲方版本尚未接受。'},
+        {level:'warn', no:'ACCEPT', txt:'甲方要求“未书面确认视为不通过”，乙方要求“逾期未反馈视为通过”，验收默认规则完全相反。'},
+        {level:'warn', no:'LIABILITY', txt:'乙方新增“赔偿责任上限为合同总额 10%”，甲方版本仍保留按实际损失承担，需要法务确认。'},
+      ] : [
+        {level:'warn', no:'PAY', txt:'当前只有合同初稿，首期是否允许签约后预付、是否需要绑验收结果，仍待对比稿确认。'},
+        {level:'warn', no:'DELIVER', txt:'建设周期、延期顺延和里程碑拆分还没进入修改版对比，当前只能给出初稿级判断。'},
+        {level:'warn', no:'ACCEPT', txt:'验收默认规则与书面确认要求尚未看到另一方改稿，不建议直接输出最终签署结论。'},
+        {level:'warn', no:'LIABILITY', txt:'违约责任和赔偿上限通常是争议高发点，缺修改版前先保留为待确认项。'},
       ],
       clause_diffs: hasSupp ? [
-        {dim:'付款安排', ours:'总金额 197,800 元；首期 30% / 二期 60% / 末期 10%', theirs:'延续三期支付比例，并补充每期触发后 3 个工作日内付款', diff:'ok', note:'补充协议没有改金额和比例，只把付款动作补齐到可执行时点。'},
-        {dim:'建设周期', ours:'合同签订后 30 天内完成建设交付', theirs:'补充协议未改建设总周期，仅说明阶段成果按验收节点推进', diff:'ok', note:'追加条款延续正文的 30 天建设期，没有形成新的交付日期冲突。'},
-        {dim:'验收机制', ours:'收到申请后 5 个工作日内初验；试运行 1 个月后 5 个工作日内终验', theirs:'补充协议再次确认初验、终验和付款触发的衔接关系', diff:'ok', note:'补充协议承担的是口径补齐作用，可直接与正文验收条款对齐。'},
-        {dim:'售后服务', ours:'6 个月保修；7×24 响应；一般情况 48 小时内到场', theirs:'补充协议再次确认售后与到场要求', diff:'ok', note:'属于对正文售后服务条款的重申，没有新增冲突责任。'},
-        {dim:'追加说明', ours:'正文已覆盖金额、建设、验收、售后四类核心条款', theirs:'补充协议新增“付款触发后 3 个工作日内付款”的执行说明', diff:'warn', note:'该时点说明建议在正式签署时并回正文，避免后续只看主合同的人遗漏执行规则。'},
+        {dim:'付款触发', modified_by:'甲方', ours:'签约后 5 个工作日内支付首期 30%', theirs:'首期付款改为“初验通过后 5 个工作日内支付”', diff:'warn', note:'甲方希望把回款节点后移，乙方现金流压力明显增大。'},
+        {dim:'建设周期', modified_by:'乙方', ours:'签约后 30 天内完成建设交付', theirs:'建设周期调整为 45 天，并增加“接口延迟顺延”说明', diff:'warn', note:'乙方把延期条件写进正文，甲方版本目前没有接受。'},
+        {dim:'验收默认规则', modified_by:'双方', ours:'收到申请后 5 个工作日内完成初验', theirs:'甲方版写“未书面确认视为不通过”；乙方版写“逾期未反馈视为通过”', diff:'warn', note:'同一条款被双方改成相反结论，是当前最需要收口的冲突点。'},
+        {dim:'违约责任', modified_by:'乙方', ours:'违约责任按实际损失承担', theirs:'新增“乙方赔偿责任上限不超过合同总额 10%”', diff:'warn', note:'乙方加入责任上限，甲方是否接受需要单独谈判。'},
+        {dim:'售后响应', modified_by:'甲方', ours:'7×24 小时响应，一般情况 48 小时内到场', theirs:'追加“重大故障 24 小时内到场并提供临时替代方案”', diff:'ok', note:'属于服务要求升级，冲突强度低于付款与验收条款。'},
       ] : null,
       negotiation_list: hasSupp ? [
-        '优先把补充协议中的“每期触发后 3 个工作日内付款”并回主合同付款条款，减少执行歧义。',
-        '确认首期、二期、末期各自对应的申请材料和验收动作，保证付款节点与验收节点一一对应。',
-        '在签署页或盖章说明中写清补充协议仅作追加说明，避免被理解成重置主合同金额与建设周期。',
-        '若后续还有新增条款，建议继续围绕正文现有条款补齐，不再另起一套金额、交付或服务口径。',
+        '先统一首期付款触发条件，明确是否允许签约后预付，避免签后立即出现执行争议。',
+        '把建设周期和顺延条件并到同一条款，不要让甲方版和乙方版分别保留一套时间口径。',
+        '验收条款必须二选一：要么逾期视为通过，要么必须书面确认，否则履约阶段一定反复扯皮。',
+        '违约责任建议单列“责任上限 + 例外情形”，不要继续散落在不同批注版本里。',
       ] : [
-        '当前已识别主合同正文条款，但没有补充协议前不输出追加条款判断。',
-        '优先确认付款节点、交付里程碑、验收反馈时限与违约责任是否需要单独修订。',
-        '签署建议可以先停留在正文核对，不建议提前输出最终签署结论。',
+        '当前仅识别合同初稿，建议先拿到甲方版或乙方版修改稿，再进入条款前后对比。',
+        '优先确认付款节点、建设周期、验收默认规则和违约责任这四类高风险条款是否会被修改。',
+        '没有对比稿前，可以先完成结构字段核对，但不要直接给出最终签署意见。',
       ],
+      timeline_items: hasSupp ? [
+        {
+          phase:'签约生效',
+          party_a:'甲方完成合同盖章、生效确认，并明确项目启动接口人与内部验收负责人。',
+          party_b:'乙方完成项目启动准备，确认实施团队、交付计划与首期付款申请材料。',
+          note:'签约生效后应先把项目启动责任人与资料交接路径固定，避免后续付款和交付节点脱节。',
+        },
+        {
+          phase:'首期付款触发',
+          party_a:'若采用甲方修改版，则甲方在初验通过后 5 个工作日内支付首期款；若维持初稿，则需确认是否允许签约后即支付。',
+          party_b:'乙方提交首期付款申请、发票与启动说明，并根据最终签署版本配合付款触发条件。',
+          note:'首期付款是当前差异最大的业务节点，时间线里必须明确最终采用“签约后支付”还是“初验后支付”。',
+        },
+        {
+          phase:'建设交付',
+          party_a:'甲方按约提供接口、环境与配合资源，并确认是否接受“接口延迟则工期顺延”的例外条件。',
+          party_b:'乙方按最终约定的 30 天或 45 天建设周期完成平台建设交付，并提交阶段成果说明。',
+          note:'建设周期不是谈判动作，而是履约节点；时间线要直接反映最终采用哪一个交付时长。',
+        },
+        {
+          phase:'初验与终验',
+          party_a:'甲方收到成果申请后按合同完成初验，并在试运行期满后完成终验；同时需明确最终采用“书面确认通过”还是“逾期默认通过”规则。',
+          party_b:'乙方提交初验材料、试运行支持与终验申请，并根据最终验收口径配合补充整改或结项。',
+          note:'验收规则决定付款与结项是否顺畅，这里应该直接展示合同内的验收动作和判断口径。',
+        },
+        {
+          phase:'售后保修',
+          party_a:'甲方在保修期内按故障等级发起服务请求，并依据最终版本确认是否要求重大故障 24 小时到场。',
+          party_b:'乙方在 6 个月保修期内提供 7×24 响应，并按最终签署条款履行到场支持与售后承诺。',
+          note:'售后响应是履约后段的业务时间，不是改稿意见；时间线里应作为保修阶段单独展示。',
+        },
+      ] : null,
+      change_summary: hasSupp ? [
+        {label:'甲方重点修改', value:'付款触发后移、验收必须书面确认、售后到场时限加严'},
+        {label:'乙方重点修改', value:'建设周期延长、增加顺延条件、违约责任设置 10% 上限'},
+        {label:'当前结论', value:'已形成明确前后差异，但付款、验收、责任三项仍需收口后再签'},
+      ] : null,
     },
     field_alerts: hasSupp ? [
-      {key:'clauses[0]', level:'yellow', reason:'补充协议补齐了付款触发后的到账时点，建议与正文合并理解'},
-      {key:'clauses[3]', level:'yellow', reason:'补充协议重申售后与到场要求，签署时需明确与正文同一优先级'},
+      {key:'clauses[0]', level:'yellow', reason:'甲方与乙方对首期付款触发条件改成了两种口径，需先统一'},
+      {key:'clauses[2]', level:'yellow', reason:'验收默认通过 / 默认不通过被双方改成相反版本，属于签署前必收口条款'},
     ] : [],
     summary: hasSupp
-      ? '主合同正文与补充协议已经可以逐项对齐付款、建设周期、验收和售后条款；当前重点是把补充协议中的执行时点并回正文，形成一套一致口径。'
+      ? '当前已识别出甲方版与乙方版在付款、建设周期、验收默认规则和违约责任上的修改差异；建议先收口冲突条款，再生成最终签署版。'
       : '已识别主合同封面与正文核心条款，当前可完成付款、建设周期、验收和售后责任的基础核对。',
     decision: 'revise',  // sign | revise | legal_review
   }),
@@ -5033,11 +5588,11 @@ const MOCK = {
       ] : [],
       mismatch_items: hasSupp ? [] : [],
       calc_metrics: {
-        income_total:  hasSupp ? 0 : 0,
-        expense_total: hasSupp ? 8168.75 : 0,
-        net:           hasSupp ? -8168.75 : 0,
-        recovery_rate: hasSupp ? 1 : null,
-        verified:      !!hasSupp,
+        receipt_fact_score: hasSupp ? 0.96 : 0.91,
+        credential_hit_rate: hasSupp ? 1 : 0,
+        amount_match_rate: hasSupp ? 1 : 0,
+        archive_readiness: hasSupp ? 0.88 : 0.34,
+        verified: !!hasSupp,
       },
       analysis_summary: hasSupp
         ? '已从手写单据提取出商家、日期、路线与金额，并在银行流水中命中 2025-01-09 的同额出行支出，当前可形成“已对上”的核验结论。'
@@ -5063,13 +5618,30 @@ const MOCK = {
         title:    'Attention Is All You Need',
         authors:  'Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin',
         venue:    'NIPS 2017',
-        keywords: ['Transformer','self-attention','machine translation'],
+        keywords: ['Transformer','self-attention','encoder-decoder'],
         rq:       '能否只依赖 attention 机制，在不使用 recurrence 和 convolution 的情况下完成 sequence transduction？',
-        method:   ['纯 attention 的 encoder-decoder', 'scaled dot-product attention 与 multi-head attention', '去除 recurrence / convolution，提升并行训练效率'],
+        method:   ['把它当作架构源头论文来读，不要当作文档理解任务论文直接复现', '先吃透 scaled dot-product attention、multi-head attention 和 encoder-decoder 的配合关系', '重点借鉴实验组织方式、模块拆解方式和“为什么去掉 recurrence”的论证路径'],
+        usage_steps: [
+          {title:'写综述时怎么用', body:'把它放在“通用 Transformer 架构来源”这一层，负责解释 self-attention 为什么成为后续 OCR-free 文档模型的共同基础。'},
+          {title:'做方法设计时怎么用', body:'重点看 attention 结构、多头机制、残差与层归一化组合，不要直接照搬任务设定，而是抽取架构原则。'},
+          {title:'做 baseline 时怎么用', body:'不建议把这篇论文直接当文档理解 baseline；更适合作为 Donut、LayoutLMv3、Pix2Struct 这类任务论文的前置背景。'},
+        ],
         results:  [
           {metric:'WMT14 En-De',  value:'28.4 BLEU'},
           {metric:'WMT14 En-Fr',  value:'41.8 BLEU'},
           {metric:'Training cost', value:'8 GPUs / 3.5 days'},
+        ],
+        figure_extracts: [
+          {
+            label:'Figure 1',
+            caption:'Transformer model architecture',
+            image:'./demo_sample_files_public/rendered_multi/attention_p03.png',
+          },
+          {
+            label:'Figure 2',
+            caption:'Scaled Dot-Product Attention / Multi-Head Attention',
+            image:'./demo_sample_files_public/rendered_multi/attention_p04.png',
+          },
         ],
         scope:    '主场景是 machine translation，也验证到 constituency parsing；不是面向文档理解的专门论文。',
       },
@@ -5082,14 +5654,15 @@ const MOCK = {
       } : null,
       relevance_judgement: hasSupp ? {
         level:'medium', score:0.72,
-        points:['是 Donut 等 OCR-free 文档模型的共同基础架构', 'attention / encoder-decoder 思想必须理解', '适合作为方法源头论文阅读'],
-        gaps: ['任务是 MT，不是文档理解', '没有 document image / OCR-free 实验', '不能直接替代 Donut 这类任务论文'],
+        points:['它解释了后续 OCR-free 文档模型为什么普遍采用 Transformer 主干', '如果当前题目涉及多模态文档理解，这篇论文最有价值的是架构原则而不是任务结果', '适合作为综述或相关工作中的“方法源头论文”精读'],
+        gaps: ['任务场景是机器翻译，不是文档理解', '没有 document image、表单、版面或 OCR-free 专项实验', '不适合直接作为任务 baseline 或复现实验对象'],
       } : null,
       reference_value: hasSupp ? [
-        {dim:'方法源头', val:'先吃透 self-attention、multi-head attention、encoder-decoder 结构。'},
-        {dim:'阅读顺序', val:`主论文读 Transformer，再回到 ${direction} 方向里的具体任务论文。`},
-        {dim:'课题挂钩', val:`把 Transformer 放进你当前的「${currentTopic}」课题脉络里，再判断它对后续模型阅读的支撑作用。`},
-        {dim:'展示口径', val:`把主文件定位为基础架构论文，再用你的关注问题 ${focus} 和写作目的 ${purpose} 收束成任务落地判断。`},
+        {dim:'最适合写进哪一段', val:`适合写进「${direction}」方向的架构演进或相关工作开头，用来交代为什么后续模型普遍转向 Transformer。`},
+        {dim:'和当前题目的关系', val:`对「${currentTopic}」最直接的帮助，是补足 attention 主干、encoder-decoder 结构和并行训练优势这条方法脉络。`},
+        {dim:'真正值得抄的部分', val:'实验写法、模块拆解方式、图 1 / 图 2 的结构表达，以及“为什么这样设计”的论证节奏。'},
+        {dim:'不建议怎么用', val:`不要把它直接当成解决「${focus}」的任务论文；更适合作为写作背景、方法源头或后续任务论文的阅读前置。`},
+        {dim:'下一步动作', val:`先精读架构与实验章节，再回到更贴近 ${purpose} 的任务论文，判断哪些模块值得继续追。`},
       ] : null,
       evidence_links: [
         {section:'Abstract', ref:'dispensing with recurrence and convolutions entirely'},
@@ -5101,7 +5674,7 @@ const MOCK = {
       {key:'user_research_context', level:'yellow', reason:'未补研究上下文，输出为参考性判断'},
     ],
     summary: hasSupp
-      ? `主文件适合作为 Transformer 基础论文精读；结合 ${direction}、${currentTopic} 与 ${purpose} 这组研究上下文，可以建立“通用架构 -> 当前课题 / 写作目标”的阅读链路。`
+      ? `主文件适合作为 Transformer 架构源头论文精读；结合 ${direction}、${currentTopic} 与 ${purpose} 这组研究上下文，当前最适合把它用在“方法来源解释 + 后续任务论文阅读前置”这条链路上。`
       : '已完成目标论文解析；当前更适合把它定位为基础架构论文，而不是文档理解任务论文。',
     decision: hasSupp ? 'deep_read' : 'pending',  // deep_read | skim | skip | pending
     degraded: !hasSupp,                            // PRD 4.1.1: 研究信息不足 → 降级
@@ -5150,21 +5723,21 @@ const SAMPLE_LIBRARY = {
   contract: {
     main: {
       id: 'mississippi_sample_contract',
-      name: '中文甲方合同样例.pdf',
-      size: 460418,
+      name: '合同初稿样例 v2.pdf',
+      size: 3653,
       type: 'application/pdf',
-      url: './demo_sample_files_public/chinese_samples/chinese_party_a_party_b_contract.pdf',
-      label: '中文甲方合同样例',
+      url: './demo_sample_files_public/chinese_samples/contract_scene_main_v2.pdf',
+      label: '合同初稿样例 v2',
     },
   },
   statement: {
     main: {
       id: 'umich_handwritten_receipt_example',
-      name: '中文手写单据样例.jpg',
-      size: 142385,
+      name: '手写单据样例 v2.jpg',
+      size: 128765,
       type: 'image/jpeg',
-      url: './demo_sample_files_public/chinese_samples/chinese_taxi_receipt_scene.jpg',
-      label: '中文手写单据样例',
+      url: './demo_sample_files_public/chinese_samples/statement_scene_receipt_v2.jpg',
+      label: '手写单据样例 v2',
     },
   },
   paper: {
@@ -5183,23 +5756,23 @@ const SUPPLEMENT_SAMPLE_LIBRARY = {
   contract: {
     supp: {
       id: 'contract_supplement_scene',
-      name: '补充协议样例.pdf',
-      size: 217779,
+      name: '合同修改版样例 v2.pdf',
+      size: 3841,
       type: 'application/pdf',
-      url: './demo_sample_files_public/chinese_samples/chinese_project_supplement_agreement.pdf',
-      path: '/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/chinese_project_supplement_agreement.pdf',
-      label: '补充协议样例',
+      url: './demo_sample_files_public/chinese_samples/contract_scene_modified_v2.pdf',
+      path: '/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/contract_scene_modified_v2.pdf',
+      label: '合同修改版样例 v2',
     },
   },
   statement: {
     supp: {
       id: 'bank_statement_scene',
-      name: '银行流水样例.pdf',
-      size: 158155,
+      name: '银行流水样例 v2.pdf',
+      size: 3994,
       type: 'application/pdf',
-      url: './demo_sample_files_public/chinese_samples/chinese_bank_statement_scene.pdf',
-      path: '/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/chinese_bank_statement_scene.pdf',
-      label: '银行流水样例',
+      url: './demo_sample_files_public/chinese_samples/statement_scene_bank_v2.pdf',
+      path: '/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/statement_scene_bank_v2.pdf',
+      label: '银行流水样例 v2',
     },
   },
 };
@@ -5296,16 +5869,64 @@ function showRoute(name){
 
 let currentScn = 'resume';
 let pickerLaunchScn = null;
+const SCENE_SWITCH_MIN_MS = 420;
+const sceneSwitchState = { token:0, timer:null };
+
+function showSceneLoadingOverlay(scn){
+  const root = document.getElementById('scene-loading');
+  if (!root) return;
+  const meta = TYPE_META[scn] || TYPE_META.paper;
+  const conf = SE.scenarios[scn];
+  const title = document.getElementById('scene-loading-title');
+  const desc = document.getElementById('scene-loading-desc');
+  const type = document.getElementById('scene-loading-type');
+  const task = document.getElementById('scene-loading-task');
+  if (title) title.textContent = `${conf?.name || meta.typeName || '文档'}场景`;
+  if (desc) desc.textContent = conf?.desc || '正在载入新的分析面板与对应工作流。';
+  if (type) type.textContent = (meta.typeName || conf?.name || 'SCENE').toUpperCase();
+  if (task) task.textContent = `${(meta.ctaName || 'workflow').toUpperCase()} ANALYSIS`;
+  root.classList.add('is-visible');
+  root.setAttribute('aria-hidden', 'false');
+}
+
+function hideSceneLoadingOverlay(){
+  const root = document.getElementById('scene-loading');
+  if (!root) return;
+  root.classList.remove('is-visible');
+  root.setAttribute('aria-hidden', 'true');
+}
+
+function openSceneRoute(scn, {withLoading = false} = {}){
+  clearTimeout(sceneSwitchState.timer);
+  const token = ++sceneSwitchState.token;
+  currentScn = scn;
+  showRoute('scene');
+  if (withLoading) showSceneLoadingOverlay(scn);
+  else hideSceneLoadingOverlay();
+  renderScene();
+  if (!withLoading){
+    hideSceneLoadingOverlay();
+    return;
+  }
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      sceneSwitchState.timer = setTimeout(()=>{
+        if (token !== sceneSwitchState.token) return;
+        hideSceneLoadingOverlay();
+      }, SCENE_SWITCH_MIN_MS);
+    });
+  });
+}
 
 function navigate(){
   const h = location.hash || '#/';
-  if (h === '#/' || h === ''){ showRoute('home'); renderHome(); return; }
+  if (h === '#/' || h === ''){ hideSceneLoadingOverlay(); showRoute('home'); renderHome(); return; }
   if (h.startsWith('#/scene/')){
     const k = h.replace('#/scene/','').split('?')[0];
     if (!SE.scenarios[k]) { location.hash = '#/'; return; }
-    currentScn = k;
-    showRoute('scene'); renderScene(); return;
+    openSceneRoute(k); return;
   }
+  hideSceneLoadingOverlay();
   if (h === '#/history'){ showRoute('history'); renderHistory(); return; }
   if (h === '#/settings'){ showRoute('settings'); renderSettings(); return; }
   showRoute('home'); renderHome();
@@ -5321,72 +5942,17 @@ function renderHome(){
   if (!SE.parseTask || SE.parseTask.state === 'idle'){
     resetParseHomeUi();
     setStepperStep(1, 'active');
-    document.getElementById('pdb-num-tess').textContent = '—';
-    document.getElementById('pdb-extra-tess').textContent = '准确率 —';
-    document.getElementById('pdb-num-se').textContent = '—';
-    document.getElementById('pdb-extra-se').textContent = '准确率 —';
   } else if (SE.parseTask.state === 'done'){
     setStepperStep(2, 'done');
     showSnapCta(SE.parseTask.detected_type || 'paper');
-    updateDiffBar(currentParseMockKey(SE.parseTask.detected_type || 'paper'));
   } else {
     setStepperStep(2, 'active');
     hideSnapCta();
   }
 
-  // ===== Sidebar: Sample files =====
-  const samplesEl = document.getElementById('parse-samples');
-  if (samplesEl && !samplesEl.__rendered){
-    samplesEl.__rendered = true;
-    samplesEl.innerHTML = SAMPLE_LIST_RENDER_ORDER.map(key => {
-      const sample = SAMPLE_REGISTRY[key];
-      if (!sample) return '';
-      return `
-        <li class="ps-item ${sample.available ? '' : 'opacity-45'}" data-sample="${key}">
-          <i data-lucide="${sample.icon || 'file-text'}"></i>
-          <div class="min-w-0 flex-1">
-            <div class="truncate">${sample.name}</div>
-            <div class="font-mono text-[9.5px] text-t3 mt-0.5">${fmtSize(sample.size)}${sample.available ? '' : ' · unavailable'}</div>
-          </div>
-        </li>
-      `;
-    }).join('');
-  }
-  document.querySelectorAll('#parse-samples [data-sample]').forEach(li=>{
-    if (li.__bound) return;
-    li.__bound = true;
-    li.addEventListener('click', ()=>{
-      const key = li.getAttribute('data-sample');
-      if (!SAMPLE_REGISTRY[key]?.available){
-        toast('该 demo 文件已失效，请使用当前仍存在的样例文件');
-        return;
-      }
-      if (typeof startParseFromSample === 'function'){
-        startParseFromSample(key);
-      } else {
-        toast('解析引擎未接通');
-      }
-    });
-  });
-
   // ===== Pane 1: Upload entry =====
   const drop = document.getElementById('pane-raw-drop');
   const input = document.getElementById('pane-raw-input');
-  const sideUploadBtn = document.getElementById('parse-sidebar-upload-btn');
-  const sideUploadInput = document.getElementById('parse-sidebar-upload-input');
-  if (sideUploadBtn && sideUploadInput && !sideUploadBtn.__bound){
-    sideUploadBtn.__bound = true;
-    sideUploadBtn.addEventListener('click', ()=>sideUploadInput.click());
-    sideUploadInput.addEventListener('change', e=>{
-      const f = e.target.files[0]; if (!f) return;
-      if (typeof startParseFromFile === 'function'){
-        startParseFromFile({name:f.name, size:f.size, type:f.type, file:f});
-      } else {
-        toast(`已收到 ${f.name} · 解析引擎待 Phase 4 接通`);
-      }
-      sideUploadInput.value = '';
-    });
-  }
   if (drop && input && !drop.__bound){
     drop.__bound = true;
     input.addEventListener('change', e=>{
@@ -5444,15 +6010,6 @@ function renderHome(){
       }
     });
   }
-
-  // Splash 「看演示」 standby — Phase 4 will auto-trigger sample parse here
-  if (window.__splash_demo_pending){
-    window.__splash_demo_pending = false;
-    if (typeof startParseFromSample === 'function'){
-      setTimeout(()=>startParseFromSample('resume'), 200);
-    }
-  }
-
   // Reveal animations + cursor spotlight + count-up (covers splash hero too)
   bindSpotlight();
   bindReveal();
@@ -5593,7 +6150,7 @@ function renderHomeLegacy(){
   // Demo
   const demos = [
     {scn:'resume',    title:'中文简历 + 岗位信息',  sub:'简历主文件 + 场景内岗位补充。完整演示 6 步流程，含 baseline 三段对照。', tag:'baseline 对照'},
-    {scn:'contract',  title:'主合同 + 补充协议',   sub:'主合同主文件 + 同项目补充协议。展示条款补齐 + 风险判断。',               tag:'条款对照'},
+    {scn:'contract',  title:'合同初稿 + 修改版合同', sub:'合同初稿主文件 + 另一方修改版。展示条款前后差异与签署判断。',       tag:'条款对照'},
     {scn:'statement', title:'手写单据 + 银行流水', sub:'手写单据主文件 + 场景内补充流水。三栏核对 + 验算。',                   tag:'三栏核对'},
   ];
   document.getElementById('demo-list').innerHTML = demos.map((d,i) => {
@@ -5634,10 +6191,10 @@ function renderHomeLegacy(){
 /* SAMPLE_REGISTRY · sidebar key → real PDF in demo_sample_files_public/ */
 const SAMPLE_REGISTRY = {
   attention:  { url:'demo_sample_files_public/attention_is_all_you_need.pdf',                   path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/attention_is_all_you_need.pdf',                   name:'目标论文样例.pdf',                   size:2215244, type:'paper',     mock:'attention',  icon:'book-open-text', available:true  },
-  contract:   { url:'demo_sample_files_public/chinese_samples/chinese_party_a_party_b_contract.pdf',                 path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/chinese_party_a_party_b_contract.pdf',                 name:'中文甲方合同样例.pdf',                 size:460418,   type:'contract',  mock:'cn_contract',   icon:'file-signature', available:true  },
+  contract:   { url:'demo_sample_files_public/chinese_samples/contract_scene_main_v2.pdf',                           path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/contract_scene_main_v2.pdf',                           name:'合同初稿样例 v2.pdf',                       size:3653,     type:'contract',  mock:'cn_contract',   icon:'file-signature', available:true  },
   paper_long: { url:'demo_sample_files_public/ocr_free_document_understanding_transformer.pdf', path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/ocr_free_document_understanding_transformer.pdf', name:'研究补充论文样例.pdf', size:7105978, type:'paper',     mock:'ocr_free',   icon:'book',           available:false },
   resume:     { url:'demo_sample_files_public/chinese_samples/chinese_resume_zhusi.pdf',                            path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/chinese_resume_zhusi.pdf',                            name:'中文简历样例.pdf',                           size:421607,  type:'resume',    mock:'cn_resume',     icon:'file-user',      available:true  },
-  receipt:    { url:'demo_sample_files_public/chinese_samples/chinese_taxi_receipt_scene.jpg',           path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/chinese_taxi_receipt_scene.jpg',           name:'中文手写单据样例.jpg',           size:142385,  type:'statement', mock:'cn_receipt',    icon:'image',      available:true  },
+  receipt:    { url:'demo_sample_files_public/chinese_samples/statement_scene_receipt_v2.jpg',          path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/statement_scene_receipt_v2.jpg',          name:'手写单据样例 v2.jpg',            size:128765,  type:'statement', mock:'cn_receipt',    icon:'image',      available:true  },
 };
 const SAMPLE_FILE_ID_TO_REGISTRY = {
   attention_is_all_you_need: 'attention',
@@ -5741,9 +6298,7 @@ program events such as the Lunchtime  Art Talks and
 KCRW Summer Concerts.
 . Communicates  with  internal staff  and external
 clients  to  plan  their  Riverside Art Museum-based
-events  and manages the museum-wide calendar...
-
-(OCR 识别于 162 个文本块；行错位、字符识别错误、表格结构丢失)`,
+events  and manages the museum-wide calendar...`,
 
   contract: `SAMPLE  CONTRACT
 This  is  the contract  agreement  that  one will be
@@ -5764,9 +6319,7 @@ through  September 30, 2026
 
 This State Contract  Agreement is  made this _____
 day  of __________  2025, between the Department
-of Finance and Administration...
-
-(OCR 识别于 89 个文本块；条款编号丢失、签字栏空白未识别)`,
+of Finance and Administration...`,
 
   agreement: `CALAVERAS COUNTY  SAMPLE AGREEMENT
 
@@ -5787,9 +6340,7 @@ Automobile Liability
 
 Indemnification
 Contractor shall defend, indemnify and hold harmless
-the County, its officers, agents and employees...
-
-(OCR 识别于 104 个文本块；金额空栏、附件引用和保险条款层级被打散)`,
+the County, its officers, agents and employees...`,
 
   jd: `CALIFORNIA  STATE UNIVERSITY
 SAMPLE JOB DESCRIPTION
@@ -5807,9 +6358,7 @@ Responsibilities
 Preferred Qualifications
 . Experience in product thinking and prototyping
 . Strong written communication
-. Familiarity with document AI / workflow automation
-
-(OCR 识别于 73 个文本块；职责与要求段落边界混淆，bullet 被压扁)`,
+. Familiarity with document AI / workflow automation`,
 
   statement: `Handwritten  Receipt  Example
 
@@ -5824,9 +6373,7 @@ From   Brooklyn
 To     LGA
 Fare  Paid $ 4 5 . 0 0
 Signature
-Car No. 1 4
-
-(OCR 识别于 18 个文本块；手写体识别置信度低、字段未对齐)`,
+Car No. 1 4`,
 
   bank: `NBH  BANK  STATEMENT
 
@@ -5844,9 +6391,7 @@ Withdrawals and Debits
 01/18  ACH PAYMENT         612 . 00
 01/24  ATM WITHDRAWAL      200 . 00
 
-Daily balance summary...
-
-(OCR 识别于 54 个文本块；借贷分栏被打平，余额线索仍可恢复)`,
+Daily balance summary...`,
 
   receipt: `Handwritten  Receipt  Example
 
@@ -5861,9 +6406,7 @@ From   Brooklyn
 To     LGA
 Fare  Paid $ 4 5 . 0 0
 Signature
-Car No. 1 4
-
-(OCR 识别于 18 个文本块；手写体识别置信度低、字段未对齐)`,
+Car No. 1 4`,
 
   paper: `Attention Is All You Need
 
@@ -5886,9 +6429,7 @@ performing models also  connect the encoder and decoder
 through an  attention mechanism. We propose a new
 simple network architecture, the Transformer, based
 solely on attention mechanisms, dispensing with
-recurrence and convolutions entirely...
-
-(OCR 识别于全文 15 页共 486 个文本块；标题、作者、摘要、正文、公式与参考文献均被切成更细碎文本段，多栏、公式与页脚区域错位明显)`,
+recurrence and convolutions entirely...`,
 
   attention: `Attention Is All You Need
 
@@ -5917,9 +6458,7 @@ symbol positions of the input and output sequences.
 This inherently sequential nature precludes parallelization
 within training examples, which becomes critical at longer
 sequence lengths. Attention mechanisms have become an
-integral part of compelling sequence modeling systems.
-
-(OCR 识别于全文 15 页共 486 个文本块；标题、作者、摘要、正文、公式与参考文献均被切成更细碎文本段，多栏、公式与页脚区域错位明显)`,
+integral part of compelling sequence modeling systems.`,
 
   ocr_free: `OCR-Free Document Understanding Transformer
 
@@ -5939,44 +6478,49 @@ Method
 Experiments
 . form understanding benchmark
 . receipt information extraction
-. robustness to noisy scans
-
-(OCR 识别于 246 个文本块；章节尚可辨认，但图表标题和表格字段顺序混乱)`,
+. robustness to noisy scans`,
 
   cn_resume: `朱四
 
-2004-08-07 ｜ 汉族 ｜ 山东济南
-12345678 ｜ 12345@123.com
+12345678｜1 2 3 4 5 @123.com｜
+2004-08-07｜汉族｜山东济南｜
 
 教育背景
-齐鲁工业大学（山东省科学院） ｜ 本科 ｜ 2022.09 - 2026.06
-GPA：4.07 / 5.0 ｜ 专业排名：1 / 78（前 1%）
-已保研至：山东大学 ｜ 英语：已通过英语四六级
-荣誉：全国大学生能源经济学术创意大赛国赛特等奖、外研社全国英语阅读大赛二等奖、一等奖学金等 20 余项荣誉
+本科：齐鲁工业大学（山东省科学院）  2022.09-2026.06  已保研至：山东大学
+GPA：4.07/5.0  专业排名：1/78（1%）  英语：已通过英语四六级
+荣誉：全国大学生能源经济学术创意大赛 国赛特等奖，外研社全国英语阅读大赛 二等奖，校三好学生，三好学生标兵，
+优秀共青团员，志愿服务先进个人，校“一等奖学金”，学习成绩优秀奖学金，北控优派奖学金等 20 余项荣誉及奖项。
 
 实习经历
-36氪 ｜ 2023.07 - 2024.03
-. 负责互联网科技领域多平台内容分发与策略制定，3 个月内用户参与度提升 28%，品牌提及量增长 20%
-. 独立完成选题、撰写到排版全流程内容生产，产出 1 篇 10w+ 爆款推文，单篇阅读量超平台均值 3 倍
-. 基于后台画像与行为数据优化内容结构、发布时间与转化漏斗，使内容转化率提升 12%，营销活动 ROI 提高 8%
+36氪｜2023.07 - 2024.03｜内容运营
+• 平台内容策略制定：负责互联网科技领域的多平台内容分发，目标是提升用户参与度与品牌行业影响力。针对微博、微信公众号、
+小红书等平台特性定制内容，3 个月内提升用户参与度 28%，品牌提及量增长 20%。
+• 多格式内容创作：制定并执行差异化内容策略，通过数据驱动实现用户增长与内容转化。跟踪行业热点与竞品动态，独立完
+成从选题、撰写到排版的全流程内容生产，产出 1 篇爆款推文，阅读量 10w+，单篇阅读量超平台均值 3 倍。
+• 数据驱动优化：分析后台用户画像与行为数据（腾讯分析、百度统计），调整内容方向，策划爆款选题。基于数据反馈调整发
+布时间，监测内容转化漏斗，优化标题、头图及内容结构，使内容转化率提升 12%，营销活动 ROI 提高 8%。
 
-中国世界青年峰会 ｜ 2022.09 - 2023.07
-. 独立负责公众号内容策划、文案撰写、视觉设计与排版发布，累计产出 20+ 篇原创内容，账号粉丝增长 500+
-. 管理 8 个活动社群、累计 2000+ 人，活动报名转化率达 30%，社群留存率维持在 75% 以上
-. 对接 5+ 家外部媒体机构达成合作，使线下活动报名人数超预期 15%
+中国世界青年峰会｜2022.09 - 2023.07｜新媒体运营
+• 公众号运营与内容产出：独立负责公众号内容策划、文案撰写、视觉设计与排版发布，设计嘉宾海报，周均推文浏览量达
+700+，累计产出 20+ 篇原创内容，账号粉丝增长 500+。
+• 社群运营与用户活跃：负责峰会线上宣传与社群生态搭建，需提升活动曝光度与用户粘性。管理 8 个活动社群（累计 2000+
+人），制定日常互动计划，促进用户活跃，活动报名转化率达 30%，社群留存率维持在 75% 以上。
+• 媒体合作与宣传：协同多家合作媒体进行联合宣传，对接 5+ 家外部媒体机构达成合作，联推广峰会活动，扩大活动影响
+力，使线下活动报名人数超预期 15%。
 
-苏州中飞能源动力有限公司 ｜ 2024.07 - 2024.09
-. 负责 B 站、抖音、雪球、YouTube 等 5 个社媒账号从 0 到 1 运营，2 个月内累计粉丝突破 1w+，品牌曝光度提升 35%
-. 结合竞品分析与平台特性策划图文、短视频内容，提出 10+ 创意点子，带动官网流量月均增长 20%
-. 输出竞品分析报告与用户反馈，为内容策略调整提供依据，使客户咨询量增长 25%
+苏州中飞能源动力有限公司｜2024.07 - 2024.09｜新媒体运营
+• 多平台账号运营：独立负责公司 B 站、抖音、雪球、YouTube 等多平台从 0 到 1 的海外及国内品牌建设任务。负责 5 个社
+媒账号的内容策划与日常运营，制定差异化发布计划，2 个月内各账号累计粉丝突破 1w+，品牌曝光度提升 35%。
+• 内容创意与设计：通过内容策划与数据运营，提升品牌曝光。独立负责社媒内容矩阵规划，结合竞品分析与平台特性，策划
+并制作图文、短视频等内容。结合产品特性，参与头脑风暴提出 10+ 创意点子，带动官网流量月均增长 20%。
+• 数据分析与优化：运用工具分析平台流量数据，识别转化瓶颈，调整内容时长及封面设计，对发布内容进行多维度分析（播
+放量、转化率、粉丝增长），形成数据报告，指导内容策略迭代。使目标账号完播率提升 15%，用户留存率提高 10%。
 
 项目经历
-国家级科研项目：《面向“双碳”战略的工业系统降碳路径优化研究》 ｜ 2024.03 - 2025.06
-. 主导多源异构空间数据采集、清洗与地理编码，覆盖全省 68 家重点企业、供应链网络及基础设施
-. 创新性地将 GIS 空间分析与传统 LCA 框架耦合，构建高精度 GIS-LCA 决策模型
-. 设计并运行近 20 项减排技术情景模拟，将山东省建材行业碳足迹核算精度提升约 25%
-
-(OCR 识别于 168 个文本块；主体信息可恢复，但多行经历被切碎，时间、岗位与项目要点存在错位)`,
+国家级科研项目：《面向“双碳”战略的工业系统降碳路径优化研究》  2024.03 - 2025.06
+• 主导多源异构空间数据采集、清洗与地理编码，覆盖全省 68 家重点企业、供应链网络及基础设施。
+• 创新性地将 GIS 空间分析与传统 LCA 框架耦合，构建高精度 GIS-LCA 决策模型。
+• 设计并运行近 20 项减排技术情景模拟，将山东省建材行业碳足迹核算精度提升约 25%。`,
 
   cn_jd: `产品经理实习生岗位说明
 
@@ -6023,31 +6567,29 @@ GPA：4.07 / 5.0 ｜ 专业排名：1 / 78（前 1%）
 
 (OCR 识别于前 12 页共 186 个文本块；封面、正文、附件与价款表均被扫出，但条款连续性较弱，表格列和页尾信息存在拆碎与串行问题)`,
 
-  cn_agreement: `深港科技创新合作区 BIM 平台项目补充协议
+  cn_agreement: `深港科技创新合作区 BIM 平台项目合同修改版
 
-甲方：深圳市福田区机关事务管理局
-乙方：深圳飞渡致成科技有限公司
+甲方修改意见：深圳市福田区机关事务管理局
+乙方修改意见：深圳飞渡致成科技有限公司
 适用项目：深港科技创新合作区 BIM 平台
 
-一、付款补充
-. 项目总金额保持人民币 197,800 元不变
-. 继续按首期 30% / 二期 60% / 末期 10% 三期支付
-. 每一期在对应触发条件满足后 3 个工作日内完成付款
+一、付款条款修改
+. 甲方版：首期付款改为初验通过后 5 个工作日内支付
+. 乙方版：首期仍主张签约后支付，不接受完全后移至验收后
 
-二、验收衔接
-. 甲方在收到成果申请后 5 个工作日内完成初验
-. 试运行 1 个月届满后 5 个工作日内完成终验
+二、建设周期修改
+. 乙方版：建设周期调整为 45 天
+. 乙方版：若甲方接口延迟提供，则整体工期顺延
 
-三、服务补充
-. 补充协议再次确认保修期为 6 个月
-. 售后服务要求保持 7×24 小时响应
-. 一般情况 48 小时内到场处理
+三、验收条款修改
+. 甲方版：甲方未书面确认前不得视为验收通过
+. 乙方版：甲方逾期未反馈视为默认通过
 
-四、适用说明
-. 本补充协议用于补充付款执行时点、验收衔接与售后口径
-. 主合同正文已有金额、付款比例、建设周期与验收框架
+四、责任条款修改
+. 乙方版：新增赔偿责任上限不超过合同总额 10%
+. 甲方版：重大损失仍主张按实际损失承担
 
-(OCR 识别于 48 个文本块；补充协议延续主合同核心条款，重点补齐付款时点与验收衔接说明)`,
+(OCR 识别于 48 个文本块；当前样例展示甲方版与乙方版围绕付款、周期、验收与责任条款的前后修改差异)`,
 
   cn_receipt: `出租车手写单据
 
@@ -6057,9 +6599,7 @@ GPA：4.07 / 5.0 ｜ 专业排名：1 / 78（前 1%）
 目的地：福田高铁站
 支付方式：微信支付
 实付金额：¥48.75
-备注：用于市内商务出行报销
-
-(OCR 识别于 24 个文本块；金额、日期、商家与路线被拆成短块，手写字段仍有粘连)`,
+备注：用于市内商务出行报销`,
 
   cn_bank: `账户流水明细 · 2025 年 1 月
 
@@ -6409,32 +6949,31 @@ The model learns to map document images directly into structured tokens through 
 
 ## 当前识别结论
 - 主合同已经包含金额、付款比例、建设周期、验收和售后条款
-- 补充协议的作用是把付款执行时点、验收衔接和服务口径写得更明确
-- 当前可以直接做“正文条款 vs 追加条款”的对齐判断`,
+- 当前更适合作为“初稿版本”参与后续甲方版 / 乙方版修改对比
+- 当前可以直接做“初稿条款 vs 修改版条款”的前后对齐判断`,
     detected_type: 'contract',
   },
 
   cn_agreement: {
-    md: `# 深港科技创新合作区 BIM 平台项目补充协议
+    md: `# 深港科技创新合作区 BIM 平台项目合同修改版
 
 ## 主体信息
-- 甲方：深圳市福田区机关事务管理局
-- 乙方：深圳飞渡致成科技有限公司
+- 甲方修改意见：深圳市福田区机关事务管理局
+- 乙方修改意见：深圳飞渡致成科技有限公司
 - 适用项目：深港科技创新合作区 BIM 平台
-- 签署日期：2025 年 1 月 12 日
 
-## 付款补充
-- 项目总金额保持人民币 197,800 元不变
-- 延续首期 30% / 二期 60% / 末期 10% 三期支付
-- 每一期在对应触发条件满足后 3 个工作日内完成付款
+## 付款条款修改
+- 甲方版：首期付款改为初验通过后 5 个工作日内支付
+- 乙方版：首期仍主张签约后支付
 
-## 交付与验收
-- 甲方在收到成果申请后 5 个工作日内完成初验
-- 试运行 1 个月届满后 5 个工作日内完成终验
+## 建设周期修改
+- 乙方版：建设周期调整为 45 天
+- 乙方版：若甲方接口延迟提供，则整体工期顺延
 
-## 责任与保密
-- 补充协议再次确认保修期 6 个月、7×24 小时响应、一般情况 48 小时内到场
-- 本补充协议用于补充付款执行时点、验收衔接与售后口径，不改动主合同金额与付款比例`,
+## 验收与责任修改
+- 甲方版：未书面确认前不得视为验收通过
+- 乙方版：逾期未反馈视为默认通过
+- 乙方版：新增赔偿责任上限不超过合同总额 10%`,
     detected_type: 'contract',
   },
 
@@ -6480,8 +7019,8 @@ const DIFF_METRICS = {
   resume:    { tess:{n:14, acc:62}, se:{n:10, acc:96} },
   contract:  { tess:{n:18, acc:58}, se:{n:11, acc:94} },
   statement: { tess:{n:36, acc:71}, se:{n:14, acc:97} },
-  paper:     { tess:{n:486,acc:64}, se:{n:218, acc:96} },
-  attention: { tess:{n:486,acc:64}, se:{n:218, acc:96} },
+  paper:     { tess:{n:1176,acc:64}, se:{n:218, acc:96} },
+  attention: { tess:{n:1176,acc:64}, se:{n:218, acc:96} },
   agreement: { tess:{n:26, acc:61}, se:{n:9,  acc:95} },
   jd:        { tess:{n:17, acc:69}, se:{n:8,  acc:97} },
   contract_file:{ tess:{n:18, acc:58}, se:{n:11, acc:94} },
@@ -6490,7 +7029,7 @@ const DIFF_METRICS = {
   receipt:   { tess:{n:12, acc:71}, se:{n:6,  acc:98} },
   cn_resume:   { tess:{n:58, acc:88}, se:{n:16, acc:98} },
   cn_jd:       { tess:{n:24, acc:91}, se:{n:10, acc:99} },
-  cn_contract: { tess:{n:186, acc:81}, se:{n:9,  acc:96} },
+  cn_contract: { tess:{n:657, acc:81}, se:{n:9,  acc:96} },
   cn_agreement:{ tess:{n:18, acc:91}, se:{n:8,  acc:98} },
   cn_receipt:  { tess:{n:11, acc:93}, se:{n:7,  acc:99} },
   cn_bank:     { tess:{n:18, acc:95}, se:{n:9,  acc:99} },
@@ -6800,6 +7339,56 @@ function buildParseAssetMarkdown(asset){
   }).join('\n\n');
 }
 
+function splitTessFragments(text){
+  if (!text) return [];
+  return text
+    .split(/\n+|(?<=[。；：])|(?<=，)(?=\S)|(?<=\d)(?=\s*[、.])/u)
+    .map(part=>part.trim())
+    .filter(Boolean);
+}
+
+function buildTessMockFromAsset(asset, note, options = {}){
+  if (!asset?.pages?.length) return '';
+  const fragmentize = !!options.fragmentize;
+  const body = asset.pages.map(page=>{
+    const lines = [`PAGE ${page.number}`];
+    page.blocks.forEach(block=>{
+      if (!block?.text) return;
+      if (fragmentize){
+        lines.push(...splitTessFragments(block.text));
+        return;
+      }
+      lines.push(block.text);
+    });
+    return lines.join('\n');
+  }).join('\n\n');
+  return note ? `${body}\n\n${note}` : body;
+}
+
+function countParseAssetBlocks(asset){
+  if (!asset?.pages?.length) return 0;
+  return asset.pages.reduce((sum, page)=>sum + (page.blocks?.length || 0), 0);
+}
+
+function countTessFragmentsFromAsset(asset){
+  if (!asset?.pages?.length) return 0;
+  return asset.pages.reduce((sum, page)=>sum + (page.blocks?.reduce((pageSum, block)=>pageSum + splitTessFragments(block?.text).length, 0) || 0), 0);
+}
+
+function resolveTessMockText(typeOrMockKey){
+  if (typeOrMockKey === 'cn_contract'){
+    const asset = getParseAsset('cn_contract');
+    const generated = buildTessMockFromAsset(asset, '', { fragmentize:true });
+    if (generated) return generated;
+  }
+  if (typeOrMockKey === 'paper' || typeOrMockKey === 'attention'){
+    const asset = getParseAsset('attention');
+    const generated = buildTessMockFromAsset(asset, '', { fragmentize:true });
+    if (generated) return generated;
+  }
+  return TESS_MOCK[typeOrMockKey] || '';
+}
+
 function renderParseAssetPreview(asset){
   if (!asset?.pages?.length) return '<div class="ppane-md"></div>';
   return `<div class="ppane-md">` + asset.pages.map(page=>`
@@ -6816,6 +7405,40 @@ function renderParseAssetPreview(asset){
       `).join('')}
     </section>
   `).join('') + `</div>`;
+}
+
+function buildVisionEvidencePreview(asset){
+  if (!asset?.pages?.length){
+    return `<div class="ppane-md"><p>当前文件暂无可展示的视觉证据块。</p></div>`;
+  }
+  const total = asset.pages.reduce((sum, page)=>sum + (page.blocks?.length || 0), 0);
+  const textCount = asset.pages.reduce((sum, page)=>sum + (page.blocks?.filter(block => (block.kind || 'text') === 'text').length || 0), 0);
+  const imageCount = asset.pages.reduce((sum, page)=>sum + (page.blocks?.filter(block => (block.kind || 'text') === 'image').length || 0), 0);
+  const formulaCount = asset.pages.reduce((sum, page)=>sum + (page.blocks?.filter(block => (block.kind || 'text') === 'formula').length || 0), 0);
+  return `
+    <div class="ppane-md">
+      <section class="ppane-sepage">
+        <div class="ppane-sepage-kicker">VISION SUMMARY</div>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div class="ppane-seblock"><div class="ppane-seblock-meta">BLOCKS</div><div class="ppane-seblock-text">${total} 个候选证据块</div></div>
+          <div class="ppane-seblock"><div class="ppane-seblock-meta">PAGES</div><div class="ppane-seblock-text">${asset.pages.length} 页视觉输入</div></div>
+          <div class="ppane-seblock"><div class="ppane-seblock-meta">TEXT</div><div class="ppane-seblock-text">${textCount} 个文本块</div></div>
+          <div class="ppane-seblock"><div class="ppane-seblock-meta">IMAGE / FORMULA</div><div class="ppane-seblock-text">${imageCount} / ${formulaCount}</div></div>
+        </div>
+      </section>
+      ${asset.pages.map(page=>`
+        <section class="ppane-sepage" data-md-page="${page.number}">
+          <div class="ppane-sepage-kicker">PAGE ${page.number}</div>
+          ${page.blocks.map(block=>`
+            <div class="ppane-seblock kind-${block.kind || 'text'} level-${block.level || 0}">
+              <div class="ppane-seblock-meta">${(block.kind || 'text').toUpperCase()} · ${typeof block.w === 'number' && typeof block.h === 'number' ? `${block.w.toFixed(1)} × ${block.h.toFixed(1)}` : 'REGION'}</div>
+              <div class="ppane-seblock-text">${escapeHtml(block.text || '')}</div>
+            </div>
+          `).join('')}
+        </section>
+      `).join('')}
+    </div>
+  `;
 }
 
 const PARSE_ALLOWED_EXTS = new Set([
@@ -6836,8 +7459,7 @@ function makeParseTask(){
     se_md: null,
     se_asset_key: null,
     error: null,
-    selected_box_id: null,
-    timers: [],              // active timers (for cleanup on switch)
+      timers: [],              // active timers (for cleanup on switch)
   };
 }
 SE.parseTask = makeParseTask();
@@ -6856,6 +7478,41 @@ function resetParseTimers(){
     SE.parseTask.timers.forEach(t => clearTimeout(t));
     SE.parseTask.timers = [];
   }
+}
+
+function buildTessIdle(){
+  return `
+    <div class="ppane-empty">
+      <div class="idle-visual ocr-idle" aria-hidden="true">
+        <div class="ocr-card"></div>
+        <div class="ocr-line"></div>
+        <div class="ocr-line"></div>
+        <div class="ocr-line"></div>
+        <div class="ocr-line"></div>
+        <div class="ocr-line"></div>
+        <div class="ocr-scan"></div>
+        <div class="ocr-corners"><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="idle-caption">等待上传 · 视觉块提取与证据定位</div>
+    </div>
+  `;
+}
+
+function buildSeIdle(){
+  return `
+    <div class="ppane-empty">
+      <div class="idle-visual se-idle" aria-hidden="true">
+        <div class="se-ring"></div>
+        <div class="se-core"></div>
+        <div class="se-scanline"></div>
+        <span class="se-particle"></span>
+        <span class="se-particle"></span>
+        <span class="se-particle"></span>
+        <span class="se-particle"></span>
+      </div>
+      <div class="idle-caption">等待上传 · 结构化字段与结论生成</div>
+    </div>
+  `;
 }
 
 function resetParseHomeUi(){
@@ -6882,10 +7539,10 @@ function resetParseHomeUi(){
     `;
   }
   if (tess){
-    tess.innerHTML = `<div class="ppane-empty"><i data-lucide="cpu" class="w-6 h-6 opacity-50"></i><span>等待上传 · 通用 OCR 基线</span></div>`;
+    tess.innerHTML = buildTessIdle();
   }
   if (se){
-    se.innerHTML = `<div class="ppane-empty"><i data-lucide="sparkles" class="w-6 h-6 opacity-50"></i><span>等待上传 · 端侧结构化解析</span></div>`;
+    se.innerHTML = buildSeIdle();
   }
   if (rawPage) rawPage.textContent = '1 / 1';
   if (tessTag){
@@ -6893,7 +7550,7 @@ function resetParseHomeUi(){
     tessTag.innerHTML = '<span class="dot"></span>standby';
   }
   if (seTag){
-    seTag.className = 'ml-auto chip chip-brand';
+    seTag.className = 'chip chip-brand';
     seTag.innerHTML = '<span class="dot"></span>standby';
   }
   if (window.lucide) lucide.createIcons();
@@ -6987,7 +7644,6 @@ async function renderPdfPane(source){
     syncPage();
     wrap?.addEventListener('scroll', syncPage, { passive:true });
   }
-  renderParseDocBoxes();
   return true;
 }
 
@@ -7012,7 +7668,7 @@ function setStepperStep(stepIdx /* 1..3 */, status /* 'active' | 'done' */){
 }
 
 function getTessBlockCount(typeOrMockKey){
-  const raw = TESS_MOCK[typeOrMockKey];
+  const raw = resolveTessMockText(typeOrMockKey);
   if (!raw) return null;
   const match = raw.match(/OCR\s*识别于(?:前\s*\d+\s*页共)?\s*(\d+)\s*个文本块/);
   return match ? Number(match[1]) : null;
@@ -7037,10 +7693,15 @@ function getDiffMetrics(typeOrMockKey){
 /* Update diff bar with detected type's metrics */
 function updateDiffBar(type){
   const m = getDiffMetrics(type);
-  document.getElementById('pdb-num-tess').textContent = m.tess.n;
-  document.getElementById('pdb-extra-tess').textContent = `准确率 ${m.tess.acc}%`;
-  document.getElementById('pdb-num-se').textContent = m.se.n;
-  document.getElementById('pdb-extra-se').textContent = `准确率 ${m.se.acc}%`;
+  const tessNum = document.getElementById('pdb-num-tess');
+  const tessExtra = document.getElementById('pdb-extra-tess');
+  const seNum = document.getElementById('pdb-num-se');
+  const seExtra = document.getElementById('pdb-extra-se');
+  if (!tessNum || !tessExtra || !seNum || !seExtra) return;
+  tessNum.textContent = m.tess.n;
+  tessExtra.textContent = `准确率 ${m.tess.acc}%`;
+  seNum.textContent = m.se.n;
+  seExtra.textContent = `准确率 ${m.se.acc}%`;
 }
 
 function currentParseMockKey(fallbackType='paper'){
@@ -7056,138 +7717,76 @@ function parseAnchorSlug(text){
     .replace(/^-+|-+$/g, '') || 'section';
 }
 
-function normalizeSnippet(text){
-  return String(text || '')
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .replace(/[^\w\u4e00-\u9fa5$.:/%+\- ]+/g, '')
-    .trim();
-}
-
-function getParseDocBoxes(mockKey){
-  const asset = getParseAsset(mockKey);
-  if (asset?.pages?.length) return asset.pages.flatMap(page=>page.blocks.map(block=>({ ...block, page: page.number })));
-  return PARSE_DOC_BOXES[mockKey] || PARSE_DOC_BOXES[SE.parseTask?.detected_type] || [];
-}
-
-function renderParseDocBoxes(){
-  const wrap = document.getElementById('pane-raw-pdf');
-  if (!wrap) return;
-  wrap.querySelectorAll('.ppane-boxlayer').forEach(el=>el.remove());
-  const boxes = getParseDocBoxes(currentParseMockKey());
-  if (!boxes.length) return;
-  const activeId = SE.parseTask?.selected_box_id || '';
-  const activeKey = SE.parseTask?.selected_box_anchor || '';
-  const layers = new Map();
-  boxes.forEach((box, idx)=>{
-    const pageNo = box.page || 1;
-    if (!layers.has(pageNo)) layers.set(pageNo, []);
-    layers.get(pageNo).push(`
-    <button type="button"
-      class="ppane-docbox kind-${box.kind || 'text'} ${(activeId && activeId === (box.id || '')) || (!activeId && activeKey === ((box.excerpt || box.anchor || ''))) ? 'is-active' : ''}"
-      data-doc-id="${escapeHtml(box.id || '')}"
-      data-doc-anchor="${escapeHtml(box.anchor || '')}"
-      data-doc-excerpt="${escapeHtml(box.text || box.excerpt || '')}"
-      data-doc-kind="${escapeHtml(box.kind || 'text')}"
-      data-doc-page="${pageNo}"
-      data-doc-idx="${idx}"
-      style="left:${box.x}%; top:${box.y}%; width:${box.w}%; height:${box.h}%;"></button>
-  `);
-  });
-  layers.forEach((html, pageNo)=>{
-    const mount = document.getElementById(`pane-raw-pdf-page-${pageNo}`) || wrap;
-    const layer = document.createElement('div');
-    layer.className = 'ppane-boxlayer';
-    layer.innerHTML = html.join('');
-    mount.appendChild(layer);
-    layer.querySelectorAll('.ppane-docbox').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        scrollParseMarkdownTo({
-          id: btn.getAttribute('data-doc-id') || '',
-          anchor: btn.getAttribute('data-doc-anchor') || '',
-          excerpt: btn.getAttribute('data-doc-excerpt') || '',
-        });
-      });
-    });
-  });
-}
-
-function scrollParseMarkdownTo(target){
-  const blockId = typeof target === 'string' ? target : (target?.id || '');
-  const anchor = typeof target === 'string' ? '' : (target?.anchor || '');
-  const excerpt = typeof target === 'string' ? '' : (target?.excerpt || '');
-  if (!blockId && !anchor && !excerpt) return;
-  if (!SE.parseTask) SE.parseTask = makeParseTask();
-  SE.parseTask.selected_box_id = blockId || SE.parseTask.selected_box_id;
-  SE.parseTask.selected_box_anchor = excerpt || anchor;
-  if (SE.parseTask.se_tab !== 'md-preview'){
-    SE.parseTask.se_tab = 'md-preview';
-    syncSeTabs();
-    if (SE.parseTask.se_md) renderSeDone(SE.parseTask.se_md);
+function swapPaneContent(body, html, { animated = true } = {}){
+  if (!body) return;
+  if (!animated){
+    body.innerHTML = html;
+    const first = body.firstElementChild;
+    if (first) first.classList.add('pane-enter');
+    return;
   }
-  requestAnimationFrame(()=>{
-    const root = document.querySelector('#pane-se-body .ppane-md');
-    if (!root) return;
-    let match = null;
-    if (blockId){
-      match = root.querySelector(`[data-md-block-id="${blockId}"]`);
-    }
-    if (!match && excerpt){
-      const want = normalizeSnippet(excerpt);
-      const candidates = [...root.querySelectorAll('[data-md-block-id], h1, h2, h3, p, li, td, th, code, pre')];
-      match = candidates.find(el=>normalizeSnippet(el.textContent).includes(want)) || null;
-    }
-    if (!match && anchor){
-      match = root.querySelector(`[data-md-anchor="${anchor}"]`);
-    }
-    if (!match) return;
-    root.querySelectorAll('.is-target').forEach(el=>el.classList.remove('is-target'));
-    match.classList.add('is-target');
-    match.scrollIntoView({ behavior:'smooth', block:'center' });
-  });
-  renderParseDocBoxes();
+  body.classList.add('is-switching');
+  const commit = ()=>{
+    body.innerHTML = html;
+    const first = body.firstElementChild;
+    if (first) first.classList.add('pane-enter');
+    body.classList.remove('is-switching');
+  };
+  if (!body.children.length){
+    commit();
+    return;
+  }
+  setTimeout(commit, 150);
 }
 
-/* Render Tesseract output (with shimmer-then-text reveal) */
+/* Render visual grounding output */
 function renderTessProgress(){
   const body = document.getElementById('pane-tess-body');
   const tag = document.getElementById('pane-tess-tag');
   if (!body) return;
-  body.innerHTML = `
+  swapPaneContent(body, `
     <div class="pane-scan pane-scan-ocr">
       <div class="ocr-glyphs">
         <span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span>
       </div>
       <div class="ocr-pass"></div>
+      <div class="pane-scan-progress">
+        <div class="meta"><span>visual grounding</span><b>58%</b></div>
+        <div class="bar" aria-hidden="true"><span style="--p:58%"></span></div>
+      </div>
       <div class="pane-scan-caption">
         <span>OCR SCAN</span>
         <span class="rail"></span>
         <span>Tesseract OCR 解析中…</span>
       </div>
     </div>
-  `;
+  `);
   if (tag){ tag.classList.remove('chip-brand','chip-ok'); tag.classList.add('chip-info');
-    tag.innerHTML = '<span class="dot"></span>OCR…';
+    tag.innerHTML = '<span class="dot"></span>grounding…';
   }
   if (window.lucide) lucide.createIcons();
 }
-function renderTessDone(text){
+function renderTessDone(_text){
   const body = document.getElementById('pane-tess-body');
   const tag = document.getElementById('pane-tess-tag');
   if (!body) return;
-  body.innerHTML = `<pre class="ppane-tess-pre">${text}</pre>`;
+  const asset = getParseAsset(SE.parseTask?.se_asset_key || currentParseMockKey());
+  const html = asset
+    ? buildVisionEvidencePreview(asset)
+    : `<pre class="ppane-tess-pre">${resolveTessMockText(currentParseMockKey())}</pre>`;
+  swapPaneContent(body, html);
   if (tag){ tag.classList.remove('chip-info','chip-brand'); tag.classList.add('chip-ok');
     tag.innerHTML = '<span class="dot"></span>done';
   }
 }
 
-/* Render SnapExtract output */
+/* Render structured output */
 function renderSeProgress(){
   const body = document.getElementById('pane-se-body');
   const tag = document.getElementById('pane-se-tag');
   if (!body) return;
-  body.innerHTML = `
+  swapPaneContent(body, `
     <div class="pane-scan pane-scan-se">
       <div class="se-grid"></div>
       <div class="se-ring"></div>
@@ -7197,13 +7796,17 @@ function renderSeProgress(){
       <div class="se-particle"></div>
       <div class="se-particle"></div>
       <div class="se-particle"></div>
+      <div class="pane-scan-progress">
+        <div class="meta"><span>structured output</span><b>81%</b></div>
+        <div class="bar" aria-hidden="true"><span style="--p:81%"></span></div>
+      </div>
       <div class="pane-scan-caption">
-        <span>NPU PARSE</span>
+        <span>STRUCTURED PASS</span>
         <span class="rail"></span>
         <span>SnapExtract 端侧解析中…</span>
       </div>
     </div>
-  `;
+  `);
   if (tag){ tag.classList.remove('chip-ok','chip-info'); tag.classList.add('chip-brand');
     tag.innerHTML = '<span class="dot"></span>parsing…';
   }
@@ -7214,32 +7817,25 @@ function renderSeDone(md){
   const tag = document.getElementById('pane-se-tag');
   if (!body) return;
   const parse = SE.parseTask || {};
-  const tab = parse.se_tab || 'md-preview';
+  const tab = parse.se_tab || 'summary';
   const asset = getParseAsset(parse.se_asset_key || currentParseMockKey());
   let html = '';
-  if (tab === 'md-raw'){
-    html = `<pre class="ppane-tess-pre">${escapeHtml(asset ? buildParseAssetMarkdown(asset) : md)}</pre>`;
+  if (tab === 'summary'){
+    html = `<div class="ppane-md">${mdToHtml(md)}</div>`;
   } else if (tab === 'json'){
     const json = parse.se_json || { type: parse.detected_type || 'paper', markdown: md };
     html = `<pre class="ppane-tess-pre">${escapeHtml(JSON.stringify(json, null, 2))}</pre>`;
   } else {
-    html = asset ? renderParseAssetPreview(asset) : `<div class="ppane-md">${mdToHtml(md)}</div>`;
+    html = `<div class="ppane-md">${mdToHtml(md)}</div>`;
   }
-  body.innerHTML = html;
-  if (parse.se_tab === 'md-preview'){
-    requestAnimationFrame(()=>{
-      if (parse.selected_box_id || parse.selected_box_anchor){
-        scrollParseMarkdownTo({ id: parse.selected_box_id || '', excerpt: parse.selected_box_anchor || '' });
-      }
-    });
-  }
+  swapPaneContent(body, html);
   if (tag){ tag.classList.remove('chip-info','chip-brand'); tag.classList.add('chip-ok');
     tag.innerHTML = '<span class="dot"></span>done';
   }
 }
 
 function syncSeTabs(){
-  const active = SE.parseTask?.se_tab || 'md-preview';
+  const active = SE.parseTask?.se_tab || 'summary';
   document.querySelectorAll('#pane-se .ppane-tab').forEach(btn=>{
     btn.classList.toggle('is-active', btn.dataset.tab === active);
   });
@@ -7250,7 +7846,7 @@ function bindSeTabs(){
     if (btn.__bound) return;
     btn.__bound = true;
     btn.addEventListener('click', ()=>{
-      const next = btn.dataset.tab || 'md-preview';
+      const next = btn.dataset.tab || 'summary';
       if (!SE.parseTask) SE.parseTask = makeParseTask();
       SE.parseTask.se_tab = next;
       syncSeTabs();
@@ -7380,7 +7976,7 @@ async function startParseFromSample(key){
   SE.parseTask.detected_type = sample.type;
   SE.parseTask.mock_key = sample.mock || resolveMockKey(sample.name, sample.type);
   SE.parseTask.state = 'parsing';
-  SE.parseTask.se_tab = 'md-preview';
+  SE.parseTask.se_tab = 'summary';
   hideSnapCta();
   setStepperStep(2, 'active');
   await renderPdfPane(resolveSampleSrc(SE.parseTask.file));
@@ -7397,7 +7993,7 @@ async function startParseFromFile(f){
   SE.parseTask.detected_type = detectType(f.name);
   SE.parseTask.mock_key = resolveMockKey(f.name, SE.parseTask.detected_type);
   SE.parseTask.state = 'validating';
-  SE.parseTask.se_tab = 'md-preview';
+  SE.parseTask.se_tab = 'summary';
   hideSnapCta();
   renderRawValidating(f);
   renderTessProgress();
@@ -7434,22 +8030,23 @@ async function startParseFromFile(f){
 
 function startTesseractAndSe(type, mockKey){
   const asset = getParseAsset(mockKey);
+  SE.parseTask.se_asset_key = asset ? mockKey : null;
   const t1 = setTimeout(()=>{
     if (!SE.parseTask) return;
-    renderTessDone(TESS_MOCK[mockKey] || TESS_MOCK[type] || TESS_MOCK.attention);
+    renderTessDone(resolveTessMockText(mockKey) || resolveTessMockText(type) || TESS_MOCK.attention);
   }, PARSE_TIMING.tess_done);
 
   const t2 = setTimeout(()=>{
     if (!SE.parseTask) return;
-    const payload = asset
-      ? { md: buildParseAssetMarkdown(asset), detected_type: asset.detected_type || type }
-      : (SE_MOCK[mockKey] || SE_MOCK[type] || SE_MOCK.attention);
-    SE.parseTask.se_asset_key = asset ? mockKey : null;
+    const payload = SE_MOCK[mockKey] || SE_MOCK[type] || SE_MOCK.attention || {
+      md: asset ? buildParseAssetMarkdown(asset) : '',
+      detected_type: asset?.detected_type || type,
+    };
     SE.parseTask.se_md = payload.md;
     SE.parseTask.se_json = {
+      engine: 'snapextract',
       detected_type: payload.detected_type || type,
       source_file: SE.parseTask.file?.name || '',
-      diff_metrics: DIFF_METRICS[mockKey] || DIFF_METRICS[type] || DIFF_METRICS.attention,
       markdown: payload.md,
       pages: asset?.pages?.length || null,
     };
@@ -7708,22 +8305,7 @@ function closeSplashModal(){
 }
 
 function maybeShowSplash(){
-  // Only on home route, only if user hasn't seen it before
-  if (location.hash !== '#/' && location.hash !== '') return;
-  // Dev escape hatches: ?splash=1 forces show; ?splash=reset clears flag
-  const qs = new URLSearchParams(location.search);
-  if (qs.get('splash') === 'reset'){
-    try { localStorage.removeItem(SPLASH_FLAG); } catch(e) {}
-  }
-  if (qs.get('splash') === '1'){
-    setTimeout(()=>openSplashModal({force: true}), 180);
-    return;
-  }
-  let seen = false;
-  try { seen = localStorage.getItem(SPLASH_FLAG) === '1'; } catch(e) {}
-  if (seen) return;
-  // Defer slightly so initial layout settles (font load, lucide icons render)
-  setTimeout(()=>openSplashModal(), 180);
+  return;
 }
 
 function bindSplashHandlers(){
@@ -7737,15 +8319,6 @@ function bindSplashHandlers(){
     const m = document.getElementById('splash');
     if (m && m.classList.contains('show')) closeSplashModal();
   });
-  // 「看演示」 — Phase 4 will hook real auto-load + parse; for now just close
-  const demoBtn = document.getElementById('splash-cta-demo');
-  if (demoBtn){
-    demoBtn.addEventListener('click', ()=>{
-      closeSplashModal();
-      // Mark for Phase 4: trigger sample parse on next render tick
-      window.__splash_demo_pending = true;
-    });
-  }
   // Logo double-click easter egg → reopen splash without writing flag
   let lastLogoClick = 0;
   const logo = document.getElementById('brand-logo');
@@ -8488,9 +9061,10 @@ function buildPaperFollowupModal(st){
             <span class="chip chip-brand"><span class="dot"></span>${escapeHtml(ctx.label || '当前选区')}</span>
             <span class="chip"><span class="dot"></span>LOCAL CONTEXT</span>
           </div>
-          <div class="capture-summary">
+            <div class="capture-summary">
             <div class="capture-summary-grid">
               <div class="capture-mini">
+                <video class="capture-mini-video" src="./modal_capture_animation.mp4" autoplay muted loop playsinline preload="auto"></video>
                 <div class="capture-mini-box" style="${paperRectStyle(st.capture_rect)}"></div>
               </div>
               <div class="space-y-3">
@@ -8709,7 +9283,7 @@ function stateChip(state){
   const map = {
     idle:              ['',           'idle'],
     scene_entered:     ['chip-info',  'ready'],
-    baseline_viewing:  ['chip-warn',  'baseline'],
+    baseline_viewing:  ['chip-warn',  'evidence'],
     supplement_added:  ['chip-info',  'supp added'],
     parsing:           ['chip-brand', 'parsing…'],
     result_ready:      ['chip-ok',    'done'],
@@ -9184,8 +9758,8 @@ function renderBaselinePanel(s, st){
     chip.querySelector('span:nth-child(2)').textContent = '预生成 · 不参与正式解析';
   }
   hint.textContent = open
-    ? '固定展示 无解析 / Tesseract / SnapExtract 三段差异，不承载正式场景结论。'
-    : '点击查看 无解析 / Tesseract / SnapExtract 三段差异';
+    ? '固定展示 原文 / 视觉证据 / 结构化输出 三段差异，不承载正式场景结论。'
+    : '点击查看 原文 / 视觉证据 / 结构化输出 三段差异';
 
   if (open){
     const b = BASELINE[currentScn] || {};
@@ -9196,11 +9770,11 @@ function renderBaselinePanel(s, st){
           <div class="bl-text">${b.raw || '—'}</div>
         </div>
         <div class="bl-col">
-          <div class="bl-name">Tesseract</div>
+          <div class="bl-name">视觉证据</div>
           <div class="bl-text">${b.tesseract || '—'}</div>
         </div>
         <div class="bl-col">
-          <div class="bl-name">SnapExtract</div>
+          <div class="bl-name">结构化输出</div>
           <div class="bl-text">${b.snapextract || '—'}</div>
         </div>
       </div>
@@ -9337,8 +9911,8 @@ function resultLeadCopy(st){
       ? '已按简历主文件与 JD 上下文输出候选人信息、匹配判断、面试问题与初筛结论。'
       : '当前结果只基于简历主文件，已输出候选人信息、综合评价与初筛方向，岗位匹配仍属待增强判断。',
     contract: st.fields?.clause_diffs
-      ? '已结合主合同与对照合同输出结构字段、风险点、差异对照与待谈判事项。'
-      : '当前结果只基于我方合同，已完成关键信息提取与风险初判；主合同与补充协议对照尚未启用。',
+      ? '已结合合同初稿与修改版输出结构字段、修改前后差异、风险点与签署建议。'
+      : '当前结果只基于合同初稿，已完成关键信息提取与风险初判；合同修改前后对比尚未启用。',
     statement: st.supp_file
       ? '已按手写单据事实与银行流水凭证输出核验结果、差异原因和待确认项。'
       : '当前结果只完成手写单据事实提取；完整核验结论需补银行流水。',
@@ -9389,7 +9963,7 @@ function buildResultNotes(st){
   if (!hasSupplementContext(st)){
     const missingMap = {
       resume: '未补 JD，当前不输出岗位对照视图与确定性的匹配结论。',
-      contract: '未补补充协议，当前不输出条款差异与责任对照。',
+      contract: '未补修改版合同，当前不输出条款前后对比与责任差异。',
       statement: '未补银行流水，当前不输出完整比对、验算与分析结论。',
       paper: '未补研究上下文，当前相关性判断与阅读建议保持参考性口径。',
     };
@@ -9450,49 +10024,59 @@ function buildPaperPromptPanel(st){
 }
 
 function buildPaperInlineFormulaCard(){
-  if (!LAB_FORMULAS.length) return '';
-  return `
-    <button class="btn justify-center text-[12px] paper-formula-launch" id="paper-formula-open" type="button">
-      <i data-lucide="sigma" class="w-3.5 h-3.5"></i> 查看全部公式
-    </button>`;
+  return '';
 }
 
 function buildPaperContextForm(st){
   const form = st.supp_form || {};
   return `
-    <div class="paper-context-form">
+    <div class="paper-context-form is-paper-brief">
       <div class="paper-form-hero">
         <div class="paper-form-hero-main">
           <div class="paper-form-badge"><i data-lucide="sparkles" class="w-4 h-4"></i></div>
           <div>
-            <div class="section-title">USER PAPER INFO · 用户论文信息</div>
-            <div class="paper-form-title">补充你的研究上下文</div>
-            <div class="paper-form-copy">补充研究方向、当前课题、关注问题和写作目标后，再开始分析。</div>
+            <div class="section-title">PAPER CONTEXT</div>
+            <div class="paper-form-title">补充论文分析信息</div>
+            <div class="paper-form-copy">补充研究方向、当前题目、重点问题和阅读目的后，再开始分析。</div>
           </div>
         </div>
       </div>
-      <div class="paper-field">
-        <span class="paper-field-icon"><i data-lucide="compass" class="w-4 h-4"></i></span>
-        <input id="paper-user-direction" placeholder="研究方向" value="${escapeHtml(form.direction || '')}" />
+      <div class="scene-spec-form">
+        <div class="scene-spec-row">
+          <div class="scene-spec-label"><div class="k">Field 01</div><div class="v">研究方向</div></div>
+          <div class="scene-spec-control paper-field">
+            <span class="paper-field-icon"><i data-lucide="compass" class="w-4 h-4"></i></span>
+            <input id="paper-user-direction" placeholder="例如：文档理解 / 多模态信息抽取" value="${escapeHtml(form.direction || '')}" />
+          </div>
+        </div>
+        <div class="scene-spec-row">
+          <div class="scene-spec-label"><div class="k">Field 02</div><div class="v">当前题目</div></div>
+          <div class="scene-spec-control paper-field">
+            <span class="paper-field-icon"><i data-lucide="flask-conical" class="w-4 h-4"></i></span>
+            <input id="paper-user-topic" placeholder="例如：票据版式建模 / 端侧 OCR 强化" value="${escapeHtml(form.current_topic || '')}" />
+          </div>
+        </div>
+        <div class="scene-spec-row is-textarea-row">
+          <div class="scene-spec-label"><div class="k">Field 03</div><div class="v">重点问题</div></div>
+          <div class="scene-spec-control paper-field is-textarea">
+            <span class="paper-field-icon"><i data-lucide="search" class="w-4 h-4"></i></span>
+            <textarea id="paper-user-focus" placeholder="例如：想看方法创新、实验设计或是否适合作为 baseline">${escapeHtml(form.focus || '')}</textarea>
+          </div>
+        </div>
+        <div class="scene-spec-row">
+          <div class="scene-spec-label"><div class="k">Field 04</div><div class="v">阅读目的</div></div>
+          <div class="scene-spec-control paper-field">
+            <span class="paper-field-icon"><i data-lucide="pen-tool" class="w-4 h-4"></i></span>
+            <input id="paper-user-purpose" placeholder="例如：比较方法路线 / 写文献综述 / 复现实验" value="${escapeHtml(form.purpose || '')}" />
+          </div>
+        </div>
       </div>
-      <div class="paper-field">
-        <span class="paper-field-icon"><i data-lucide="flask-conical" class="w-4 h-4"></i></span>
-        <input id="paper-user-topic" placeholder="当前课题" value="${escapeHtml(form.current_topic || '')}" />
-      </div>
-      <div class="paper-field is-textarea">
-        <span class="paper-field-icon"><i data-lucide="search" class="w-4 h-4"></i></span>
-        <textarea id="paper-user-focus" placeholder="关注问题">${escapeHtml(form.focus || '')}</textarea>
-      </div>
-      <div class="paper-field">
-        <span class="paper-field-icon"><i data-lucide="pen-tool" class="w-4 h-4"></i></span>
-        <input id="paper-user-purpose" placeholder="目标方法或写作目的" value="${escapeHtml(form.purpose || '')}" />
-      </div>
-      <div class="scene-form-hint">填写完成后点击开始分析。也可以先点“样例”快速演示。</div>
+      <div class="scene-form-hint">补充论文分析信息后开始分析，也可直接填入示例。</div>
       <div class="paper-context-form-actions">
-        <button class="btn flex-1 justify-center text-[12px]" id="paper-context-fill">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 样例
+        <button class="btn w-full justify-center text-[12px]" id="scene-fill-sample" type="button">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 填入示例
         </button>
-        <button class="cta flex-1 justify-center text-[12px]" id="scene-start-parse" type="button">
+        <button class="cta w-full justify-center text-[12px]" id="scene-start-parse" type="button">
           <i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析
         </button>
       </div>
@@ -9513,11 +10097,20 @@ function paperAnalysisCards(st){
     },
     {
       key:'method',
-      title:'方法路径',
-      preview:(p.method || []).slice(0,2).join('；') || '点击查看方法路径与公式解释',
+      title:'使用方法',
+      preview:(p.usage_steps || []).slice(0,1).map(x=>x.title).join('；') || (p.method || []).slice(0,1).join('；') || '点击查看使用方法',
       detail:`<div class="space-y-4">
-        <div class="text-[13px] text-t2 leading-relaxed">${(p.method || []).length ? `<ul>${(p.method || []).map(x=>`<li>${x}</li>`).join('')}</ul>` : '未生成方法路径结果。'}</div>
-        ${buildPaperInlineFormulaCard()}
+        ${(p.usage_steps || []).length ? `
+          <div class="space-y-3">
+            ${(p.usage_steps || []).map(step=>`
+              <div class="rounded-10 border border-line1 bg-bg2/50 p-3">
+                <div class="text-[12px] text-t1 font-medium mb-1">${step.title}</div>
+                <div class="text-[12.5px] text-t2 leading-relaxed">${step.body}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+        <div class="text-[13px] text-t2 leading-relaxed">${(p.method || []).length ? `<ul>${(p.method || []).map(x=>`<li>${x}</li>`).join('')}</ul>` : '未生成使用方法结果。'}</div>
       </div>`,
     },
     {
@@ -9526,7 +10119,35 @@ function paperAnalysisCards(st){
       preview:'机器翻译任务上超过既有最佳结果，并显著缩短训练时间',
       detail:`${
         (p.results || []).length
-          ? `<div class="space-y-3 text-[13px] text-t2 leading-relaxed">
+          ? `<div class="space-y-4 text-[13px] text-t2 leading-relaxed">
+              <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                  <div class="w-28 text-[11px] font-mono text-t3">WMT14 EN-DE</div>
+                  <div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:68%;height:100%;background:linear-gradient(90deg,#FF7A18,#FF2D87)"></div></div>
+                  <div class="text-t1 text-[12px] font-mono">28.4 BLEU</div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-28 text-[11px] font-mono text-t3">WMT14 EN-FR</div>
+                  <div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:91%;height:100%;background:linear-gradient(90deg,#FF7A18,#FF2D87)"></div></div>
+                  <div class="text-t1 text-[12px] font-mono">41.8 BLEU</div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-28 text-[11px] font-mono text-t3">TRAINING COST</div>
+                  <div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:46%;height:100%;background:linear-gradient(90deg,#22D3EE,#10B981)"></div></div>
+                  <div class="text-t1 text-[12px] font-mono">3.5 DAYS</div>
+                </div>
+              </div>
+              <div class="paper-figure-grid">
+                ${(p.figure_extracts || []).map(fig=>`
+                  <div class="paper-figure-card">
+                    <img src="${fig.image}" alt="${escapeHtml(fig.caption)}" />
+                    <div class="paper-figure-copy">
+                      <div class="k">${fig.label}</div>
+                      <div class="v">${fig.caption}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
               <div>
                 在 <b class="text-t1">WMT 2014 英文到德文翻译任务</b> 上，Transformer 取得了
                 <b class="text-t1">28.4 BLEU</b>，相比论文中提到的既有最佳结果提升超过 <b class="text-t1">2 BLEU</b>。
@@ -9546,11 +10167,13 @@ function paperAnalysisCards(st){
     {
       key:'conclusion',
       title:'结论与可借鉴点',
-      preview:(rel?.points || []).slice(0,1).join('；') || (refs[0] ? `${refs[0].dim} ${refs[0].val}` : '点击查看结论与可借鉴点'),
+      preview:(refs[0] ? `${refs[0].dim}：${refs[0].val}` : '') || (rel?.points || []).slice(0,1).join('；') || '点击查看结论与可借鉴点',
       detail:`<div class="space-y-4 text-[13px] text-t2 leading-relaxed">
         <div><b class="text-t1">相关性判断</b><br/>${rel?.points?.length ? rel.points.join('；') : '未补研究信息，当前保持参考性判断。'}</div>
-        <div><b class="text-t1">用户研究信息</b><br/>${context ? `研究方向：${context.direction}；当前课题：${context.current_topic || '—'}；关注问题：${context.focus}；目标方法或写作目的：${context.purpose || '—'}` : '尚未填写。'}</div>
-        <div><b class="text-t1">可借鉴点</b><br/>${refs.length ? refs.map(x=>`${x.dim}：${x.val}`).join('；') : '当前没有追加可借鉴点。'}</div>
+        <div><b class="text-t1">当前输入信息</b><br/>${context ? `研究方向：${context.direction}；当前题目：${context.current_topic || '—'}；重点问题：${context.focus}；阅读目的：${context.purpose || '—'}` : '尚未填写。'}</div>
+        <div><b class="text-t1">最值得借鉴</b><br/>${refs.length ? refs.slice(0,3).map(x=>`${x.dim}：${x.val}`).join('；') : '当前没有追加可借鉴点。'}</div>
+        <div><b class="text-t1">不建议直接使用</b><br/>${rel?.gaps?.length ? rel.gaps.join('；') : '暂无额外边界说明。'}</div>
+        <div><b class="text-t1">下一步建议</b><br/>${refs[refs.length - 1]?.val || '先把架构章节读透，再进入更贴近任务的论文。'}</div>
       </div>`,
     },
   ];
@@ -9578,52 +10201,7 @@ function buildPaperDetailModal(st){
 }
 
 function buildPaperFormulaModal(st){
-  if (!st.formula_modal_open) return '';
-  const idx = Math.max(0, Math.min(st.formula_modal_idx || 0, LAB_FORMULAS.length - 1));
-  const f = LAB_FORMULAS[idx];
-  if (!f) return '';
-  return `
-    <div class="paper-detail-modal show" id="paper-formula-modal">
-      <div class="paper-detail-backdrop" data-paper-formula-close></div>
-      <div class="paper-detail-panel">
-        <div class="paper-detail-head">
-          <div>
-            <div class="section-title">公式总览</div>
-            <div class="text-[18px] text-t1 mt-1">方法路径相关公式</div>
-          </div>
-          <button class="iconbtn" data-paper-formula-close title="关闭"><i data-lucide="x" class="w-4 h-4"></i></button>
-        </div>
-        <div class="paper-detail-body">
-          <div class="paper-formula-library">
-            <div class="paper-formula-list">
-              ${LAB_FORMULAS.map((item, i)=>`
-                <button class="paper-formula-item ${i === idx ? 'is-active' : ''}" data-paper-formula-pick="${i}">
-                  <div class="name">${item.name}</div>
-                  <div class="src">${item.src}</div>
-                </button>
-              `).join('')}
-            </div>
-            <div class="paper-formula-view">
-              <div class="paper-flip-card" id="paper-modal-formula-card">
-                <div class="paper-flip-face front">
-                  <div class="paper-analysis-k">正文公式</div>
-                  <div class="formula mt-3">${f.front}</div>
-                  <div class="paper-analysis-k mt-5">来源</div>
-                  <div class="src mt-2">${f.src}</div>
-                </div>
-                <div class="paper-flip-face back">
-                  <div class="paper-analysis-k">LaTeX</div>
-                  <div class="paper-latex-box mt-3"><pre>${escapeHtml(f.latex || '')}</pre></div>
-                </div>
-              </div>
-              <button class="btn justify-center text-[12px] mt-3" id="paper-modal-formula-flip" type="button">
-                <i data-lucide="repeat" class="w-3.5 h-3.5"></i> 翻转查看 LaTeX
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>`;
+  return '';
 }
 
 function buildScenarioContextForm(st){
@@ -9638,31 +10216,41 @@ function buildScenarioContextForm(st){
             <div>
               <div class="section-title">岗位信息 · 招聘方补充</div>
               <div class="paper-form-title">补充招聘要求</div>
-              <div class="paper-form-copy">补充岗位、必备能力和重点关注项后，再开始分析简历匹配度和面试建议。</div>
+              <div class="paper-form-copy">补充岗位、JD 和排除条件后，再开始分析简历匹配度和初筛结论。</div>
             </div>
           </div>
         </div>
-        <label class="paper-field">
-          <span class="paper-field-icon"><i data-lucide="briefcase-business" class="w-4 h-4"></i></span>
-          <input id="resume-user-role" placeholder="岗位 / 职级" value="${escapeHtml(form.role_title || '')}" />
-        </label>
-        <label class="paper-field">
-          <span class="paper-field-icon"><i data-lucide="badge-check" class="w-4 h-4"></i></span>
-          <input id="resume-user-must" placeholder="核心要求 / 必备能力" value="${escapeHtml(form.must_have || '')}" />
-        </label>
-        <label class="paper-field is-textarea">
-          <span class="paper-field-icon"><i data-lucide="scan-search" class="w-4 h-4"></i></span>
-          <textarea id="resume-user-focus" placeholder="你最想确认的点">${escapeHtml(form.jd_text || '')}</textarea>
-        </label>
-        <div class="scene-form-hint">填写完成后点击开始分析。也可以先点“样例”快速演示。</div>
+        <div class="scene-spec-form">
+          <div class="scene-spec-row">
+            <div class="scene-spec-label"><div class="k">Field 01</div><div class="v">岗位</div></div>
+            <label class="scene-spec-control paper-field">
+              <span class="paper-field-icon"><i data-lucide="briefcase-business" class="w-4 h-4"></i></span>
+              <input id="resume-user-role" placeholder="例如：高级产品经理 / 后端工程师" value="${escapeHtml(form.role_title || '')}" />
+            </label>
+          </div>
+          <div class="scene-spec-row">
+            <div class="scene-spec-label"><div class="k">Field 02</div><div class="v">JD</div></div>
+            <label class="scene-spec-control paper-field">
+              <span class="paper-field-icon"><i data-lucide="file-text" class="w-4 h-4"></i></span>
+              <input id="resume-user-must" placeholder="写入核心要求、必备经历或技能" value="${escapeHtml(form.must_have || '')}" />
+            </label>
+          </div>
+          <div class="scene-spec-row">
+            <div class="scene-spec-label"><div class="k">Field 03</div><div class="v">排除条件</div></div>
+            <label class="scene-spec-control paper-field is-textarea">
+              <span class="paper-field-icon"><i data-lucide="ban" class="w-4 h-4"></i></span>
+              <textarea id="resume-user-focus" placeholder="写入不接受的行业、经历或限制条件">${escapeHtml(form.jd_text || '')}</textarea>
+            </label>
+          </div>
+        </div>
+        <div class="scene-form-hint">补充招聘要求后开始分析，也可直接填入示例。</div>
         <div class="paper-context-form-actions">
-          <button class="btn flex-1 justify-center text-[12px]" id="resume-context-fill"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 样例</button>
-          <button class="cta shrink-0 justify-center text-[12px]" id="scene-start-parse" type="button"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析</button>
+          <button class="btn shrink-0 justify-center text-[12px] w-full" id="scene-fill-sample" type="button"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 填入示例</button>
+          <button class="cta shrink-0 justify-center text-[12px] w-full" id="scene-start-parse" type="button"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析</button>
         </div>
       </div>`;
   }
   if (currentScn === 'contract'){
-    const localSample = sampleRef('contract', 'supp');
     const attached = st.supp_file;
     return `
       <div class="paper-context-form">
@@ -9670,9 +10258,9 @@ function buildScenarioContextForm(st){
           <div class="paper-form-hero-main">
             <div class="paper-form-badge"><i data-lucide="file-signature" class="w-4 h-4"></i></div>
             <div>
-              <div class="section-title">补充文件 · 补充协议</div>
-              <div class="paper-form-title">补充协议对照</div>
-              <div class="paper-form-copy">补传同项目补充协议后，再开始分析金额、责任与关键条款差异。</div>
+              <div class="section-title">对照文件 · 合同修订版</div>
+              <div class="paper-form-title">上传另一方修改版合同</div>
+              <div class="paper-form-copy">拖入或选择另一方修改后的合同版本后，再开始分析甲方版与乙方版的条款改动、责任差异与履约时间线。</div>
             </div>
           </div>
         </div>
@@ -9680,23 +10268,21 @@ function buildScenarioContextForm(st){
           <input type="file" class="hidden" id="contract-supp-input" />
           ${buildSceneFileViewerContent(
             attached,
-            '补传补充协议',
+            '上传对照合同',
             '支持 PDF · DOC · DOCX'
           )}
           <div class="scene-file-pick-state">
-            <span>${attached ? '已接入' : '待补充'}</span>
+            <span>${attached ? '已接入' : '待上传'}</span>
             <i data-lucide="${attached ? 'check' : 'plus'}" class="w-3.5 h-3.5"></i>
           </div>
         </label>
-        <div class="scene-form-hint">补充协议接入后点击开始分析。也可以先点“样例”快速演示。</div>
-        <div class="paper-context-form-actions">
-          ${localSample ? `<button class="btn flex-1 justify-center text-[12px]" id="contract-context-sample"><i data-lucide="folder-open" class="w-3.5 h-3.5"></i> 样例</button>` : ''}
-          <button class="cta shrink-0 justify-center text-[12px]" id="scene-start-parse" type="button"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析</button>
+        <div class="scene-form-hint">接入修改版合同后开始分析，结果会直接展示客户修改前后对比。</div>
+        <div class="paper-context-form-actions is-centered">
+          <button class="cta shrink-0 justify-center text-[12px] w-full" id="scene-start-parse" type="button"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析</button>
         </div>
       </div>`;
   }
   if (currentScn === 'statement'){
-    const localSample = sampleRef('statement', 'supp');
     const attached = st.supp_file;
     return `
       <div class="paper-context-form">
@@ -9706,26 +10292,31 @@ function buildScenarioContextForm(st){
             <div>
               <div class="section-title">补充文件 · 银行流水</div>
               <div class="paper-form-title">补充核对流水</div>
-              <div class="paper-form-copy">补传银行流水截图后，再开始分析手写单据识别结果、差异摘要和验算指标。</div>
+              <div class="paper-form-copy">桌面拖入 / 文件夹选择银行流水后，再开始分析手写单据识别结果、对比结论和税务申报建议。</div>
             </div>
           </div>
         </div>
-        <label class="scene-file-pick is-large is-viewer" id="statement-supp-drop">
-          <input type="file" class="hidden" id="statement-supp-input" />
-          ${buildSceneFileViewerContent(
-            attached,
-            '补传银行流水',
-            '支持 PDF'
-          )}
-          <div class="scene-file-pick-state">
-            <span>${attached ? '已接入' : '待补充'}</span>
-            <i data-lucide="${attached ? 'check' : 'plus'}" class="w-3.5 h-3.5"></i>
+        <div class="scene-spec-form">
+          <div class="scene-spec-row">
+            <div class="scene-spec-label"><div class="k">Field 01</div><div class="v">银行流水</div></div>
+            <label class="scene-spec-control scene-file-pick is-large is-viewer" id="statement-supp-drop">
+              <input type="file" class="hidden" id="statement-supp-input" />
+              ${buildSceneFileViewerContent(
+                attached,
+                '补传银行流水',
+                '支持 PDF'
+              )}
+              <div class="scene-file-pick-state">
+                <span>${attached ? '已接入' : '待补充'}</span>
+                <i data-lucide="${attached ? 'check' : 'plus'}" class="w-3.5 h-3.5"></i>
+              </div>
+            </label>
           </div>
-        </label>
-        <div class="scene-form-hint">补传完成后点击开始分析。也可以先点“样例”快速演示。</div>
+        </div>
+        <div class="scene-form-hint">补传流水后开始分析，也可直接载入示例文件。</div>
         <div class="paper-context-form-actions">
-          ${localSample ? `<button class="btn flex-1 justify-center text-[12px]" id="statement-context-sample"><i data-lucide="folder-open" class="w-3.5 h-3.5"></i> 样例</button>` : ''}
-          <button class="cta shrink-0 justify-center text-[12px]" id="scene-start-parse" type="button"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析</button>
+          <button class="btn shrink-0 justify-center text-[12px] w-full" id="scene-fill-sample" type="button"><i data-lucide="folder-open" class="w-3.5 h-3.5"></i> 载入示例文件</button>
+          <button class="cta shrink-0 justify-center text-[12px] w-full" id="scene-start-parse" type="button"><i data-lucide="zap" class="w-3.5 h-3.5"></i> 开始分析</button>
         </div>
       </div>`;
   }
@@ -9734,10 +10325,8 @@ function buildScenarioContextForm(st){
 
 function bindScenarioContextForm(st){
   document.getElementById('scene-start-parse')?.addEventListener('click', startParse);
+  document.getElementById('scene-fill-sample')?.addEventListener('click', applySceneSupplementSample);
   if (currentScn === 'resume'){
-    document.getElementById('resume-context-fill')?.addEventListener('click', ()=>{
-      applySupplementFormSample();
-    });
     ['resume-user-role','resume-user-must','resume-user-focus'].forEach(id=>{
       const el = document.getElementById(id);
       if (!el || el.__bound) return;
@@ -9758,10 +10347,6 @@ function bindScenarioContextForm(st){
       uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
       e.target.value = '';
     });
-    document.getElementById('contract-context-sample')?.addEventListener('click', ()=>{
-      const sample = sampleRef('contract', 'supp');
-      if (sample) uploadSupplement(sample);
-    });
   }
   if (currentScn === 'statement'){
     document.getElementById('statement-supp-input')?.addEventListener('change', e=>{
@@ -9769,10 +10354,6 @@ function bindScenarioContextForm(st){
       if (!f) return;
       uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
       e.target.value = '';
-    });
-    document.getElementById('statement-context-sample')?.addEventListener('click', ()=>{
-      const sample = sampleRef('statement', 'supp');
-      if (sample) uploadSupplement(sample);
     });
   }
 }
@@ -9802,9 +10383,10 @@ function bindScenarioDetailModal(st){
   document.querySelectorAll('[data-scenario-card]').forEach(btn=>{
     if (btn.__bound) return;
     btn.__bound = true;
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click', e=>{
+      if (e.target.closest('button,a,input,textarea,label')) return;
       st.result_detail_modal = btn.getAttribute('data-scenario-card');
-      renderLayer3(SE.scenarios[currentScn], st);
+      renderResultMain(SE.scenarios[currentScn], st);
     });
   });
   document.querySelectorAll('[data-scenario-detail-close]').forEach(btn=>{
@@ -9812,7 +10394,7 @@ function bindScenarioDetailModal(st){
     btn.__bound = true;
     btn.addEventListener('click', ()=>{
       st.result_detail_modal = null;
-      renderLayer3(SE.scenarios[currentScn], st);
+      renderResultMain(SE.scenarios[currentScn], st);
     });
   });
 }
@@ -9862,7 +10444,8 @@ function bindPaperResultDetail(st){
   document.querySelectorAll('[data-paper-card]').forEach(btn=>{
     if (btn.__bound) return;
     btn.__bound = true;
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click', e=>{
+      if (e.target.closest('button,a,input,textarea,label')) return;
       st.paper_detail_modal = btn.getAttribute('data-paper-card');
       renderResultMain(SE.scenarios.paper, st);
     });
@@ -9880,9 +10463,7 @@ function bindPaperResultDetail(st){
 function bindPaperContextForm(st){
   if (currentScn !== 'paper') return;
   document.getElementById('scene-start-parse')?.addEventListener('click', startParse);
-  document.getElementById('paper-context-fill')?.addEventListener('click', ()=>{
-    applySupplementFormSample();
-  });
+  document.getElementById('scene-fill-sample')?.addEventListener('click', applySceneSupplementSample);
   ['paper-user-direction','paper-user-topic','paper-user-focus','paper-user-purpose'].forEach(id=>{
     const el = document.getElementById(id);
     if (!el || el.__bound) return;
@@ -9937,9 +10518,9 @@ function scenarioAnalysisCards(st){
   if (currentScn === 'resume'){
     const f = st.fields || {};
     return [
-      { key:'info', title:'候选人信息', preview:`${f.name || '候选人'} · ${f.current_title || '职位待定'}`, detail:SCENE_RENDERERS.resume.fields(st) },
-      { key:'judgment', title:'匹配判断', preview:(f.job_match_summary?.evidences || []).slice(0,1).map(e=>`${e.dim} ${e.match}`).join('；') || '点击查看匹配判断', detail:SCENE_RENDERERS.resume.keyJudgment(st) },
-      { key:'summary', title:'推进建议', preview:st.summary || '点击查看推进建议', detail:SCENE_RENDERERS.resume.summaryDecision(st) },
+      { key:'info', title:'信息', preview:`${f.name || '候选人'} · ${f.current_title || '职位待定'}`, detail:SCENE_RENDERERS.resume.fields(st) },
+      { key:'judgment', title:'综合评价', preview:(f.job_match_summary?.evidences || []).slice(0,1).map(e=>`${e.dim} ${e.match}`).join('；') || '点击查看综合评价', detail:SCENE_RENDERERS.resume.keyJudgment(st) },
+      { key:'summary', title:'初筛结论', preview:st.summary || '点击查看初筛结论', detail:SCENE_RENDERERS.resume.summaryDecision(st) },
       { key:'iq', title:'面试问题', preview:(f.interview_focus || []).slice(0,1)[0] || '点击查看面试问题', detail:SCENE_RENDERERS.resume.view(st, 'iq') },
     ];
   }
@@ -9947,17 +10528,17 @@ function scenarioAnalysisCards(st){
     const f = st.fields || {};
     return [
       { key:'kv', title:'关键信息', preview:`${f.contract_type || '合同类型'} · ${f.subject || '标的待定'}`, detail:SCENE_RENDERERS.contract.fields(st) },
-      { key:'risk', title:'风险判断', preview:(f.risk_points || []).slice(0,1).map(x=>x.txt).join('；') || '点击查看风险判断', detail:SCENE_RENDERERS.contract.keyJudgment(st) },
-      { key:'summary', title:'签署建议', preview:st.summary || '点击查看签署建议', detail:SCENE_RENDERERS.contract.summaryDecision(st) },
-      { key:'diffs', title:'追加条款', preview:(f.clause_diffs || []).slice(0,1).map(x=>`${x.dim}：${x.theirs}`).join('；') || '点击查看追加条款', detail:SCENE_RENDERERS.contract.view(st, 'diffs') },
+      { key:'risk', title:'签署建议', preview:st.summary || '点击查看签署建议', detail:SCENE_RENDERERS.contract.summaryDecision(st) },
+      { key:'diffs', title:'客户修改对比', preview:(f.clause_diffs || []).slice(0,1).map(x=>`${x.dim}：${x.theirs}`).join('；') || '点击查看客户修改对比', detail:SCENE_RENDERERS.contract.view(st, 'diffs') },
+      { key:'timeline', title:'履约时间线', preview:(f.negotiation_list || []).slice(0,1)[0] || '点击查看履约时间线', detail:SCENE_RENDERERS.contract.view(st, 'timeline') },
     ];
   }
   const f = st.fields || {};
   return [
-    { key:'receipt', title:'识别字段', preview:`${f.receipt_entries?.length || 0} 笔手写条目`, detail:SCENE_RENDERERS.statement.fields(st) },
-    { key:'judgment', title:'核对判断', preview:(st.fields?.analysis_summary || st.summary || '点击查看核对判断'), detail:SCENE_RENDERERS.statement.keyJudgment(st) },
-    { key:'summary', title:'差异摘要', preview:(f.mismatch_items || []).slice(0,1).map(x=>x.reason).join('；') || '点击查看差异摘要', detail:SCENE_RENDERERS.statement.summaryDecision(st) },
-    { key:'metrics', title:'验算指标', preview:`匹配 ${f.matched_pairs?.length || 0} / 待核 ${f.mismatch_items?.length || 0}`, detail:SCENE_RENDERERS.statement.view(st, 'metrics') },
+    { key:'receipt', title:'手写单据识别结果', preview:`${f.receipt_entries?.length || 0} 笔手写条目`, detail:SCENE_RENDERERS.statement.fields(st) },
+    { key:'judgment', title:'对比结论', preview:(st.fields?.analysis_summary || st.summary || '点击查看对比结论'), detail:SCENE_RENDERERS.statement.keyJudgment(st) },
+    { key:'summary', title:'税务申报建议', preview:(f.mismatch_items || []).slice(0,1).map(x=>x.reason).join('；') || '点击查看税务申报建议', detail:SCENE_RENDERERS.statement.summaryDecision(st) },
+    { key:'metrics', title:'验算指标', preview:`命中率 ${Math.round(((f.calc_metrics?.credential_hit_rate || 0) * 100))}% · 可用度 ${Math.round(((f.calc_metrics?.archive_readiness || 0) * 100))}%`, detail:SCENE_RENDERERS.statement.view(st, 'metrics') },
   ];
 }
 
@@ -10085,13 +10666,13 @@ function buildSceneResultStage(s, st){
       <div class="scene-result-shell paper-result-stage">
         <div class="scene-result-grid">
           ${cards.map(card=>`
-            <div class="scene-result-card">
+            <div class="scene-result-card" data-${currentScn === 'paper' ? 'paper' : 'scenario'}-card="${card.key}">
               <div class="title">${card.title}</div>
               <div class="body">${card.detail}</div>
             </div>
           `).join('')}
         </div>
-        ${currentScn === 'paper' ? buildPaperFormulaModal(st) : ''}
+        ${currentScn === 'paper' ? buildPaperDetailModal(st) : buildScenarioDetailModal(st)}
       </div>
     `;
   }
@@ -10179,21 +10760,6 @@ function renderResultMain(s, st){
       if (window.lucide) lucide.createIcons();
       return;
     }
-    if (st.state === 'parsing'){
-      body.innerHTML = `
-        <div class="scene-two-step">
-          <div class="scene-two-step-head">
-            <div class="scene-two-step-copy">
-              <h2>${s.name}分析结果</h2>
-              <p>补充信息已接收，正在生成场景结果。</p>
-            </div>
-            <div class="scene-step-badge"><span class="num">02</span><span>结果展示</span></div>
-          </div>
-          ${buildSceneParsingPanel(s, st)}
-        </div>`;
-      if (window.lucide) lucide.createIcons();
-      return;
-    }
     if (st.state === 'error'){
       body.innerHTML = `
         <div class="scene-two-step">
@@ -10212,8 +10778,8 @@ function renderResultMain(s, st){
     }
 
     body.innerHTML = buildSceneResultStage(s, st);
-    bindPaperInlineFormula();
-    bindPaperFormulaModal(st);
+    bindScenarioDetailModal(st);
+    bindPaperResultDetail(st);
     if (window.lucide) lucide.createIcons();
   } catch (err) {
     body.innerHTML = `
@@ -10407,6 +10973,7 @@ const SCENE_RENDERERS = {
           <span class="numtile" style="font-size:32px;">${m.score}</span>
           <span class="text-t3 text-[11px] font-mono tracking-wider">匹配分</span>
         </div>
+        <div class="metric-summary"><b>文字评价：</b>候选人和岗位的重合点主要落在内容策略、数据复盘和跨角色协同推进，当前已经具备进入一轮沟通的基本说服力；如果把岗位相关案例再写得更产品化，匹配判断会更稳。</div>
         <div class="metric-stack">
           ${m.evidences.map(e=>`
             <div class="metric-item">
@@ -10538,11 +11105,22 @@ const SCENE_RENDERERS = {
         ['total_amount','总金额', amountField],
         ['date','期限', f.start_date && f.end_date ? `${f.start_date} → ${f.end_date}`:''],
       ];
-      return items.map(([,label,v])=>`
+      const base = items.map(([,label,v])=>`
         <div class="field-row">
           <div class="k">${label}</div>
           <div class="v">${v||'—'}</div>
         </div>`).join('');
+      const changes = (f.change_summary || []).length ? `
+        <div class="rounded-10 border border-line1 bg-bg2/40 p-3 mb-3">
+          ${(f.change_summary || []).map(it=>`
+            <div class="field-row">
+              <div class="k">${it.label}</div>
+              <div class="v">${it.value}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+      return changes + base;
     },
     keyJudgment(st){
       const f = st.fields||{};
@@ -10565,7 +11143,7 @@ const SCENE_RENDERERS = {
           <div class="contract-summary-state">${decisionText(st.decision, 'contract')}${st.degraded ? ' · 参考性判断' : ''}</div>
         </div>
         <div class="hr-grad my-4"></div>
-        <div class="section-title mb-2">待谈判事项</div>
+        <div class="section-title mb-2">待确认项</div>
         <ol class="text-[12px] text-t2 leading-relaxed space-y-1 pl-4 list-decimal">
           ${(st.fields?.negotiation_list||[]).slice(0,4).map(t=>`<li>${t}</li>`).join('')}
         </ol>
@@ -10585,19 +11163,42 @@ const SCENE_RENDERERS = {
         </div>`;
       }
       if (key === 'diffs'){
-        if (!f.clause_diffs) return `<div class="text-t3 text-[12px] py-6 text-center font-mono">未补补充协议</div>`;
+        if (!f.clause_diffs) return `<div class="text-t3 text-[12px] py-6 text-center font-mono">未补修改版合同</div>`;
         return `<table class="w-full text-[12px]">
           <thead><tr class="text-t3 font-mono text-[10px] uppercase">
-            <th class="text-left py-1.5">维度</th><th class="text-left">我方</th><th class="text-left">对方</th>
+            <th class="text-left py-1.5">修改项</th><th class="text-left">修改前</th><th class="text-left">修改后</th>
           </tr></thead>
           <tbody>${f.clause_diffs.map(d=>`
             <tr class="border-t border-line1">
-              <td class="py-2">${d.dim}</td>
+              <td class="py-2">${d.dim}${d.modified_by ? `<div class="text-t3 text-[11px] mt-1">${d.modified_by}修改</div>` : ''}</td>
               <td class="text-t2">${d.ours}</td>
               <td class="text-t1">${d.theirs}${d.note ? `<div class="text-t3 text-[11px] mt-1">${d.note}</div>` : ''}</td>
             </tr>
           `).join('')}</tbody>
         </table>`;
+      }
+      if (key === 'timeline'){
+        const items = f.timeline_items || [];
+        return `<div class="contract-dual-timeline">
+          ${items.map((it,i)=>`
+            <div class="contract-dual-row">
+              <div class="contract-dual-card is-a">
+                <div class="party">甲方</div>
+                <div class="main">${it.party_a}</div>
+                <div class="sub">${it.note}</div>
+              </div>
+              <div class="contract-dual-axis">
+                <div class="dot">${i+1}</div>
+                <div class="time">${it.phase}</div>
+              </div>
+              <div class="contract-dual-card is-b">
+                <div class="party">乙方</div>
+                <div class="main">${it.party_b}</div>
+                <div class="sub">${it.note}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>`;
       }
       if (key === 'todo'){
         return `<ol class="space-y-1.5 text-[12.5px] list-decimal pl-4">
@@ -10666,7 +11267,7 @@ const SCENE_RENDERERS = {
           </div>
           <div class="field-row">
             <div class="k">核验凭证</div>
-            <div class="v" style="font-size:13px; line-height:1.65;">${hasSupp ? '已补银行流水，并开始按日期、金额和商家线索查找对应流水；当前样例已命中 2025-01-09 的同额出行支出。' : '尚未补银行流水，当前只能停留在单据事实提取，不能进入流水核验。'}</div>
+            <div class="v" style="font-size:13px; line-height:1.65;">${hasSupp ? '已补银行流水，并开始按日期、金额和商家线索查找对应流水；当前已命中同日同额的可疑对应支出。' : '尚未补银行流水，当前只能停留在单据事实提取，不能进入流水核验。'}</div>
           </div>
         </div>
       `;
@@ -10684,6 +11285,12 @@ const SCENE_RENDERERS = {
             ${decisionText}${st.degraded ? ' · 参考性判断' : ''}
           </div>
         </div>
+        <div class="hr-grad my-4"></div>
+        <div class="section-title mb-2">申报建议</div>
+        <div class="text-[12px] text-t2 leading-relaxed">
+          ${st.supp_file ? '当前可按已匹配的日期、金额和商户线索进入报销或税务申报留档；未匹配部分建议暂缓申报，待补充凭证后再入账。'
+                       : '当前只有手写单据，尚不足以作为完整税务申报凭证，建议补充银行流水或电子发票后再提交。'}
+        </div>
         ${(st.fields?.mismatch_items||[]).length ? `
           <div class="hr-grad my-4"></div>
           <div class="section-title mb-2">MISMATCH · 待核</div>
@@ -10695,6 +11302,8 @@ const SCENE_RENDERERS = {
     },
     view(st, key){
       const f = st.fields||{};
+      const metrics = f.calc_metrics || {};
+      const fmtPct = value => value == null ? '—' : `${Math.round(value * 100)}%`;
       if (key === 'receipt'){
         return `<table class="w-full text-[12px]">
           <thead><tr class="text-t3 font-mono text-[10px] uppercase"><th class="text-left py-1">日期</th><th class="text-left">商家</th><th class="text-left">路线 / 用途</th><th class="text-right">金额</th></tr></thead>
@@ -10727,7 +11336,30 @@ const SCENE_RENDERERS = {
         </ol>`;
       }
       if (key === 'metrics'){
-        return SCENE_RENDERERS.statement.keyJudgment(st);
+        return `
+          <div class="statement-metric-grid">
+            <div class="statement-metric-card">
+              <div class="k">识别完整度</div>
+              <div class="v">${fmtPct(metrics.receipt_fact_score)}</div>
+              <div class="sub">单据中商家、日期、路线与金额字段是否提取齐全。</div>
+            </div>
+            <div class="statement-metric-card">
+              <div class="k">凭证命中率</div>
+              <div class="v">${fmtPct(metrics.credential_hit_rate)}</div>
+              <div class="sub">补传流水后，是否在同日同类支出里找到对应凭证。</div>
+            </div>
+            <div class="statement-metric-card">
+              <div class="k">金额一致率</div>
+              <div class="v">${fmtPct(metrics.amount_match_rate)}</div>
+              <div class="sub">手写单据金额与流水金额是否一致，避免人工复核偏差。</div>
+            </div>
+            <div class="statement-metric-card">
+              <div class="k">留档可用度</div>
+              <div class="v">${fmtPct(metrics.archive_readiness)}</div>
+              <div class="sub">当前材料距离报销 / 税务留档还差多少补充动作。</div>
+            </div>
+          </div>
+        `;
       }
     }
   },
@@ -10982,6 +11614,19 @@ function applySupplementFormSample(){
   renderScene();
 }
 
+function applySceneSupplementSample(){
+  if (scenarioNeedsFormSupplement(currentScn)){
+    applySupplementFormSample();
+    return;
+  }
+  const sample = sampleRef(currentScn, 'supp');
+  if (!sample){
+    toast('该场景暂未配置示例文件');
+    return;
+  }
+  uploadSupplement(sample);
+}
+
 function clearSupplement(){
   const k = currentScn;
   const st = SE.state[k];
@@ -11005,7 +11650,6 @@ function startParse(){
   st.state = 'parsing';
   st.parsing_phase = 'preparing';
   setSceneStep(st, 'result');
-  renderScene();
 
   const finalizeParse = () => {
     try {
@@ -11024,7 +11668,13 @@ function startParse(){
   const phases = ['extracting','summarizing'];
   const fastPath = !!(SE.demoMode || st.main_file?.sample || st.supp_file?.sample || hasSupplementContext(st));
   if (fastPath){
-    finalizeParse();
+    setTimeout(()=>{
+      st.parsing_phase = 'extracting';
+    }, 180);
+    setTimeout(()=>{
+      st.parsing_phase = 'summarizing';
+    }, 520);
+    setTimeout(finalizeParse, 1080);
     return;
   }
   let idx = 0;
@@ -11034,7 +11684,6 @@ function startParse(){
       return;
     }
     st.parsing_phase = phases[idx++];
-    renderScene();
     setTimeout(runPhase, 180);
   };
   setTimeout(runPhase, 150);
@@ -11169,7 +11818,7 @@ function buildMarkdown(s, st, o){
   }
   if (currentScn === 'statement'){
     const m = f.calc_metrics||{};
-    return head + `## 验算指标\n- 收入：¥${m.income_total?.toLocaleString()}\n- 支出：¥${m.expense_total?.toLocaleString()}\n- 净额：¥${m.net?.toLocaleString()}\n- 回款率：${m.recovery_rate?Math.round(m.recovery_rate*100)+'%':'—'}\n- 校验：${m.verified?'已核对':'仅基于单据'}\n\n## 单据条目\n${(f.receipt_entries||[]).map(e=>`- ${e.date}｜${e.dir==='in'?'+':'-'}¥${e.amount}｜${e.party}｜${e.purpose}`).join('\n')}\n\n## 异常\n${(f.mismatch_items||[]).map(it=>`- ${it.reason}`).join('\n')||'无'}\n`;
+    return head + `## 验算指标\n- 识别完整度：${m.receipt_fact_score!=null?Math.round(m.receipt_fact_score*100)+'%':'—'}\n- 凭证命中率：${m.credential_hit_rate!=null?Math.round(m.credential_hit_rate*100)+'%':'—'}\n- 金额一致率：${m.amount_match_rate!=null?Math.round(m.amount_match_rate*100)+'%':'—'}\n- 留档可用度：${m.archive_readiness!=null?Math.round(m.archive_readiness*100)+'%':'—'}\n- 校验：${m.verified?'已核对':'仅基于单据'}\n\n## 单据条目\n${(f.receipt_entries||[]).map(e=>`- ${e.date}｜${e.dir==='in'?'+':'-'}¥${e.amount}｜${e.party}｜${e.purpose}`).join('\n')}\n\n## 异常\n${(f.mismatch_items||[]).map(it=>`- ${it.reason}`).join('\n')||'无'}\n`;
   }
   if (currentScn === 'paper'){
     const p = f.target_paper_profile||{};
@@ -11352,9 +12001,7 @@ function applyAutoplayPreset(){
   const main = sampleRef(scn, 'main');
   const supp = sampleRef(scn, 'supp');
   if (main) uploadMainFile(scn, main);
-  currentScn = scn;
-  showRoute('scene');
-  renderScene();
+  openSceneRoute(scn, { withLoading:false });
   if (includeSupp){
     if (scenarioNeedsFormSupplement(scn)) applySupplementFormSample();
     else if (supp) uploadSupplement(supp);
