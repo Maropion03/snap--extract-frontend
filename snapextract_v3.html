@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@200;400;500;600&display=swap" rel="stylesheet" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -51,7 +51,46 @@
   --grad: linear-gradient(135deg,#FF7A18 0%,#FF2D87 100%);
   --grad-soft: linear-gradient(135deg,rgba(255,122,24,.18) 0%,rgba(255,45,135,.18) 100%);
   --glow: 0 0 28px -6px #FF7A18, 0 0 64px -20px #FF2D87;
+
+  /* === Aurora Glass · 全息光舱视觉系统扩展 === */
+  /* 光舱玻璃材质 */
+  --hull-tint:    rgba(255,255,255,.045);
+  --hull-tint-2:  rgba(255,255,255,.08);
+  --hull-edge:    rgba(255,255,255,.14);
+  --hull-edge-lit:rgba(255,255,255,.34);
+
+  /* 橙粉光源（基于现有 --ba/--bb，不引入新色） */
+  --aurora-warm:  radial-gradient(60% 80% at 20% 30%, rgba(255,122,24,.42), transparent 60%);
+  --aurora-cool:  radial-gradient(50% 70% at 80% 70%, rgba(255,45,135,.38), transparent 60%);
+  --aurora-core:  radial-gradient(40% 50% at 50% 50%, rgba(255,180,90,.30), transparent 70%);
+
+  /* 色散（chromatic aberration）— 仅做 1-2px 偏移的橙/粉双层 */
+  --ca-warm:  1px 0 0 rgba(255,122,24,.45);
+  --ca-cool: -1px 0 0 rgba(255,45,135,.45);
+
+  /* 玻璃高光路径 */
+  --gloss: linear-gradient(135deg,
+            rgba(255,255,255,.18) 0%,
+            rgba(255,255,255,0)   22%,
+            rgba(255,255,255,0)   72%,
+            rgba(255,255,255,.08) 100%);
+
+  /* 缓动 */
+  --ease-glass: cubic-bezier(.2, .8, .2, 1);
+  --ease-pop:   cubic-bezier(.34, 1.56, .64, 1);
+
+  /* 浮起阶梯 */
+  --lift-1: 0 6px 20px -8px rgba(0,0,0,.55), 0 0 0 1px var(--hull-edge);
+  --lift-2: 0 18px 50px -16px rgba(0,0,0,.7), 0 0 0 1px var(--hull-edge-lit),
+            0 0 36px -12px var(--ba), 0 0 80px -24px var(--bb);
 }
+@media (prefers-reduced-transparency: reduce){
+  :root{ --hull-tint:#0E1013; --hull-tint-2:#14171B; }
+}
+@media (max-resolution: 1.5dppx){
+  :root{ --hull-blur: 6px; }
+}
+:root{ --hull-blur: 14px; }
 html,body{
   background:var(--bg-0);
   color:var(--t1);
@@ -74,8 +113,18 @@ body{
 }
 body::before{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.18'/></svg>");
-  opacity:.025; mix-blend-mode:overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.34'/></svg>");
+  opacity:.07; mix-blend-mode:overlay;
+}
+/* Aurora Glass · 全屏底层极光晕（极淡，只为玻璃面板背后透出光源使用）*/
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(60% 80% at 12% 18%, rgba(255,122,24,.18), transparent 60%),
+    radial-gradient(50% 70% at 88% 76%, rgba(255,45,135,.16), transparent 60%),
+    radial-gradient(36% 48% at 50% 52%, rgba(255,180,90,.08), transparent 70%);
+  filter: blur(80px) saturate(130%);
+  opacity:.55;
 }
 .dotgrid{
   background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
@@ -99,14 +148,33 @@ body::before{
 .chip-brand .dot{ background:var(--ba); box-shadow:0 0 8px var(--ba); }
 .chip-info .dot{ background:#60A5FA; box-shadow:0 0 8px #60A5FA; }
 
+/* Aurora Glass · CTA 光斑充能 */
 .cta{
   position:relative; display:inline-flex; align-items:center; gap:8px;
-  padding:9px 16px; border-radius:8px;
-  background:var(--grad); color:#0B0B0C; font-weight:600; font-size:13px; letter-spacing:.01em;
-  box-shadow: var(--glow), inset 0 1px 0 rgba(255,255,255,.25);
-  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  padding:10px 18px; border-radius:9px;
+  background:var(--grad); color:#0B0B0C; font-weight:600; font-size:13px; letter-spacing:.02em;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -1px 0 rgba(0,0,0,.18),
+    0 12px 30px -10px var(--ba),
+    0 0 0 1px rgba(255,255,255,.08);
+  transition: transform .2s var(--ease-pop), box-shadow .3s var(--ease-glass), filter .2s;
+  isolation: isolate;
 }
-.cta:hover{ filter:brightness(1.06); transform:translateY(-1px); }
+.cta::before{
+  /* 常态 gloss 高光带 */
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background: var(--gloss); mix-blend-mode: overlay; opacity:.9;
+}
+.cta:hover{
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    0 18px 44px -12px var(--ba),
+    0 6px 24px -8px var(--bb),
+    0 0 0 1px rgba(255,255,255,.18);
+}
+.cta:active{ transform: translateY(0) scale(.985); filter: brightness(.96); }
 .cta:disabled,.cta[aria-disabled="true"]{
   background:var(--bg-2); color:var(--t3); box-shadow:none; cursor:not-allowed;
   border:1px solid var(--line-2);
@@ -126,15 +194,36 @@ body::before{
 }
 .iconbtn:hover{ background:var(--bg-2); color:var(--t1); border-color:var(--line-2); }
 
+/* Aurora Glass · .card 玻璃化（半透明 + 背后橙粉极光 + 对角 gloss）*/
 .card{
-  background:var(--bg-1); border:1px solid var(--line-2); border-radius:10px;
-  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  position:relative; isolation:isolate;
+  background:
+    var(--gloss),
+    linear-gradient(180deg, var(--hull-tint), var(--hull-tint-2)),
+    rgba(14,16,19,.72);
+  background-blend-mode: overlay, normal, normal;
+  border:1px solid var(--hull-edge); border-radius:10px;
+  backdrop-filter: blur(var(--hull-blur,14px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--hull-blur,14px)) saturate(140%);
+  box-shadow: var(--lift-1);
+  transition: border-color .25s var(--ease-glass),
+              transform .25s var(--ease-pop),
+              box-shadow .3s var(--ease-glass);
+}
+.card-hover{ overflow:hidden; }
+.card-hover::before{
+  /* 背后橙粉极光，被 blur 折射出来 */
+  content:""; position:absolute; inset:-40%; z-index:-1; pointer-events:none;
+  background: var(--aurora-warm), var(--aurora-cool);
+  filter: blur(40px); opacity:0;
+  transition: opacity .45s var(--ease-glass);
 }
 .card-hover:hover{
-  border-color: rgba(255,122,24,.45);
-  box-shadow: 0 0 0 1px rgba(255,122,24,.08), 0 12px 40px -20px rgba(255,122,24,.4);
-  transform: translateY(-1px);
+  border-color: var(--hull-edge-lit);
+  box-shadow: var(--lift-2);
+  transform: translateY(-2px);
 }
+.card-hover:hover::before{ opacity:.55; }
 .surface-grad{
   background:
     linear-gradient(135deg, rgba(255,122,24,.10) 0%, rgba(255,45,135,.06) 100%),
@@ -173,24 +262,54 @@ body::before{
 .reveal[data-d="6"]{ transition-delay:.44s; }
 
 /* Animated gradient mesh in hero */
-.hero-mesh{ position:absolute; inset:-20%; pointer-events:none; z-index:0; filter: blur(40px); opacity:.85; }
+/* Aurora Glass · Hero 三层极光 + 缓慢自转的光谱条 */
+.hero-mesh{
+  position:absolute; inset:-25%; pointer-events:none; z-index:0;
+  filter: blur(62px) saturate(135%); opacity:.92;
+  overflow:hidden;
+}
 .hero-mesh::before, .hero-mesh::after{
   content:""; position:absolute; border-radius:50%;
-  animation: mesh-float 16s ease-in-out infinite alternate;
+  animation: aurora-drift 22s var(--ease-glass) infinite alternate;
+  will-change: transform;
 }
 .hero-mesh::before{
-  width:520px; height:520px; left:55%; top:-10%;
-  background: radial-gradient(circle at 30% 30%, #FF7A18 0%, transparent 60%);
+  width:640px; height:640px; left:48%; top:-18%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,122,24,.78) 0%, rgba(255,122,24,0) 62%);
 }
 .hero-mesh::after{
-  width:480px; height:480px; left:40%; top:30%;
-  background: radial-gradient(circle at 70% 60%, #FF2D87 0%, transparent 60%);
-  animation-delay:-7s;
+  width:580px; height:580px; left:32%; top:34%;
+  background: radial-gradient(circle at 70% 60%, rgba(255,45,135,.72) 0%, rgba(255,45,135,0) 60%);
+  animation-delay:-9s; animation-duration: 26s;
 }
-@keyframes mesh-float{
+/* 第三层 amber core，更小但更亮 */
+.hero-mesh > .aurora-core{
+  position:absolute; width:340px; height:340px; left:58%; top:42%; border-radius:50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,200,120,.5) 0%, rgba(255,200,120,0) 70%);
+  animation: aurora-drift 32s var(--ease-glass) infinite alternate; animation-delay:-14s;
+  mix-blend-mode: screen;
+}
+/* 旋转光谱条 */
+.hero-mesh > .aurora-band{
+  position:absolute; inset:-20%; border-radius:50%;
+  background: conic-gradient(from 0deg,
+    rgba(255,122,24,0),
+    rgba(255,122,24,.22) 30deg,
+    rgba(255,180,90,.18) 90deg,
+    rgba(255,45,135,.22) 180deg,
+    rgba(255,122,24,0) 280deg,
+    rgba(255,122,24,0) 360deg);
+  animation: aurora-rotate 60s linear infinite;
+  mix-blend-mode: screen; opacity:.45;
+}
+@keyframes aurora-drift{
   0%   { transform: translate(0,0) scale(1); }
-  50%  { transform: translate(-40px,30px) scale(1.08); }
-  100% { transform: translate(60px,-20px) scale(.95); }
+  50%  { transform: translate(-44px,28px) scale(1.06); }
+  100% { transform: translate(56px,-18px) scale(.94); }
+}
+@keyframes aurora-rotate{ to{ transform: rotate(1turn); } }
+@keyframes mesh-float{ /* 保留兼容 */
+  0%{ transform:translate(0,0) scale(1);} 100%{ transform:translate(40px,-20px) scale(1.06);}
 }
 
 /* Conic gradient border that sweeps on hover */
@@ -218,22 +337,83 @@ body::before{
 .spotlight:hover::after{ opacity:1; }
 .spotlight > *{ position:relative; z-index:2; }
 
-/* Big number tile */
-.numtile{
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 56px; line-height:1; letter-spacing:-.04em;
-  font-weight:600;
-  background: linear-gradient(180deg, rgba(236,237,238,.95), rgba(236,237,238,.35));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+/* === Aurora Glass · 字符级 reveal（特征性时刻 A） === */
+[data-aurora-reveal]{ display:block; }
+.aurora-reveal-char{
+  display:inline-block; white-space:pre;
+  opacity:0; transform: translateY(.18em);
+  filter: blur(10px);
+  text-shadow: var(--ca-warm), var(--ca-cool);
+  animation: aurora-lock .7s var(--ease-glass) both;
+  animation-delay: calc(var(--i,0) * 38ms);
+}
+/* 处于渐变父级（如 .text-grad）里的字符 — 继承背景渐变让 background-clip:text 继续工作 */
+.text-grad .aurora-reveal-char{
+  background-image: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@keyframes aurora-lock{
+  0%   { opacity:0; transform: translateY(.18em); filter:blur(10px); }
+  60%  { opacity:1; transform: none; filter: blur(0);
+         text-shadow: var(--ca-warm), var(--ca-cool); }
+  100% { opacity:1; transform: none; filter: blur(0);
+         text-shadow: 0 0 24px rgba(255,180,90,.18); }
 }
 
-/* CTA shine sweep */
+/* === Aurora Glass · 上传卡光照注册（特征性时刻 B） === */
+@keyframes hull-scan{
+  from{ transform: translateY(100%); opacity:.9; }
+  to  { transform: translateY(-260%); opacity:0; }
+}
+@keyframes caret-blink{ 50%{ opacity:.18; } }
+
+/* === Aurora Glass · 全息成像（特征性时刻 C） === */
+@keyframes spectrum-bloom{
+  0%   { opacity:0; transform: scale(.92); }
+  50%  { opacity:1; }
+  100% { opacity:.35; transform: scale(1.02); }
+}
+@keyframes spectrum-tear{
+  0%   { left:50%; right:50%; opacity:1; }
+  70%  { left:4%;  right:4%;  opacity:1; }
+  100% { left:4%;  right:4%;  opacity:0; }
+}
+
+/* === Aurora Glass · 雷达扫描 === */
+@property --ra{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+@keyframes radar-sweep{ to{ --ra: 360deg; } }
+
+
+/* Big number tile · Aurora Glass — 衬线 italic 全息感 */
+.numtile{
+  font-family: 'Instrument Serif', 'JetBrains Mono', serif;
+  font-size: 62px; line-height:1; letter-spacing:-.02em;
+  font-weight:400; font-style: italic;
+  background: linear-gradient(180deg, rgba(236,237,238,.98), rgba(236,237,238,.45));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 0 28px rgba(255,180,90,.18);
+}
+/* Hero h1 / 章节大标题 — 也走 Instrument Serif italic */
+.display-serif{
+  font-family: 'Instrument Serif', 'HarmonyOS Sans SC', serif;
+  font-style: italic; font-weight: 400; letter-spacing: -.01em;
+}
+/* 辅助拉丁 body — Geist Sans 顶替 system-ui */
+.font-geist{ font-family: 'Geist', 'HarmonyOS Sans SC', system-ui, sans-serif; }
+/* 数字仪表 — JetBrains Mono 200 超细 / 600 加粗 */
+.font-mono-thin{ font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 200; letter-spacing:.04em; }
+.font-mono-bold{ font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; letter-spacing:.02em; }
+
+/* CTA shine sweep · Aurora Glass — 节流 + overlay 混合 */
 .cta{ overflow:hidden; }
 .cta::after{
   content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
   background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.55) 50%, transparent 100%);
   transform: skewX(-18deg);
-  animation: cta-shine 2.8s ease-in-out infinite;
+  animation: cta-shine 4.5s ease-in-out infinite;
+  opacity:.5; mix-blend-mode: overlay; pointer-events:none;
 }
 @keyframes cta-shine{ 0%{ left:-60%; } 60%,100%{ left:120%; } }
 
@@ -249,12 +429,31 @@ body::before{
   100%{ transform: scale(1.6); opacity:0; }
 }
 
-/* Ticker / marquee */
+/* Aurora Glass · Ticker / marquee + 玻璃底栏 + 时间戳前缀 */
 .ticker{
   display:flex; gap:48px; white-space:nowrap;
-  animation: ticker 40s linear infinite;
+  animation: ticker 50s linear infinite;
 }
 @keyframes ticker{ from{ transform: translateX(0); } to{ transform: translateX(-50%); } }
+/* 给底栏加玻璃 + 全宽刻度线 — 通过父容器选择器 */
+.ticker-bar,
+.absolute.left-0.right-0.bottom-0.border-t.border-line1.overflow-hidden:has(> .ticker){
+  background:
+    linear-gradient(to right, var(--hull-edge) 1px, transparent 1px) 0 100% / 96px 3px repeat-x,
+    rgba(8,9,10,.7);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-top:1px solid var(--hull-edge) !important;
+}
+/* 每条 ticker 项前的时间戳（由装饰 JS 注入 data-t）*/
+.ticker > span > span[data-t]::before{
+  content: attr(data-t) "  ▸  ";
+  font:11px/1 'JetBrains Mono', ui-monospace, monospace; font-weight: 500;
+  background: var(--grad);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  letter-spacing:.08em; margin-right:6px;
+  filter: drop-shadow(0 0 8px rgba(255,122,24,.35));
+}
 
 /* Scan beam for parsing */
 .scanwrap{ position:relative; overflow:hidden; }
@@ -1509,13 +1708,36 @@ body::before{
   line-height:1.55;
   color:var(--t3);
 }
+/* Aurora Glass · 结果区玻璃化 + 全息成像（特征性时刻 C） */
 .result-stage{
-  border:1px solid var(--line-1);
+  position:relative; isolation:isolate;
+  border:1px solid var(--hull-edge);
   border-radius:12px;
   overflow:hidden;
   background:
-    linear-gradient(180deg, rgba(255,122,24,.10), rgba(255,45,135,.04) 34%, rgba(255,255,255,.02) 68%, rgba(255,255,255,.01) 100%),
-    var(--bg-0);
+    var(--gloss),
+    linear-gradient(180deg, rgba(255,122,24,.14), rgba(255,45,135,.06) 34%, rgba(255,255,255,.02) 68%, rgba(255,255,255,.01) 100%),
+    rgba(8,9,10,.62);
+  background-blend-mode: overlay, normal, normal;
+  backdrop-filter: blur(var(--hull-blur,14px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--hull-blur,14px)) saturate(140%);
+  box-shadow: var(--lift-1);
+}
+/* result_ready 进入时的光场绽放 + 撕裂线 */
+.result-stage.is-emerging::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:
+    radial-gradient(40% 60% at 50% 50%, rgba(255,180,90,.32), transparent 70%),
+    radial-gradient(60% 80% at 50% 50%, rgba(255,45,135,.20), transparent 70%);
+  mix-blend-mode: screen;
+  animation: spectrum-bloom .9s var(--ease-glass) both;
+}
+.result-stage.is-emerging::after{
+  content:""; position:absolute; left:50%; right:50%; top:50%; height:1px;
+  background: linear-gradient(90deg, transparent, var(--ba), var(--bb), transparent);
+  box-shadow: 0 0 16px var(--ba), 0 0 32px var(--bb);
+  pointer-events:none; z-index:2;
+  animation: spectrum-tear .6s var(--ease-pop) .2s both;
 }
 .result-stage-head{
   padding:12px 14px;
@@ -2325,17 +2547,42 @@ body::before{
   flex-direction:column;
   gap:10px;
 }
+/* Aurora Glass · 上传卡光照注册（特征性时刻 B） */
 .scene-upload-slot .slot{
-  display:block;
-  padding:16px;
-  border:1px dashed var(--line-2);
-  border-radius:12px;
-  background:rgba(255,255,255,.02);
+  position:relative; isolation:isolate; overflow:hidden;
+  display:block; padding:16px;
+  border:1px dashed var(--hull-edge); border-radius:12px;
+  background:
+    radial-gradient(180px 180px at var(--mx,50%) var(--my,50%),
+      rgba(255,255,255,.10), transparent 60%),
+    var(--gloss),
+    linear-gradient(180deg, var(--hull-tint), var(--hull-tint-2)),
+    rgba(14,16,19,.5);
+  background-blend-mode: screen, overlay, normal, normal;
+  backdrop-filter: blur(10px) saturate(135%);
+  -webkit-backdrop-filter: blur(10px) saturate(135%);
+  box-shadow: var(--lift-1);
   cursor:pointer;
+  transition: transform .35s var(--ease-pop),
+              box-shadow .35s var(--ease-glass),
+              border-color .25s var(--ease-glass);
 }
 .scene-upload-slot .slot:hover{
-  border-color:rgba(255,45,135,.36);
-  background:rgba(255,45,135,.04);
+  transform: translateY(-4px);
+  border-style: solid;
+  border-color: var(--hull-edge-lit);
+  box-shadow: var(--lift-2);
+}
+.scene-upload-slot .slot::after{
+  /* 扫描光带 — 一次性扫过 */
+  content:""; position:absolute; left:0; right:0; height:140px; bottom:-140px;
+  background: linear-gradient(180deg, transparent,
+              rgba(255,122,24,.20) 38%, rgba(255,45,135,.24) 52%, transparent);
+  pointer-events:none; mix-blend-mode: screen;
+  opacity:0;
+}
+.scene-upload-slot .slot:hover::after{
+  animation: hull-scan .6s var(--ease-glass) .12s 1 forwards;
 }
 .scene-upload-slot .slot-main{
   display:flex;
@@ -2465,28 +2712,70 @@ body::before{
   padding:1px 5px; border-radius:4px; background: var(--bg-3); color: var(--t2);
 }
 
-/* privacy radar floating panel */
+/* Aurora Glass · 隐私雷达全息扇扫 */
 .pradar{
   position: fixed; right: 24px; bottom: 88px; z-index: 40;
 }
 .pradar-toggle{
+  position:relative; isolation:isolate; overflow:hidden;
   display:inline-flex; align-items:center; gap:8px;
-  padding: 8px 12px; border-radius: 999px;
-  background: var(--bg-1); border:1px solid var(--line-2);
+  padding: 9px 14px; border-radius: 999px;
+  background:
+    var(--gloss),
+    linear-gradient(180deg, var(--hull-tint), var(--hull-tint-2)),
+    rgba(14,16,19,.7);
+  background-blend-mode: overlay, normal, normal;
+  border:1px solid var(--hull-edge);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--t2); letter-spacing:.06em;
-  cursor:pointer; transition: all .2s ease;
-  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  cursor:pointer;
+  box-shadow: var(--lift-1);
+  transition: border-color .25s var(--ease-glass), color .2s, box-shadow .3s, transform .25s var(--ease-pop);
 }
-.pradar-toggle:hover{ border-color: rgba(16,185,129,.5); color:var(--t1); }
-.pradar-toggle .dot{ width:6px; height:6px; border-radius:999px; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.pradar-toggle::before{
+  /* 扇形扫描层 */
+  content:""; position:absolute; inset:-50%; pointer-events:none;
+  background: conic-gradient(from var(--ra,0deg),
+    transparent 0deg,
+    rgba(255,122,24,.32) 14deg,
+    rgba(255,180,90,.30) 28deg,
+    rgba(255,45,135,.28) 42deg,
+    transparent 60deg,
+    transparent 360deg);
+  animation: radar-sweep 4.5s linear infinite;
+  mix-blend-mode: screen; opacity:.85;
+}
+.pradar-toggle:hover{
+  border-color: var(--hull-edge-lit);
+  color:var(--t1);
+  transform: translateY(-1px);
+  box-shadow: var(--lift-2);
+}
+.pradar-toggle .dot{
+  position:relative; z-index:1;
+  width:6px; height:6px; border-radius:999px; background: var(--ba);
+  box-shadow: 0 0 10px var(--ba), 0 0 22px var(--bb);
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+.pradar-toggle > *{ position:relative; z-index:1; }
 .pradar-panel{
-  position:absolute; bottom: calc(100% + 8px); right: 0;
-  width: 280px; border-radius: 10px; border:1px solid var(--line-2); background: var(--bg-1);
-  padding: 14px; box-shadow: 0 14px 40px -10px rgba(0,0,0,.6);
-  opacity:0; transform: translateY(6px); pointer-events:none;
-  transition: opacity .18s ease, transform .18s ease;
+  position:absolute; bottom: calc(100% + 10px); right: 0;
+  width: 288px; border-radius: 12px;
+  border:1px solid var(--hull-edge);
+  background:
+    var(--gloss),
+    linear-gradient(180deg, var(--hull-tint), var(--hull-tint-2)),
+    rgba(8,9,10,.78);
+  background-blend-mode: overlay, normal, normal;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  padding: 14px;
+  box-shadow: 0 18px 50px -12px rgba(0,0,0,.7), 0 0 36px -16px var(--ba);
+  opacity:0; transform: translateY(8px) scale(.98); pointer-events:none;
+  transition: opacity .22s var(--ease-glass), transform .25s var(--ease-pop);
 }
-.pradar.show .pradar-panel{ opacity:1; transform: translateY(0); pointer-events:auto; }
+.pradar.show .pradar-panel{ opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
 
 #actionbar,
 #pradar,
@@ -2820,20 +3109,36 @@ body::before{
 .lab-tog.is-on .d{ background: var(--c); box-shadow: 0 0 8px var(--c); }
 .lab-tog.is-on .ct{ color: var(--c); }
 
+/* Aurora Glass · PDF 全息切片视差 */
 .pdf-page{
   position: relative; width: 100%; aspect-ratio: 4/3;
-  border-radius: 10px; border: 1px solid var(--line-2);
-  background: linear-gradient(180deg, #0f1115, #0A0B0D);
+  border-radius: 10px; border: 1px solid var(--hull-edge);
+  background:
+    var(--gloss),
+    linear-gradient(180deg, #0f1115, #0A0B0D);
+  background-blend-mode: overlay, normal;
   overflow: hidden;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  box-shadow: var(--lift-1);
 }
 .pdf-page::before{
   content:""; position:absolute; inset:0;
   background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
   background-size: 12px 12px;
 }
+.pdf-page::after{
+  /* 背后橙粉光晕 — hover 时显形 */
+  content:""; position:absolute; inset:-30%; z-index:0; pointer-events:none;
+  background: var(--aurora-warm), var(--aurora-cool);
+  filter: blur(36px); opacity:0;
+  transition: opacity .5s var(--ease-glass);
+}
+.pdf-page:hover::after{ opacity:.42; }
 .pdf-layer{
   position: absolute; border-radius: 4px;
-  transition: opacity .3s ease, transform .3s ease, box-shadow .25s ease;
+  transition: opacity .35s var(--ease-glass), transform .5s var(--ease-glass),
+              box-shadow .3s, filter .35s;
   cursor: default;
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px; letter-spacing: .04em;
@@ -2843,13 +3148,26 @@ body::before{
   background: color-mix(in srgb, var(--c, #FF7A18) 12%, transparent);
   color: color-mix(in srgb, var(--c, #FF7A18) 100%, white);
   text-transform: uppercase;
+  filter: brightness(.94);
+  backface-visibility: hidden;
 }
+.pdf-page:hover .pdf-layer{ filter: brightness(1.05); }
+.pdf-page:hover .pdf-layer.text   { transform: translate3d(-6px,-4px, 16px); }
+.pdf-page:hover .pdf-layer.formula{ transform: translate3d( 3px,-1px,  8px); }
+.pdf-page:hover .pdf-layer.figure { transform: translate3d( 8px, 5px,  0); }
+.pdf-page:hover .pdf-layer.table  { transform: translate3d(-3px, 3px, -6px); }
 .pdf-layer.text   { --c: #FF7A18; }
 .pdf-layer.formula{ --c: #FF2D87; font-family: serif; font-style: italic; font-size: 11px; align-items: center; justify-content: center; text-transform: none; }
 .pdf-layer.figure { --c: #22D3EE; align-items: center; justify-content: center; flex-direction: column; gap: 2px; }
 .pdf-layer.table  { --c: #10B981; align-items: center; justify-content: center; }
 .pdf-layer.is-off{ opacity: 0; transform: scale(.96); pointer-events: none; }
-.pdf-layer:hover{ box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 80%, transparent), 0 6px 18px -6px color-mix(in srgb, var(--c) 70%, transparent); }
+.pdf-layer:hover{
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--c) 80%, transparent),
+    0 0 28px -6px color-mix(in srgb, var(--c) 70%, transparent),
+    0 0 64px -22px var(--ba);
+  filter: brightness(1.18);
+}
 .pdf-layer .body-lines{ width:100%; }
 .pdf-layer .body-lines .ln{ height: 1.5px; border-radius: 999px; background: currentColor; opacity: .35; margin-top: 3px; }
 
@@ -4471,14 +4789,32 @@ body::before{
 }
 .pdb-sep{ width: 1px; height: 28px; background: var(--line-2); }
 
-/* Reduced motion */
+/* Reduced motion · Aurora Glass 扩展 */
 @media (prefers-reduced-motion: reduce){
   .hero-mesh::before, .hero-mesh::after, .cta::after, .pulse::after,
   .ticker, .scanbeam, .stepper .step.active .num, .float-y,
   .ocr-idle .ocr-scan, .ocr-idle .ocr-line, .se-idle::after, .se-idle .se-ring::before,
-  .se-idle .se-core::before, .se-idle .se-core::after, .se-idle .se-scanline, .se-idle .se-particle{
+  .se-idle .se-core::before, .se-idle .se-core::after, .se-idle .se-scanline, .se-idle .se-particle,
+  .aurora-band, .aurora-core, .pradar-toggle::before,
+  .aurora-reveal-char,
+  .result-stage.is-emerging::before, .result-stage.is-emerging::after,
+  .scene-upload-slot .slot:hover::after,
+  .card-hover::before{
     animation:none !important;
+    transition: none !important;
   }
+  .aurora-reveal-char{ opacity:1 !important; transform:none !important; filter:none !important; text-shadow:none !important; }
+  .hero-mesh, .card-hover::before{ opacity:.4 !important; }
+}
+/* 透明度降级 · 老 PC / 弱 GPU 友好 */
+@media (prefers-reduced-transparency: reduce){
+  .card, .scene-upload-slot .slot, .pdf-page, .pradar-toggle, .pradar-panel,
+  .ticker-bar, .result-stage{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--bg-1) !important;
+  }
+  body::after{ display:none !important; }
 }
 
 input, select, textarea{ background:var(--bg-2); }
@@ -4903,7 +5239,7 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
 
       <div class="relative grid grid-cols-12 gap-6 lg:gap-1 xl:gap-0 items-center min-h-[420px]">
         <div class="col-span-12 lg:col-span-5">
-          <h1 class="reveal text-[clamp(38px,4.8vw,64px)] leading-[1.06] font-medium tracking-[-0.03em]" data-d="2">
+          <h1 class="reveal display-serif text-[clamp(42px,5.2vw,72px)] leading-[1.06] font-medium tracking-[-0.02em]" data-d="2" data-aurora-reveal>
             高敏文档，<span class="text-grad whitespace-nowrap">从此不再上云</span>
           </h1>
           <div class="reveal flex items-center gap-3 mt-9" data-d="4">
@@ -14215,5 +14551,168 @@ window.addEventListener('DOMContentLoaded', ()=>{
 });
 </script>
 <script src="./demo_sample_files_public/contract_cn_parse_asset.js"></script>
+
+<!-- === Aurora Glass 装饰增强（仅 DOM wrap / attr 注入 / class toggle，无业务逻辑） === -->
+<script>
+(function AuroraGlass(){
+  'use strict';
+
+  // —— 0. reduced-motion 短路 ——
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // —— 1. Hero hero-mesh 注入装饰子元素（amber core + 旋转光谱条）——
+  function decorateHeroMesh(){
+    document.querySelectorAll('.hero-mesh').forEach(m => {
+      if (m.dataset.auroraDone) return;
+      m.dataset.auroraDone = '1';
+      const core = document.createElement('div'); core.className = 'aurora-core'; core.setAttribute('aria-hidden','true');
+      const band = document.createElement('div'); band.className = 'aurora-band'; band.setAttribute('aria-hidden','true');
+      m.appendChild(band); m.appendChild(core);
+    });
+  }
+
+  // —— 2. 字符级 reveal（特征性时刻 A）——
+  // 递归 walk text nodes，把每个 char 包成 <span class="aurora-reveal-char" style="--i:N">
+  function wrapChars(root){
+    let i = 0;
+    const walk = (node) => {
+      if (node.nodeType === Node.TEXT_NODE){
+        const txt = node.nodeValue;
+        if (!txt || !txt.trim()) return;
+        const frag = document.createDocumentFragment();
+        for (const ch of Array.from(txt)){
+          if (ch === ' ' || ch === '\n' || ch === '\t'){
+            frag.appendChild(document.createTextNode(ch));
+            continue;
+          }
+          const span = document.createElement('span');
+          span.className = 'aurora-reveal-char';
+          span.style.setProperty('--i', i++);
+          span.textContent = ch;
+          frag.appendChild(span);
+        }
+        node.parentNode.replaceChild(frag, node);
+      } else if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('aurora-reveal-char')){
+        Array.from(node.childNodes).forEach(walk);
+      }
+    };
+    Array.from(root.childNodes).forEach(walk);
+  }
+  function setupReveal(){
+    if (reduced) return;
+    const targets = document.querySelectorAll('[data-aurora-reveal]:not(.aurora-reveal-done)');
+    if (!targets.length) return;
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting){
+          const el = e.target;
+          if (!el.classList.contains('aurora-reveal-done')){
+            wrapChars(el);
+            el.classList.add('aurora-reveal-done');
+          }
+          obs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.25 });
+    targets.forEach(t => io.observe(t));
+  }
+
+  // —— 3. 上传卡 mousemove spotlight（特征性时刻 B 一部分）——
+  function setupSlotSpotlight(){
+    document.body.addEventListener('mousemove', (e) => {
+      const slot = e.target.closest('.scene-upload-slot .slot');
+      if (!slot) return;
+      const r = slot.getBoundingClientRect();
+      slot.style.setProperty('--mx', ((e.clientX - r.left) / r.width  * 100).toFixed(1) + '%');
+      slot.style.setProperty('--my', ((e.clientY - r.top ) / r.height * 100).toFixed(1) + '%');
+    }, { passive: true });
+  }
+
+  // —— 4. Ticker 时间戳注入 ——
+  function setupTickerStamps(){
+    document.querySelectorAll('.ticker').forEach(tk => {
+      if (tk.dataset.auroraDone) return;
+      tk.dataset.auroraDone = '1';
+      // 每条 ticker 项的第一个内层 span 注入 data-t（伪时间戳）
+      const items = tk.querySelectorAll(':scope > span > span:first-child');
+      const base = Math.floor(Math.random()*40) + 12;
+      items.forEach((sp, idx) => {
+        const sec = (base + idx * 7) % 60;
+        const min = Math.floor((base + idx * 7) / 60) % 60;
+        sp.setAttribute('data-t', `T-${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`);
+      });
+    });
+  }
+
+  // —— 5. result-stage 全息成像 class toggle（特征性时刻 C）——
+  // 用 MutationObserver 监听 .result-stage 出现 / 重渲染，限频后加 is-emerging
+  function setupResultEmerge(){
+    if (reduced) return;
+    const seen = new WeakSet();
+    let lastFire = 0;
+    const trigger = (el) => {
+      const now = Date.now();
+      if (now - lastFire < 400) return;
+      lastFire = now;
+      el.classList.remove('is-emerging');
+      // 强制重排让动画重新跑
+      // eslint-disable-next-line no-unused-expressions
+      void el.offsetWidth;
+      el.classList.add('is-emerging');
+      setTimeout(() => el.classList.remove('is-emerging'), 1000);
+    };
+    const scan = () => {
+      document.querySelectorAll('.result-stage').forEach(el => {
+        if (!seen.has(el)){
+          seen.add(el);
+          trigger(el);
+        }
+      });
+    };
+    const mo = new MutationObserver(() => scan());
+    mo.observe(document.body, { childList: true, subtree: true });
+    scan();
+  }
+
+  // —— 6. 全局可见性闸门：离屏 pause 持续动画 ——
+  function setupVisibilityGate(){
+    const targets = document.querySelectorAll('.hero-mesh, .ticker, .pradar-toggle');
+    if (!('IntersectionObserver' in window) || !targets.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const ps = e.isIntersecting ? 'running' : 'paused';
+        e.target.style.animationPlayState = ps;
+        e.target.querySelectorAll('*').forEach(c => { c.style.animationPlayState = ps; });
+      });
+    }, { threshold: 0.01 });
+    targets.forEach(t => io.observe(t));
+    // page visibility 也接入
+    document.addEventListener('visibilitychange', () => {
+      const ps = document.hidden ? 'paused' : 'running';
+      targets.forEach(t => {
+        t.style.animationPlayState = ps;
+        t.querySelectorAll('*').forEach(c => { c.style.animationPlayState = ps; });
+      });
+    });
+  }
+
+  // —— 启动 ——
+  function init(){
+    decorateHeroMesh();
+    setupReveal();
+    setupSlotSpotlight();
+    setupTickerStamps();
+    setupResultEmerge();
+    setupVisibilityGate();
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
 </body>
 </html>

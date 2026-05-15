@@ -43,6 +43,57 @@
 - 对账单：`receipt_entries / statement_entries / matched_pairs / mismatch_items / calc_metrics`（**主文件 = 手写单据**，银行流水是补充）
 - 论文：`target_paper_profile / paper_summary / user_research_context / relevance_judgement / reference_value`
 
+## Aurora Glass · 全息光舱视觉升级（仅 CSS + 装饰 JS，不动业务逻辑）
+
+把整套视觉从 "朴素深灰 + 橙粉点缀"（自评 5.5/10）拉到 "悬浮全息玻璃 + 极光底色"（自评 8.5+/10）。前后端通信契约 byte-for-byte 不变，合并回另一台 PC 不影响 Tesseract / Qwen2.5 后端。
+
+### 三原则
+1. **玻璃即材质** — 所有 card / modal / floating panel 走半透明玻璃 + 背后橙粉极光 + 对角 gloss
+2. **光谱即装饰** — 不引入新色板，用现有 `--ba/--bb` 衍生 amber core / chromatic aberration
+3. **浮起即响应** — hover 用 translateY + lift-2 阴影，不用 2D 边框变色
+
+### 已落地（13 项）
+- 字体：拉丁大标题换 **Instrument Serif italic**，body 引入 **Geist**，mono 加 weight 200/600
+- `:root` 扩展：`--hull-*` 玻璃材质 / `--aurora-*` 光源 / `--ca-*` 色散 / `--gloss` / `--ease-glass/-pop` / `--lift-1/-2`
+- `body::after` 全屏底层极光晕 + noise opacity 0.025→0.07
+- `.card` 全面玻璃化（backdrop-filter 14px saturate 140% + lift-1）
+- `.card-hover::before` 背后橙粉极光 hover 显形
+- `.hero-mesh` 升级为三层极光 + 旋转光谱条（aurora-drift / aurora-rotate）
+- `.numtile` / Hero h1 用 Instrument Serif italic + chromatic shadow
+- **字符级 reveal**（特征性时刻 A）：Hero 标题逐字 0.04s 错开光斑落字，IntersectionObserver 单次触发
+- `.cta` 升级为光斑充能：常态 gloss 高光 + hover lift + active 按入
+- `.scene-upload-slot .slot` 光照注册（特征性时刻 B）：mousemove spotlight + hover 浮起 4px + 扫描光带一次性扫过
+- `.pdf-page / .pdf-layer` 全息切片视差（特征性时刻 C 一部分）：3D perspective + hover 4 层错开浮起 + 激活层橙粉光环
+- `.result-stage.is-emerging` 全息成像（特征性时刻 C）：parsing→ready 时光场绽放 + 横向撕裂线
+- `.pradar / .pradar-toggle` 全息扇扫：conic-gradient 扫描层 + 玻璃面板
+- `.ticker` + 玻璃底栏 + JS 注入 `data-t` 伪时间戳前缀（橙粉渐变文字 + drop-shadow）
+
+### 装饰 JS（~110 行，统一封装在 `AuroraGlass` IIFE 末尾）
+- `decorateHeroMesh` 注入 `.aurora-core` / `.aurora-band` 子元素
+- `wrapChars` 递归 walk textNodes（**保留 `.text-grad` 等渐变父节点的 background-clip:text 继承**），把每个字符 wrap 成 `.aurora-reveal-char` 带 `--i`
+- `setupSlotSpotlight` 上传卡 mousemove → CSS 变量 `--mx --my`
+- `setupTickerStamps` Ticker 每条注入 `data-t="T-XX:YY"`
+- `setupResultEmerge` MutationObserver 监听 `.result-stage` 出现 → 加 `is-emerging`，700ms 后移除
+- `setupVisibilityGate` IntersectionObserver + page visibility → 离屏 `animation-play-state: paused`
+
+### 降级链路
+- `@media (prefers-reduced-motion: reduce)`：扩展覆盖所有新增 keyframe + aurora chars 直接 opacity:1
+- `@media (prefers-reduced-transparency: reduce)`：backdrop-filter 全 off，回退实底 `var(--bg-1)`，body::after 隐藏
+- `@media (max-resolution: 1.5dppx)`：`--hull-blur` 14px → 6px（低 DPR 节流）
+
+### 验证（local serve_snapextract.py + Claude Preview MCP）
+- ✅ 0 控制台 error
+- ✅ FPS 抓帧：60.3 fps 稳定（2s × 121 帧）
+- ✅ Instrument Serif italic 大标题 + 橙粉渐变 "从此不再上云" 共存（修复 text-grad 子 span 继承 bug）
+- ✅ Hero h1 字符级 reveal 11 个字符全部 opacity:1 完成
+- ✅ Ticker `T-00:34 ▸ ...` 时间戳注入成功
+- ✅ `.card` backdrop-filter blur 14px saturate 140% + lift-1 阴影
+- ✅ 后端契约保持：`/ocr` `/chat` `/health` 三个接口的请求格式未变
+
+### 文件
+- 唯一改动：`snapextract_v3.html`（CSS 在原 `<style>` 内追加；装饰 JS 在 `</body>` 前以独立 `<script>` 块注入）
+- 未动：`proxy.py / tools/ / *.py / *.json / demo_sample_files_public/`
+
 ## 待办
 
 - [ ] BaselineCompare 三栏对照组件（无解析 / Tesseract / SnapExtract）
