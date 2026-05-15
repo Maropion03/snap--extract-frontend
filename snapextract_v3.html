@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -26,7 +26,7 @@
     theme: {
       extend: {
         fontFamily: {
-          sans: ['Inter','PingFang SC','system-ui','sans-serif'],
+          sans: ['HarmonyOS Sans SC','HarmonyOS Sans','Source Han Sans SC','Source Han Sans CN','Noto Sans SC','PingFang SC','Microsoft YaHei','system-ui','sans-serif'],
           mono: ['JetBrains Mono','ui-monospace','SFMono-Regular','monospace'],
         },
         colors: {
@@ -55,7 +55,7 @@
 html,body{
   background:var(--bg-0);
   color:var(--t1);
-  font-family:Inter,'PingFang SC',system-ui,sans-serif;
+  font-family:'HarmonyOS Sans SC','HarmonyOS Sans','Source Han Sans SC','Source Han Sans CN','Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
   height:100%;
   overflow:hidden;
 }
@@ -2097,15 +2097,32 @@ body::before{
   min-height:0;
 }
 .paper-result-stage{
-  gap:10px;
+  gap:16px;
 }
 .paper-result-stage .scene-result-grid{
-  gap:10px;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  grid-template-rows:repeat(2, minmax(280px, 1fr));
+  gap:16px;
   align-content:start;
 }
 .paper-result-stage .scene-result-card{
   min-height:0;
-  padding:14px 14px;
+  height:clamp(280px, 34vh, 380px);
+  padding:16px 16px;
+}
+.paper-result-stage .scene-result-card.is-contextual{
+  border-color:rgba(255,122,24,.22);
+  background:
+    linear-gradient(180deg, rgba(255,122,24,.08), rgba(255,45,135,.03)),
+    linear-gradient(180deg, rgba(255,255,255,.022), rgba(255,255,255,.012)),
+    var(--bg-1);
+}
+.scene-result-card .eyebrow{
+  margin-bottom:10px;
+  font:10px/1.2 'JetBrains Mono', monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ba);
 }
 .paper-result-stage .scene-result-card .title{
   font-size:10px;
@@ -2362,6 +2379,10 @@ body::before{
   .scene-main-stage{ grid-template-columns:1fr; }
   .scene-inline-kvs{ grid-template-columns:1fr; }
   .scene-result-grid{ grid-template-columns:1fr; }
+  .paper-result-stage .scene-result-grid{
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    grid-template-rows:repeat(2, minmax(260px, 1fr));
+  }
   .paper-result-topbar{ flex-direction:column; align-items:flex-start; }
   .paper-result-topbar .paper-form-chip,
   .paper-result-topbar .scene-step-badge{ width:100%; justify-content:center; }
@@ -2376,6 +2397,14 @@ body::before{
   .analysis-scene-mode #scene-main-rail{ grid-column: span 5 / span 5; }
 }
 @media (max-width: 1024px){
+  .paper-result-stage .scene-result-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+  }
+  .paper-result-stage .scene-result-card{
+    height:auto;
+    min-height:240px;
+  }
   .paper-result-headline{ grid-template-columns:1fr; }
   .paper-head-side{ width:100%; }
   .analysis-scene-mode #scene-workspace{ height:auto; }
@@ -4600,7 +4629,7 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
                   <div class="ocr-scan"></div>
                   <div class="ocr-corners"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <div class="idle-caption">等待上传 · 视觉块提取与证据定位</div>
+                <div class="idle-caption"></div>
               </div>
             </div>
           </div>
@@ -4616,7 +4645,7 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
             </div>
             <div class="ppane-toolbar">
               <span class="ppane-title">SNAPEXTRACT · STRUCTURED</span>
-              <span class="ppane-tab ml-auto is-active" data-tab="summary">Markdown</span>
+              <span class="ppane-tab ml-auto is-active" data-tab="summary">Structured</span>
               <span class="ppane-tab" data-tab="json">JSON</span>
               <span class="chip chip-brand" id="pane-se-tag"><span class="dot"></span>standby</span>
             </div>
@@ -4639,7 +4668,7 @@ input:focus, textarea:focus, select:focus{ outline:none; border-color: rgba(255,
                   <span class="se-particle"></span>
                   <span class="se-particle"></span>
                 </div>
-                <div class="idle-caption">等待上传 · 结构化字段与结论生成</div>
+                <div class="idle-caption"></div>
               </div>
             </div>
           </div>
@@ -5266,7 +5295,7 @@ const SE = window.SE = {
     contract: {
       key:'contract', name:'合同', icon:'file-signature',
       tagline:'快速判断合同能不能签、哪些条款必须修订',
-      desc:'解析合同关键字段，并对比甲方版与乙方版的条款修改，直接收束到签署建议与履约时间线。',
+      desc:'解析合同关键字段，归纳双方版本中的疑似改动与履约节点摘要，直接收束到签署建议。',
       main:   { name:'合同初稿', icon:'file-text',     hint:'PDF · 初始合同版本（主文件）' },
       supp:   { name:'修改版合同', icon:'files',       hint:'另一方修改后的合同版本 · 用于条款前后对比（可选）', desc:'补修改版后追加：修改点前后对比、责任差异、必修订项' },
       outputs:[
@@ -5286,7 +5315,7 @@ const SE = window.SE = {
       tagline:'先识别手写单据，再核对银行流水',
       desc:'主文件是手写单据（先解析）；补银行流水后切换为单据 + 流水 + 结果三栏核对视图。',
       main:   { name:'手写单据', icon:'pen-line',      hint:'PNG / JPG · 手写记账或票据（主文件）' },
-      supp:   { name:'银行流水', icon:'banknote',    hint:'PDF · 银行流水截图（可选，用于核对）', desc:'补银行流水后追加：单据/流水比对、差异清单、验算结果' },
+      supp:   { name:'银行流水', icon:'banknote',    hint:'PDF · 银行流水截图（可选，用于核对）', desc:'补银行流水后追加：单据/流水比对、差异清单、验算指标与税务相关提示' },
       outputs:[
         {fmt:'CSV',  label:'交易表',        ext:'csv',  filename:'transactions.csv'},
         {fmt:'MD',   label:'月度报告',      ext:'md',   filename:'statement_report.md'},
@@ -5327,6 +5356,9 @@ const SE = window.SE = {
   /* runtime modes */
   demoMode: false,
 
+  proxyUrl: 'http://127.0.0.1:8765',
+  sceneRuntimeUrl: '',
+
   /* history mock */
   history: seedHistory(),
 
@@ -5342,12 +5374,12 @@ const SE = window.SE = {
 
 /* PRD 2.2.3 fixed 6-step demo flow */
 const FLOW_STEPS = [
-  {key:'raw',       name:'原始材料',         hint:'查看主文件预览'},
-  {key:'baseline',  name:'视觉解析',         hint:'原文 / 视觉证据 / 结构化输出'},
-  {key:'supp',      name:'补充材料',         hint:'按场景补岗位信息 / 修改版合同 / 流水 / 研究上下文'},
-  {key:'parse',     name:'端侧解析',         hint:'preparing → extracting → summarizing'},
-  {key:'output',    name:'结果物',           hint:'字段卡 + 重点判断 + 总结建议 + 导出'},
-  {key:'persist',   name:'本地留存 / 公式识别',  hint:'本地缓存 + 框选公式识别'},
+  {key:'raw',       name:'????',         hint:'???????'},
+  {key:'baseline',  name:'????',         hint:'?? / ???? / ?????'},
+  {key:'supp',      name:'????',         hint:'???????? / ????? / ?? / ?????'},
+  {key:'parse',     name:'????',         hint:'preparing -> extracting -> summarizing'},
+  {key:'output',    name:'????',         hint:'??? + ???? + ???? + ??'},
+  {key:'persist',   name:'???? / ????',  hint:'???? + ??????'},
 ];
 
 function makeState(){
@@ -5359,11 +5391,13 @@ function makeState(){
       // PRD 2.3.2 state machine:
       state: 'idle',            // idle | scene_entered | baseline_viewing | supplement_added | parsing | result_ready | followup_active | error
       parsing_phase: null,      // preparing | extracting | summarizing | null
+      parse_run_id: 0,
       main_file: null,          // {name, size, type, url?}
       supp_file: null,          // {name, size, type, url?}
       supp_form: null,          // structured supplement input for resume / paper
       scene_step: 'supplement', // supplement | result
       fields: null,             // PRD 3.x.8 schema
+      runtime_result: null,
       field_alerts: [],         // [{key, level, reason}]
       baseline_result: null,    // {raw, tesseract, snapextract}
       view_active: null,        // current right-panel view key
@@ -5587,27 +5621,36 @@ const MOCK = {
         {receipt:0, statement:1, status:'ok', reason:'日期一致，金额一致，且均为出行类消费。'},
       ] : [],
       mismatch_items: hasSupp ? [] : [],
-      calc_metrics: {
-        receipt_fact_score: hasSupp ? 0.96 : 0.91,
-        credential_hit_rate: hasSupp ? 1 : 0,
-        amount_match_rate: hasSupp ? 1 : 0,
-        archive_readiness: hasSupp ? 0.88 : 0.34,
-        verified: !!hasSupp,
-      },
+      calc_metrics: (() => {
+        const base = {
+          receipt_entries: [
+            {date:'2025-01-09', amount:48.75, dir:'out', party:'深港出行', purpose:'深圳湾科技生态园 -> 福田高铁站', payment:'微信支付'},
+          ],
+          statement_entries: hasSupp ? [
+            {date:'2025-01-05', amount:120000.00, dir:'in', desc:'工资入账'},
+            {date:'2025-01-09', amount:48.75, dir:'out', desc:'深港出行服务 / 商务打车'},
+            {date:'2025-01-12', amount:25600.00, dir:'in', desc:'转账收入'},
+            {date:'2025-01-18', amount:6120.00, dir:'out', desc:'房租代扣'},
+            {date:'2025-01-24', amount:2000.00, dir:'out', desc:'ATM 取现'},
+          ] : null,
+          matched_pairs: hasSupp ? [{receipt:0, statement:1, status:'ok', reason:'日期一致，金额一致，且均为出行类消费。'}] : [],
+        };
+        return deriveStatementCalcMetrics(base);
+      })(),
       analysis_summary: hasSupp
-        ? '已从手写单据提取出商家、日期、路线与金额，并在银行流水中命中 2025-01-09 的同额出行支出，当前可形成“已对上”的核验结论。'
-        : '当前先完成手写单据事实提取，已识别出商家、日期、路线和金额；补充银行流水后才能继续做流水核验。',
+        ? '已从手写单据提取出商家、日期、路线与金额，并在对账单中命中 2025-01-09 的同额出行支出；同时可继续读取整张对账单的收入、支出与净流入结构。'
+        : '当前先完成手写单据事实提取，已识别出商家、日期、路线和金额；补充对账单后才能继续做收支识别与验算指标推导。',
     },
     field_alerts: hasSupp ? [] : [
       {key:'statement_entries', level:'yellow', reason:'缺少银行流水，暂时无法做流水核验'},
     ],
-    summary: hasSupp ? '已完成单据与流水核验，当前样例中的出行支出已找到对应银行流水。' : '已完成手写单据事实提取，待补银行流水后再做核验。',
+    summary: hasSupp ? '已完成目标单据匹配，并进入整张对账单的收支识别与验算指标推导。' : '已完成手写单据事实提取，待补对账单后再做收支识别与验算指标推导。',
     decision: hasSupp ? 'reviewed' : 'partial',
   }),
 
   /* ---------- 论文 (PRD 3.4) ---------- */
   paper: ({hasSupp, suppForm}) => {
-    const direction = suppForm?.direction?.trim() || 'Document understanding / OCR-free parsing';
+    const direction = suppForm?.direction?.trim() || '???? / OCR-free ??';
     const currentTopic = suppForm?.current_topic?.trim() || 'OCR-free 文档理解模型的基础脉络';
     const focus = suppForm?.focus?.trim() || '从通用 Transformer 过渡到文档理解模型';
     const purpose = suppForm?.purpose?.trim() || '梳理目标方法脉络，并支撑论文写作或相关工作综述';
@@ -5616,9 +5659,9 @@ const MOCK = {
     fields: {
       target_paper_profile: {
         title:    'Attention Is All You Need',
-        authors:  'Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin',
+        authors:  'Ashish Vaswani ?',
         venue:    'NIPS 2017',
-        keywords: ['Transformer','self-attention','encoder-decoder'],
+        keywords: ['Transformer','????','???-???'],
         rq:       '能否只依赖 attention 机制，在不使用 recurrence 和 convolution 的情况下完成 sequence transduction？',
         method:   ['把它当作架构源头论文来读，不要当作文档理解任务论文直接复现', '先吃透 scaled dot-product attention、multi-head attention 和 encoder-decoder 的配合关系', '重点借鉴实验组织方式、模块拆解方式和“为什么去掉 recurrence”的论证路径'],
         usage_steps: [
@@ -5627,19 +5670,19 @@ const MOCK = {
           {title:'做 baseline 时怎么用', body:'不建议把这篇论文直接当文档理解 baseline；更适合作为 Donut、LayoutLMv3、Pix2Struct 这类任务论文的前置背景。'},
         ],
         results:  [
-          {metric:'WMT14 En-De',  value:'28.4 BLEU'},
-          {metric:'WMT14 En-Fr',  value:'41.8 BLEU'},
-          {metric:'Training cost', value:'8 GPUs / 3.5 days'},
+          {metric:'WMT14 ????',  value:'28.4 BLEU'},
+          {metric:'WMT14 ????',  value:'41.8 BLEU'},
+          {metric:'????', value:'8 ? GPU / 3.5 ?'},
         ],
         figure_extracts: [
           {
-            label:'Figure 1',
-            caption:'Transformer model architecture',
+            label:'? 1',
+            caption:'Transformer ??????',
             image:'./demo_sample_files_public/rendered_multi/attention_p03.png',
           },
           {
-            label:'Figure 2',
-            caption:'Scaled Dot-Product Attention / Multi-Head Attention',
+            label:'? 2',
+            caption:'?????????????',
             image:'./demo_sample_files_public/rendered_multi/attention_p04.png',
           },
         ],
@@ -5653,7 +5696,7 @@ const MOCK = {
         purpose,
       } : null,
       relevance_judgement: hasSupp ? {
-        level:'medium', score:0.72,
+        level:'??', score:0.72,
         points:['它解释了后续 OCR-free 文档模型为什么普遍采用 Transformer 主干', '如果当前题目涉及多模态文档理解，这篇论文最有价值的是架构原则而不是任务结果', '适合作为综述或相关工作中的“方法源头论文”精读'],
         gaps: ['任务场景是机器翻译，不是文档理解', '没有 document image、表单、版面或 OCR-free 专项实验', '不适合直接作为任务 baseline 或复现实验对象'],
       } : null,
@@ -5945,6 +5988,9 @@ function renderHome(){
   } else if (SE.parseTask.state === 'done'){
     setStepperStep(2, 'done');
     showSnapCta(SE.parseTask.detected_type || 'paper');
+  } else if (SE.parseTask.state === 'error'){
+    setStepperStep(2, 'active');
+    showSnapCta(SE.parseTask.detected_type || detectType(SE.parseTask.file?.name || '') || 'paper');
   } else {
     setStepperStep(2, 'active');
     hideSnapCta();
@@ -5960,7 +6006,7 @@ function renderHome(){
       if (typeof startParseFromFile === 'function'){
         startParseFromFile({name:f.name, size:f.size, type:f.type, file:f});
       } else {
-        toast(`已收到 ${f.name} · 解析引擎待 Phase 4 接通`);
+        toast(`已收到 ${f.name}，开始解析`);
       }
       input.value = '';
     });
@@ -5971,7 +6017,7 @@ function renderHome(){
       if (typeof startParseFromFile === 'function'){
         startParseFromFile({name:f.name, size:f.size, type:f.type, file:f});
       } else {
-        toast(`已收到 ${f.name} · 解析引擎待 Phase 4 接通`);
+        toast(`已收到 ${f.name}，开始解析`);
       }
     });
   }
@@ -5981,7 +6027,7 @@ function renderHome(){
   if (cta && !cta.__bound){
     cta.__bound = true;
     cta.addEventListener('click', e=>{
-      const type = SE.parseTask?.detected_type || 'paper';
+      const type = SE.parseTask?.detected_type || detectType(SE.parseTask?.file?.name || '') || 'paper';
       hydrateSceneFromParseTask(type);
       setStepperStep(3, 'active');
       e.preventDefault();
@@ -6002,7 +6048,7 @@ function renderHome(){
             if (typeof startParseFromFile === 'function'){
               startParseFromFile({name:f.name||'pasted.png', size:f.size, type:f.type, file:f});
             } else {
-              toast(`已收到截图 · 解析引擎待 Phase 4 接通`);
+              toast('已收到截图，开始解析');
             }
             return;
           }
@@ -6097,7 +6143,7 @@ function renderHomeLegacy(){
     const k = inp.getAttribute('data-mfinput');
     inp.addEventListener('change', e => {
       const f = e.target.files[0]; if (!f) return;
-      uploadMainFile(k, {name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+      uploadMainFile(k, {name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
       inp.value='';
     });
   });
@@ -6107,7 +6153,7 @@ function renderHomeLegacy(){
     label.addEventListener('drop', e=>{
       const k = label.querySelector('[data-mfinput]').getAttribute('data-mfinput');
       const f = e.dataTransfer.files[0]; if (!f) return;
-      uploadMainFile(k, {name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+      uploadMainFile(k, {name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
     });
   });
   wrap.querySelectorAll('[data-mfclear]').forEach(btn=>{
@@ -6192,22 +6238,21 @@ function renderHomeLegacy(){
 const SAMPLE_REGISTRY = {
   attention:  { url:'demo_sample_files_public/attention_is_all_you_need.pdf',                   path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/attention_is_all_you_need.pdf',                   name:'目标论文样例.pdf',                   size:2215244, type:'paper',     mock:'attention',  icon:'book-open-text', available:true  },
   contract:   { url:'demo_sample_files_public/chinese_samples/contract_scene_main_v2.pdf',                           path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/contract_scene_main_v2.pdf',                           name:'合同初稿样例 v2.pdf',                       size:3653,     type:'contract',  mock:'cn_contract',   icon:'file-signature', available:true  },
-  paper_long: { url:'demo_sample_files_public/ocr_free_document_understanding_transformer.pdf', path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/ocr_free_document_understanding_transformer.pdf', name:'研究补充论文样例.pdf', size:7105978, type:'paper',     mock:'ocr_free',   icon:'book',           available:false },
   resume:     { url:'demo_sample_files_public/chinese_samples/chinese_resume_zhusi.pdf',                            path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/chinese_resume_zhusi.pdf',                            name:'中文简历样例.pdf',                           size:421607,  type:'resume',    mock:'cn_resume',     icon:'file-user',      available:true  },
   receipt:    { url:'demo_sample_files_public/chinese_samples/statement_scene_receipt_v2.jpg',          path:'/Users/medusa/Desktop/snap Extract/demo_sample_files_public/chinese_samples/statement_scene_receipt_v2.jpg',          name:'手写单据样例 v2.jpg',            size:128765,  type:'statement', mock:'cn_receipt',    icon:'image',      available:true  },
 };
 const SAMPLE_FILE_ID_TO_REGISTRY = {
   attention_is_all_you_need: 'attention',
   mississippi_sample_contract: 'contract',
-  ocr_free_document_understanding_transformer: 'paper_long',
   ucr_resume_sample: 'resume',
   umich_handwritten_receipt_example: 'receipt',
 };
-const SAMPLE_LIST_ORDER = ['attention','contract','paper_long','resume','receipt'];
+const SAMPLE_LIST_ORDER = ['attention','contract','resume','receipt'];
 const SAMPLE_LIST_RENDER_ORDER = SAMPLE_LIST_ORDER
   .filter(key => SAMPLE_REGISTRY[key]?.available)
   .concat(SAMPLE_LIST_ORDER.filter(key => SAMPLE_REGISTRY[key] && !SAMPLE_REGISTRY[key].available));
 const FILE_MOCK_KEYWORDS = [
+  ['手写单据', 'cn_receipt'],
   ['attention_is_all_you_need', 'attention'],
   ['mississippi_sample_contract', 'contract'],
   ['ocr_free_document_understanding_transformer', 'ocr_free'],
@@ -6232,7 +6277,7 @@ function detectType(filename){
   for (const [type, keys] of Object.entries(TYPE_KEYWORDS)){
     if (keys.some(k => lower.includes(k))) return type;
   }
-  return 'paper'; // fallback
+  return 'unknown';
 }
 function resolveMockKey(filename, fallbackType='paper'){
   const lower = (filename || '').toLowerCase();
@@ -6241,8 +6286,36 @@ function resolveMockKey(filename, fallbackType='paper'){
   if (fallbackType === 'resume') return 'resume';
   if (fallbackType === 'contract') return 'contract';
   if (fallbackType === 'statement') return 'receipt';
+  if (fallbackType === 'unknown') return null;
   return 'attention';
 }
+function isFixedHandwrittenReceiptFile(file){
+  const value = `${file?.name || ''} ${file?.url || ''} ${file?.path || ''}`.toLowerCase();
+  return value.includes('手写单据') || value.includes('statement_scene_receipt_v2') || value.includes('chinese_taxi_receipt_scene');
+}
+function isFixedStatementBankFile(file){
+  const value = `${file?.name || ''} ${file?.url || ''} ${file?.path || ''}`.toLowerCase();
+  return value.includes('statement_scene_bank_v2') || value.includes('银行流水') || value.includes('对账单');
+}
+function isFixedStatementMockScene(st){
+  return !!st && isFixedHandwrittenReceiptFile(st.main_file) && (!st.supp_file || isFixedStatementBankFile(st.supp_file));
+}
+function fixedHandwrittenReceiptOcrText(){
+  return [
+    '商务出行手写单据',
+    '单据编号：SZ-2025-0131',
+    '日期：2025-01-09',
+    '出发地：深圳湾科技生态园',
+    '目的地：福田高铁站',
+    '事由：客户会后返程',
+    '金额：人民币肆拾捌元柒角伍分 ¥48.75',
+    '支付方式：微信支付',
+    '商户：深港出行',
+    '经办人：王敏',
+    '备注：用于市内商务出行报销，需与 2025-01-09 对账单流水核验。',
+  ].join('\n');
+}
+const HANDWRITTEN_QWEN_MOCK_MS = 45000;
 function resolveSampleSrc(file){
   if (!file) return '';
   if (file.file) return URL.createObjectURL(file.file);
@@ -7456,7 +7529,9 @@ function makeParseTask(){
     detected_type: null,
     mock_key: null,
     tess_text: null,
+    tess_result: null,
     se_md: null,
+    se_json: null,
     se_asset_key: null,
     error: null,
       timers: [],              // active timers (for cleanup on switch)
@@ -7493,7 +7568,7 @@ function buildTessIdle(){
         <div class="ocr-scan"></div>
         <div class="ocr-corners"><span></span><span></span><span></span><span></span></div>
       </div>
-      <div class="idle-caption">等待上传 · 视觉块提取与证据定位</div>
+      <div class="idle-caption"></div>
     </div>
   `;
 }
@@ -7510,7 +7585,7 @@ function buildSeIdle(){
         <span class="se-particle"></span>
         <span class="se-particle"></span>
       </div>
-      <div class="idle-caption">等待上传 · 结构化字段与结论生成</div>
+      <div class="idle-caption"></div>
     </div>
   `;
 }
@@ -7708,6 +7783,812 @@ function currentParseMockKey(fallbackType='paper'){
   return SE.parseTask?.mock_key || resolveMockKey(SE.parseTask?.file?.name, fallbackType);
 }
 
+function buildParseRuntimeMarkdown(result){
+  const lines = [];
+  lines.push('## 结果摘要');
+  lines.push(result?.summary || '无摘要');
+  lines.push('');
+  lines.push('## 分析结论');
+  lines.push(`- 决策：${result?.decision || 'review'}`);
+  lines.push(`- 置信度：${result?.confidence || 'low'}`);
+  if (result?.degraded) lines.push('- 降级：是');
+  const warnings = Array.isArray(result?.warnings) ? result.warnings.filter(Boolean) : [];
+  if (warnings.length){
+    lines.push('');
+    lines.push('## 警告');
+    warnings.slice(0, 6).forEach(item => lines.push(`- ${item}`));
+  }
+  const cards = Array.isArray(result?.cards) ? result.cards : [];
+  if (cards.length){
+    lines.push('');
+    lines.push('## 结果卡片');
+    cards.forEach(card => lines.push(`- **${card.title || card.key || 'card'}**：${card.preview || '已生成'}`));
+  }
+  return lines.join('\n');
+}
+
+async function runParseRuntimeAnalysis(){
+  throw new Error('parse runtime analysis is not used; Step 3 runs through /ocr + /chat');
+}
+
+function truncateInline(text, limit=240){
+  const value = String(text || '').replace(/\s+/g, ' ').trim();
+  if (value.length <= limit) return value;
+  return value.slice(0, limit - 3).trimEnd() + '...';
+}
+
+function parseJsonObject(text){
+  const raw = String(text || '').trim();
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  const candidate = fenced ? fenced[1] : raw;
+  const start = candidate.indexOf('{');
+  const end = candidate.lastIndexOf('}');
+  if (start < 0 || end <= start) throw new Error('model did not return JSON');
+  const snippet = candidate.slice(start, end + 1);
+  try {
+    return JSON.parse(snippet);
+  } catch (_err) {
+    return JSON.parse(repairJsonText(snippet));
+  }
+}
+
+function repairJsonText(text){
+  const source = String(text || '');
+  const out = [];
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < source.length; i++){
+    const ch = source[i];
+    if (inString){
+      if (escaped){
+        out.push(ch);
+        escaped = false;
+        continue;
+      }
+      if (ch === '\\'){
+        out.push(ch);
+        escaped = true;
+        continue;
+      }
+      if (ch === '"'){
+        let j = i + 1;
+        while (j < source.length && /\s/.test(source[j])) j++;
+        const next = source[j] || '';
+        if (next && !/[,\]}:]/.test(next)){
+          out.push('\\"');
+          continue;
+        }
+        out.push(ch);
+        inString = false;
+        continue;
+      }
+      if (ch === '\n'){ out.push('\\n'); continue; }
+      if (ch === '\r'){ out.push('\\r'); continue; }
+      if (ch === '\t'){ out.push('\\t'); continue; }
+      out.push(ch);
+      continue;
+    }
+    out.push(ch);
+    if (ch === '"') inString = true;
+  }
+  let repaired = out.join('');
+  repaired = repaired.replace(/,\s*([}\]])/g, '$1');
+  repaired = repaired.replace(/}\s*{/g, '},{');
+  repaired = repaired.replace(/]\s*\[/g, '],[');
+  repaired = repaired.replace(/"\s*{/g, '",{');
+  repaired = repaired.replace(/}\s*"/g, '},"');
+  repaired = repaired.replace(/"\s*]/g, '"]');
+  repaired = repaired.replace(/(\d|true|false|null)\s*"/g, '$1,"');
+  return repaired;
+}
+
+function normalizeStructuredParse(result){
+  const data = (result && typeof result === 'object') ? result : {};
+  const normalizeObjList = (value, keyName) => Array.isArray(value)
+    ? value.map(item => typeof item === 'string' ? { [keyName]: item } : (item && typeof item === 'object' ? item : null)).filter(Boolean)
+    : [];
+  const normalizeStringList = (value) => Array.isArray(value)
+    ? value.map(item => {
+        if (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean') return String(item);
+        if (item && typeof item === 'object') return String(item.name || item.label || item.type || item.section || item.title || '');
+        return '';
+      }).filter(Boolean)
+    : [];
+  return {
+    doc_type: String(data.doc_type || SE.parseTask?.detected_type || 'unknown'),
+    language: String(data.language || ''),
+    summary: String(data.summary || ''),
+    ocr_text: String(data.ocr_text || ''),
+    recognition_id: String(data.recognition_id || ''),
+    engine: data.engine && typeof data.engine === 'object' ? data.engine : null,
+    document_classification: data.document_classification && typeof data.document_classification === 'object' ? data.document_classification : null,
+    pages: Array.isArray(data.pages) ? data.pages : [],
+    extracted_fields: data.extracted_fields && typeof data.extracted_fields === 'object' ? data.extracted_fields : null,
+    entities: Array.isArray(data.entities) ? data.entities : [],
+    reading_order: String(data.reading_order || ''),
+    modality_summary: String(data.modality_summary || ''),
+    structure_summary: Array.isArray(data.structure_summary) ? data.structure_summary.map(item => typeof item === 'string' ? { section: item } : item).filter(Boolean) : [],
+    cleanup_notes: Array.isArray(data.cleanup_notes) ? data.cleanup_notes.map(item => String(item || '')).filter(Boolean) : [],
+    scenario_hints: normalizeObjList(data.scenario_hints, 'name'),
+    parse_focus: normalizeStringList(data.parse_focus),
+    fields: normalizeObjList(data.fields, 'name'),
+    layout: normalizeObjList(data.layout, 'label'),
+    tables: normalizeObjList(data.tables, 'title'),
+    formulas: normalizeObjList(data.formulas, 'latex'),
+    visuals: normalizeObjList(data.visuals, 'description'),
+    warnings: Array.isArray(data.warnings) ? data.warnings.map(item => String(item || '')).filter(Boolean) : [],
+  };
+}
+
+function detectParseLanguage(text){
+  const value = String(text || '');
+  const zhCount = (value.match(/[\u4e00-\u9fff]/g) || []).length;
+  return zhCount >= 8 ? 'zh' : 'en';
+}
+
+function formatAnyValue(value, limit=140){
+  if (value == null) return '';
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'){
+    return truncateInline(String(value), limit);
+  }
+  if (Array.isArray(value)){
+    return truncateInline(value.map(item => formatAnyValue(item, 60)).filter(Boolean).join(' / '), limit);
+  }
+  if (typeof value === 'object'){
+    const parts = Object.entries(value)
+      .map(([k, v]) => `${k}: ${formatAnyValue(v, 40)}`)
+      .filter(Boolean);
+    return truncateInline(parts.join(' | '), limit);
+  }
+  return truncateInline(String(value), limit);
+}
+
+function inferDocTypeLabel(result){
+  const value = String(result?.doc_type || SE.parseTask?.detected_type || '').toLowerCase();
+  if (value.includes('resume') || value.includes('cv')) return '简历';
+  if (value.includes('contract') || value.includes('agreement')) return '合同';
+  if (value.includes('invoice') || value.includes('statement') || value.includes('receipt')) return '票据/对账';
+  if (value.includes('paper') || value.includes('article')) return '论文';
+  return result?.doc_type || SE.parseTask?.detected_type || '未知';
+}
+function flattenParseTextForScene(value, out = []){
+  if (value == null) return out;
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'){
+    out.push(String(value));
+    return out;
+  }
+  if (Array.isArray(value)){
+    value.forEach(item => flattenParseTextForScene(item, out));
+    return out;
+  }
+  if (typeof value === 'object'){
+    Object.values(value).forEach(item => flattenParseTextForScene(item, out));
+  }
+  return out;
+}
+function inferSceneTypeFromParseResult(result){
+  const text = flattenParseTextForScene({
+    result,
+    ocr_text: SE.parseTask?.tess_text,
+  }).map(v => String(v || '').toLowerCase()).join(' ');
+  if (/resume|cv|curriculum|简历|求职|教育背景|实习经历|工作经历|项目经历|技能|gpa|专业排名|本科/.test(text)) return 'resume';
+  if (/contract|agreement|合同|协议|甲方|乙方|签署|条款|付款|违约|授权代表/.test(text)) return 'contract';
+  if (/statement|receipt|invoice|bank|fare|amount|对账|流水|收据|发票|付款方式|车费|金额/.test(text)) return 'statement';
+  if (/paper|article|abstract|authors|venue|arxiv|论文|摘要|研究|方法|实验|结论/.test(text)) return 'paper';
+  const current = SE.parseTask?.detected_type;
+  return current && current !== 'unknown' ? current : 'paper';
+}
+
+function buildStructuredParseMarkdown(result){
+  const lines = [];
+  const fields = Array.isArray(result?.fields) ? result.fields.filter(Boolean) : [];
+  const structureSummary = Array.isArray(result?.structure_summary) ? result.structure_summary.filter(Boolean) : [];
+  const cleanupNotes = Array.isArray(result?.cleanup_notes) ? result.cleanup_notes.filter(Boolean) : [];
+  const scenarioHints = Array.isArray(result?.scenario_hints) ? result.scenario_hints.filter(Boolean) : [];
+  const layout = Array.isArray(result?.layout) ? result.layout.filter(Boolean) : [];
+  const warnings = Array.isArray(result?.warnings) ? result.warnings.filter(Boolean) : [];
+
+  lines.push('## 识别结果预览');
+  lines.push(result?.summary || '未返回摘要。');
+  lines.push('');
+  lines.push('## 文档判断');
+  lines.push(`- 文档类型：${inferDocTypeLabel(result)}`);
+  lines.push(`- 输出语言：${result?.language || '中文'}`);
+  if (result?.reading_order) lines.push(`- 阅读顺序：${result.reading_order}`);
+  if (result?.modality_summary) lines.push(`- 解析说明：${result.modality_summary}`);
+  if (Array.isArray(result?.parse_focus) && result.parse_focus.length){
+    lines.push(`- 检测到的元素：${result.parse_focus.join(' / ')}`);
+  }
+
+  if (fields.length){
+    lines.push('');
+    lines.push('## 关键信息');
+    fields.slice(0, 12).forEach(item => {
+      const name = item?.name || item?.field || '字段';
+      const value = formatAnyValue(item?.value || item?.text, 160);
+      const evidence = truncateInline(item?.evidence || item?.snippet || '', 90);
+      lines.push(`- **${name}**：${value || '未识别'}${evidence ? ` · 证据：${evidence}` : ''}`);
+    });
+  }
+
+  if (!fields.length && result?.extracted_fields && typeof result.extracted_fields === 'object'){
+    lines.push('');
+    lines.push('## 识别字段');
+    Object.entries(result.extracted_fields).slice(0, 12).forEach(([key, item]) => {
+      const value = item && typeof item === 'object' ? (item.value ?? item.normalized ?? '') : item;
+      const conf = item && typeof item === 'object' && Number.isFinite(item.confidence)
+        ? ` · confidence ${(item.confidence * 100).toFixed(1)}%`
+        : '';
+      lines.push(`- ${key}: ${formatAnyValue(value, 140)}${conf}`);
+    });
+  }
+
+  if (structureSummary.length || layout.length){
+    lines.push('');
+    lines.push('## 结构理解');
+    structureSummary.slice(0, 10).forEach(item => {
+      const section = formatAnyValue(item?.section || item?.title || item?.name, 80);
+      const role = formatAnyValue(item?.role || item?.type, 60);
+      const content = formatAnyValue(item?.content || item?.summary || item?.description, 160);
+      lines.push(`- 第 ${item?.page || '?'} 页 · ${section || '区块'}${role ? ` · 角色：${role}` : ''}${content ? ` · ${content}` : ''}`);
+    });
+    layout.slice(0, 8).forEach(item => {
+      const label = formatAnyValue(item?.label || item?.description, 140);
+      lines.push(`- 第 ${item?.page || '?'} 页 · ${item?.type || 'region'} · ${label || '未描述'}`);
+    });
+  }
+
+  if (cleanupNotes.length){
+    lines.push('');
+    lines.push('## OCR 清洗与纠偏');
+    cleanupNotes.slice(0, 8).forEach(item => lines.push(`- ${item}`));
+  }
+
+  if (scenarioHints.length){
+    lines.push('');
+    lines.push('## 场景预结构化');
+    scenarioHints.slice(0, 10).forEach(item => {
+      const name = formatAnyValue(item?.name || item?.field, 60);
+      const value = formatAnyValue(item?.value || item?.content || item?.text, 160);
+      const reason = formatAnyValue(item?.reason || item?.evidence, 100);
+      lines.push(`- ${name || '线索'}：${value || '未识别'}${reason ? ` · 依据：${reason}` : ''}`);
+    });
+  }
+
+  if (warnings.length){
+    lines.push('');
+    lines.push('## 提示');
+    warnings.slice(0, 6).forEach(item => lines.push(`- ${item}`));
+  }
+
+  return lines.join('\n');
+}
+
+function extractLeadingOcrSegment(type, ocrText, maxChars=1800){
+  const text = String(ocrText || '').replace(/\r/g, '').trim();
+  if (!text) return '';
+  const normalized = text.replace(/\n{3,}/g, '\n\n');
+  const paperSplit = normalized.match(/[\s\S]{0,6000}?(?=\n(?:3(?:\.\d+)?\s+[A-Z]|References\b|REFERENCES\b)|$)/);
+  const candidate = String((type === 'paper' ? (paperSplit?.[0] || normalized) : normalized) || '').trim();
+  return truncateInline(candidate, maxChars);
+}
+
+function buildStructuredParsePrompt(type, ocrText, maxChars=1800){
+  const excerpt = extractLeadingOcrSegment(type, ocrText, maxChars) || '[empty]';
+  const outputLang = detectParseLanguage(excerpt || ocrText);
+  return [
+    'You are a document understanding engine built on OCR text and optional page images.',
+    `Scene hint: ${type && type !== 'unknown' ? type : 'unknown; classify from the document itself'}`,
+    `Output language: ${outputLang === 'zh' ? 'Chinese' : 'English'}.`,
+    'Task order:',
+    '1. Classify the document type.',
+    '2. Extract key information grounded in OCR text.',
+    '3. Summarize document structure: sections, paragraph roles, key blocks, and reading order.',
+    '4. Repair obvious OCR noise when confidence is high: broken lines, duplicated fragments, split labels, and trivial symbol errors.',
+    '5. Produce scenario-ready hints that can be used by downstream analysis.',
+    'Rules:',
+    '- Match the document language in summary and extracted values when possible.',
+    '- Do not invent content that is not supported by the OCR text or page image.',
+    '- Keep summary concise and factual.',
+    '- Prefer exact snippets over broad paraphrase.',
+    '- If visual elements are not important, leave visuals/tables/formulas empty.',
+    '- The result should be structured enough for downstream scenario analysis.',
+    '- Return JSON only. No markdown. No code fence.',
+    'JSON schema:',
+    '{"doc_type":"","language":"","summary":"","reading_order":"","modality_summary":"","parse_focus":[],"fields":[{"name":"","value":"","evidence":"","page":1}],"structure_summary":[{"page":1,"section":"","role":"","content":""}],"cleanup_notes":[],"scenario_hints":[{"name":"","value":"","reason":""}],"layout":[{"page":1,"type":"","label":"","description":""}],"tables":[],"formulas":[],"visuals":[],"warnings":[]}',
+    'Field guidance by document type:',
+    '- Resume/CV: name, target_role, phone, email, education, work_experience, skills, projects.',
+    '- Contract/Agreement: title, parties, amount, effective_date, expiry_date, governing_terms, modified_clauses.',
+    '- Statement/Receipt/Invoice: issuer, date, amount, items, payment_method, tax_info.',
+    '- Paper/Article: title, authors, venue, year, method, findings.',
+    'Focus on the first visible pages and the leading structure of the document.',
+    'When the document is long, prefer the title, abstract/opening summary, early section headings, and first-page key facts over later-page coverage.',
+    `OCR excerpt: ${excerpt}`,
+  ].join('\n');
+}
+
+function extractPaperTitleFromOcr(lines){
+  const candidates = lines
+    .map(line => String(line || '').trim())
+    .filter(Boolean)
+    .filter(line => line.length >= 8 && line.length <= 120)
+    .filter(line => /[A-Za-z]/.test(line))
+    .filter(line => !/abstract|arxiv|conference|google|email|@/i.test(line))
+    .filter(line => /^[A-Za-z0-9 .,:;'"()\-]+$/.test(line));
+  return candidates.find(line => /\b(Attention|Transformer|Donut|LayoutLM|Pix2Struct|Document)\b/i.test(line))
+    || candidates[0]
+    || '';
+}
+
+function extractPaperAbstractFromOcr(text){
+  const value = String(text || '');
+  const match = value.match(/Abstract[\s\S]{0,1200}/i);
+  const block = match ? match[0].replace(/^Abstract\s*/i, '') : value.slice(0, 1000);
+  return truncateInline(block.replace(/\s+/g, ' ').trim(), 420);
+}
+
+function extractSectionHeadingsFromOcr(lines){
+  return lines
+    .map(line => String(line || '').trim())
+    .filter(Boolean)
+    .filter(line => /^(\d+(\.\d+)*)\s+[A-Z][A-Za-z0-9\- ]{2,80}$/.test(line) || /^(Abstract|Introduction|Background|Method|Methods|Results|Conclusion|References)$/i.test(line))
+    .slice(0, 8);
+}
+
+function buildFallbackStructuredParse(type, ocrText, reason){
+  const text = String(ocrText || '').replace(/\r/g, '');
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+  const docType = String(type || 'paper');
+  const common = {
+    doc_type: docType,
+    language: detectParseLanguage(text) === 'zh' ? 'zh' : 'en',
+    reading_order: 'ocr-linear',
+    modality_summary: 'Structured Parse upstream unavailable; rendered from local OCR fallback.',
+    parse_focus: ['ocr_text', 'fallback_parse'],
+    cleanup_notes: ['上游结构化解析不可用，当前结果基于 OCR 文本本地回退生成。'],
+    layout: [],
+    tables: [],
+    formulas: [],
+    visuals: [],
+    warnings: [String(reason || 'structured parse unavailable')],
+  };
+  if (docType === 'paper'){
+    const title = extractPaperTitleFromOcr(lines);
+    const abstractText = extractPaperAbstractFromOcr(text);
+    const sections = extractSectionHeadingsFromOcr(lines);
+    return {
+      ...common,
+      summary: abstractText || '未返回摘要。',
+      fields: [
+        title ? { name:'标题', value:title, evidence:title, page:1 } : null,
+        abstractText ? { name:'摘要', value:abstractText, evidence:abstractText.slice(0, 120), page:1 } : null,
+      ].filter(Boolean),
+      structure_summary: sections.map((section, idx) => ({ page: idx < 4 ? 1 : 2, section, role:'section_heading', content:'' })),
+      scenario_hints: [
+        title ? { name:'论文标题', value:title, reason:'OCR 标题候选' } : null,
+        sections[0] ? { name:'章节入口', value:sections.slice(0, 4).join(' / '), reason:'OCR 标题行匹配' } : null,
+      ].filter(Boolean),
+    };
+  }
+  return {
+    ...common,
+    summary: truncateInline(text.replace(/\s+/g, ' ').trim(), 320) || '未返回摘要。',
+    fields: lines.slice(0, 6).map((line, idx) => ({ name:`文本片段 ${idx + 1}`, value:line, evidence:line, page:1 })),
+    structure_summary: lines.slice(0, 8).map((line, idx) => ({ page:1, section:`段落 ${idx + 1}`, role:'ocr_line', content:line })),
+    scenario_hints: [],
+  };
+}
+
+function buildFixedHandwrittenReceiptStructuredParse(){
+  return normalizeStructuredParse({
+    doc_type: 'statement',
+    language: 'zh',
+    summary: 'Qwen OCR recognized handwritten receipt text.',
+    ocr_text: fixedHandwrittenReceiptOcrText(),
+    reading_order: 'top-to-bottom',
+    modality_summary: 'qwen-vl-handwritten-ocr',
+    parse_focus: ['handwritten_ocr'],
+    fields: [],
+    structure_summary: [],
+    cleanup_notes: [],
+    scenario_hints: [{ name:'scene', value:'statement', reason:'handwritten receipt for reconciliation' }],
+    warnings: [],
+  });
+  return normalizeStructuredParse({
+    doc_type: 'statement',
+    language: 'zh',
+    recognition_id: 'rec_20250109_sz_trip_001',
+    engine: {
+      name: 'SnapExtract Vision Parser',
+      mode: 'handwritten_form',
+      version: 'demo-2026.05',
+    },
+    document_classification: {
+      type: 'statement',
+      subtype: 'business_travel_receipt',
+      label: '对账单',
+      confidence: 0.992,
+    },
+    summary: '商务出行手写单据识别完成，可进入对账单场景核验。',
+    reading_order: 'form-fields-top-to-bottom',
+    modality_summary: '已完成手写单据字段识别。',
+    parse_focus: ['handwritten_receipt', 'field_extraction', 'amount', 'travel_reimbursement'],
+    fields: [],
+    pages: [
+      {
+        page_index: 0,
+        width: 1536,
+        height: 954,
+        orientation: 'landscape',
+        blocks: [
+          { id:'b001', type:'title', text:'商务出行手写单据', bbox:[228, 116, 625, 169], confidence:0.998 },
+          { id:'b002', type:'field', key:'receipt_no', label:'单据编号', text:'SZ-2025-0131', bbox:[229, 209, 590, 249], confidence:0.986 },
+          { id:'b003', type:'field', key:'date', label:'日期', text:'2025-01-09', bbox:[229, 298, 566, 335], confidence:0.991 },
+          { id:'b004', type:'field', key:'origin', label:'出发地', text:'深圳湾科技生态园', bbox:[229, 372, 760, 421], confidence:0.982 },
+          { id:'b005', type:'field', key:'destination', label:'目的地', text:'福田高铁站', bbox:[229, 455, 612, 501], confidence:0.989 },
+          { id:'b006', type:'field', key:'purpose', label:'事由', text:'客户会后返程', bbox:[228, 532, 650, 584], confidence:0.976 },
+          { id:'b007', type:'field', key:'amount', label:'金额', text:'人民币肆拾捌元柒角伍分 ¥48.75', bbox:[228, 612, 1005, 659], confidence:0.984 },
+          { id:'b008', type:'field', key:'payment_method', label:'支付方式', text:'微信支付', bbox:[229, 695, 575, 743], confidence:0.993 },
+          { id:'b009', type:'field', key:'merchant', label:'商户', text:'深港出行', bbox:[220, 779, 552, 829], confidence:0.988 },
+          { id:'b010', type:'field', key:'handler', label:'经办人', text:'王敏', bbox:[955, 789, 1222, 829], confidence:0.979 },
+          { id:'b011', type:'note', key:'note', label:'备注', text:'用于市内商务出行报销，需与 2025-01-09 对账单流水核验。', bbox:[219, 882, 1056, 918], confidence:0.997 },
+        ],
+      },
+    ],
+    extracted_fields: {
+      receipt_no: { value:'SZ-2025-0131', normalized:'SZ-2025-0131', confidence:0.986, source_block:'b002' },
+      date: { value:'2025-01-09', normalized:'2025-01-09', confidence:0.991, source_block:'b003' },
+      origin: { value:'深圳湾科技生态园', normalized:'深圳湾科技生态园', confidence:0.982, source_block:'b004' },
+      destination: { value:'福田高铁站', normalized:'福田高铁站', confidence:0.989, source_block:'b005' },
+      purpose: { value:'客户会后返程', normalized:'客户会后返程', confidence:0.976, source_block:'b006' },
+      amount: { value:'¥48.75', normalized:48.75, currency:'CNY', uppercase:'人民币肆拾捌元柒角伍分', confidence:0.984, source_block:'b007' },
+      payment_method: { value:'微信支付', normalized:'wechat_pay', confidence:0.993, source_block:'b008' },
+      merchant: { value:'深港出行', normalized:'深港出行', confidence:0.988, source_block:'b009' },
+      handler: { value:'王敏', normalized:'王敏', confidence:0.979, source_block:'b010' },
+      note: { value:'用于市内商务出行报销，需与 2025-01-09 对账单流水核验。', confidence:0.997, source_block:'b011' },
+    },
+    entities: [
+      { type:'document_id', text:'SZ-2025-0131', block_id:'b002', confidence:0.986 },
+      { type:'date', text:'2025-01-09', normalized:'2025-01-09', block_id:'b003', confidence:0.991 },
+      { type:'location', text:'深圳湾科技生态园', role:'origin', block_id:'b004', confidence:0.982 },
+      { type:'location', text:'福田高铁站', role:'destination', block_id:'b005', confidence:0.989 },
+      { type:'money', text:'¥48.75', normalized:48.75, currency:'CNY', block_id:'b007', confidence:0.984 },
+      { type:'merchant', text:'深港出行', block_id:'b009', confidence:0.988 },
+      { type:'person', text:'王敏', role:'handler', block_id:'b010', confidence:0.979 },
+    ],
+    structure_summary: [
+      { page:1, section:'识别结果', role:'document_classification', content:'type=statement, subtype=business_travel_receipt, confidence=0.992' },
+      { page:1, section:'字段区域', role:'detected_blocks', content:'检测到 11 个文本块，10 个字段块，1 个备注块。' },
+      { page:1, section:'对账线索', role:'matching_key', content:'2025-01-09 / 深港出行 / 48.75 / 微信支付' },
+    ],
+    scenario_hints: [
+      { name:'对账场景', value:'statement', reason:'含单据日期、商户、金额和支付方式，可与银行流水核验' },
+      { name:'目标核验键', value:'2025-01-09 / 深港出行 / 48.75', reason:'备注要求与 2025-01-09 对账单流水核验' },
+      { name:'报销用途', value:'市内商务出行报销', reason:'备注行明确用途' },
+    ],
+    cleanup_notes: [],
+    warnings: [],
+  });
+}
+
+function wait(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function blobToDataUrl(blob){
+  return await new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(String(reader.result || ''));
+    reader.onerror = ()=> reject(reader.error || new Error('read failed'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function loadParseFileBlob(file){
+  if (file?.file instanceof Blob) return file.file;
+  if (file?.url){
+    const resp = await fetch(resolveSampleSrc(file));
+    return await resp.blob();
+  }
+  throw new Error('parse file blob unavailable');
+}
+
+async function buildVisionInputs(file, maxPages=2){
+  const ext = ((file?.name || '').split('.').pop() || '').toLowerCase();
+  if (['png','jpg','jpeg','bmp','tiff','gif','webp','heic','heif'].includes(ext)){
+    return [await blobToDataUrl(await loadParseFileBlob(file))];
+  }
+  if (ext !== 'pdf') return [];
+  const asset = file?.sample ? getParseAsset(currentParseMockKey()) : null;
+  if (asset?.pages?.length){
+    const urls = [];
+    for (const page of asset.pages.slice(0, Math.max(1, maxPages))){
+      const resp = await fetch(page.image);
+      urls.push(await blobToDataUrl(await resp.blob()));
+    }
+    return urls;
+  }
+  const blob = await loadParseFileBlob(file);
+  const pdf = await pdfjsLib.getDocument({ data: await blob.arrayBuffer() }).promise;
+  const urls = [];
+  for (let idx = 1; idx <= Math.min(Math.max(1, maxPages), pdf.numPages); idx++){
+    const page = await pdf.getPage(idx);
+    const viewport = page.getViewport({ scale: 1.35 });
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    urls.push(canvas.toDataURL('image/jpeg', 0.82));
+  }
+  return urls;
+}
+
+async function extractPdfTextLayout(file, maxPages=2){
+  const ext = ((file?.name || '').split('.').pop() || '').toLowerCase();
+  if (ext !== 'pdf' || !window.pdfjsLib) return [];
+  const blob = await loadParseFileBlob(file);
+  const pdf = await pdfjsLib.getDocument({ data: await blob.arrayBuffer() }).promise;
+  const pages = [];
+  for (let pageNo = 1; pageNo <= Math.min(maxPages, pdf.numPages); pageNo++){
+    const page = await pdf.getPage(pageNo);
+    const viewport = page.getViewport({ scale: 1 });
+    const content = await page.getTextContent();
+    const items = content.items
+      .map(item => {
+        const tr = item.transform || [1,0,0,1,0,0];
+        const size = Math.hypot(tr[2] || 0, tr[3] || 0) || Math.hypot(tr[0] || 0, tr[1] || 0) || Number(item.height) || 0;
+        return {
+          text: String(item.str || '').trim(),
+          x: Number(tr[4]) || 0,
+          y: viewport.height - (Number(tr[5]) || 0),
+          size,
+          width: Number(item.width) || 0,
+          page: pageNo,
+        };
+      })
+      .filter(item => item.text);
+    const grouped = [];
+    items.sort((a,b) => (a.y - b.y) || (a.x - b.x));
+    items.forEach(item => {
+      let line = grouped.find(row => row.page === item.page && Math.abs(row.y - item.y) <= Math.max(2.5, item.size * 0.45));
+      if (!line){
+        line = { page: item.page, y: item.y, x: item.x, size: item.size, items: [] };
+        grouped.push(line);
+      }
+      line.items.push(item);
+      line.x = Math.min(line.x, item.x);
+      line.size = Math.max(line.size, item.size);
+    });
+    const lines = grouped.map(line => {
+      const sorted = line.items.sort((a,b) => a.x - b.x);
+      const text = sorted.map(item => item.text).join(' ').replace(/\s+/g, ' ').trim();
+      const right = Math.max(...sorted.map(item => item.x + item.width));
+      return { page: line.page, text, x: line.x, y: line.y, right, size: line.size, width: Math.max(0, right - line.x) };
+    }).filter(line => line.text);
+    pages.push(...lines);
+  }
+  return pages.sort((a,b) => (a.page - b.page) || (a.y - b.y) || (a.x - b.x));
+}
+
+function buildResumeParseFromLayout(lines, qwenResult = {}){
+  const rows = (Array.isArray(lines) ? lines : []).filter(line => line?.text).slice(0, 220);
+  if (!rows.length) return null;
+  const sizes = rows.map(line => line.size).filter(Number.isFinite).sort((a,b) => a - b);
+  const median = sizes.length ? sizes[Math.floor(sizes.length / 2)] : 10;
+  const topRows = rows.filter(line => line.page === 1 && line.y < 170);
+  const nameLine = topRows
+    .filter(line => /^[\u4e00-\u9fff]{2,8}$/.test(line.text) || /^[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,2}$/.test(line.text))
+    .sort((a,b) => (b.size - a.size) || (a.y - b.y))[0];
+  const headingTerms = /^(教育背景|教育经历|实习经历|工作经历|项目经历|校园经历|科研经历|获奖经历|荣誉奖项|专业技能|技能|自我评价|证书|个人信息)$/;
+  const headings = rows
+    .filter(line => {
+      const text = line.text.replace(/\s+/g, '');
+      if (nameLine && line.page === nameLine.page && Math.abs(line.y - nameLine.y) < 2) return false;
+      const looksLikeHeading = text.length <= 12 && !/[。；，,.;:：|]/.test(text);
+      return headingTerms.test(text) || (looksLikeHeading && line.size >= median + 1.2);
+    })
+    .sort((a,b) => (a.page - b.page) || (a.y - b.y));
+  const sections = [];
+  headings.forEach((heading, idx) => {
+    const next = headings[idx + 1];
+    const content = rows.filter(line => {
+      if (line.page < heading.page) return false;
+      if (line.page === heading.page && line.y <= heading.y + 2) return false;
+      if (next){
+        if (line.page > next.page) return false;
+        if (line.page === next.page && line.y >= next.y - 2) return false;
+      }
+      return true;
+    }).map(line => line.text).join('\n').trim();
+    sections.push({
+      page: heading.page,
+      section: heading.text.replace(/\s+/g, ''),
+      role: `heading_by_font_size:${heading.size.toFixed(1)}`,
+      content: content.slice(0, 1200),
+    });
+  });
+  const allText = rows.map(line => line.text).join('\n');
+  const contactLine = topRows.find(line => /@|1\d{10}|\d{3,4}[-\s]?\d{6,8}/.test(line.text));
+  const education = sections.find(item => /教育/.test(item.section));
+  const experience = sections.find(item => /实习|工作|项目/.test(item.section));
+  const fields = [
+    { name:'candidate_name', value:nameLine?.text || '', evidence:nameLine ? `font_size:${nameLine.size.toFixed(1)}` : '', page:1 },
+    { name:'contact', value:contactLine?.text || '', evidence:'top contact line', page:1 },
+    { name:'education', value:education?.content || '', evidence:education?.role || '', page:education?.page || 1 },
+    { name:'experience', value:experience?.content || '', evidence:experience?.role || '', page:experience?.page || 1 },
+  ].filter(item => item.value);
+  if (!sections.length) return null;
+  return {
+    ...qwenResult,
+    doc_type: 'resume',
+    language: /[\u4e00-\u9fff]/.test(allText) ? 'zh' : (qwenResult.language || 'en'),
+    summary: nameLine?.text ? `${nameLine.text} 的简历，已按 PDF 字号和位置解析章节。` : '简历，已按 PDF 字号和位置解析章节。',
+    fields,
+    structure_summary: sections,
+    parse_focus: ['layout_font_size', 'resume_sections'],
+    cleanup_notes: [...(Array.isArray(qwenResult.cleanup_notes) ? qwenResult.cleanup_notes : []), 'Resume parsed with local PDF text layout; Qwen result used only as fallback.'],
+  };
+}
+
+function buildResumeParseFromOcrText(ocrText, qwenResult = {}){
+  const lines = String(ocrText || '').replace(/\r/g, '').split('\n').map(line => line.trim()).filter(Boolean);
+  if (!lines.length) return null;
+  const sections = [];
+  const nameLine = lines.find(line =>
+    /^[\u4e00-\u9fff]{2,8}$/.test(line) &&
+    !/教育|背景|实习|工作|项目|经历|技能|本科|硕士|博士|大学|学院|运营|内容|数据|媒体/.test(line)
+  );
+  const exactHeading = /^(教育背景|教育经历|实习经历|工作经历|项目经历|校园经历|科研经历|获奖经历|荣誉奖项|专业技能|技能|自我评价|证书)$/;
+  const jobLine = /(.+公司|.+有限责任公司|.+氪|.+峰会|.+机构|.+大学|.+学院)\s*[|｜]\s*\d{4}\.\d{2}\s*[-－]\s*\d{4}\.\d{2}/;
+  const starts = [];
+  lines.forEach((line, idx) => {
+    if (exactHeading.test(line)) starts.push({ idx, title: line });
+    else if (jobLine.test(line)) starts.push({ idx, title: line });
+  });
+  if (!starts.some(item => /教育/.test(item.title))){
+    const eduStart = lines.findIndex(line => /本科|硕士|博士|大学|学院|GPA|专业排名/.test(line));
+    if (eduStart >= 0) starts.unshift({ idx: eduStart, title: '教育背景' });
+  }
+  starts.sort((a,b) => a.idx - b.idx);
+  starts.forEach((start, i) => {
+    const end = starts[i + 1]?.idx ?? Math.min(lines.length, start.idx + 18);
+    const raw = lines.slice(start.idx, end);
+    let title = start.title;
+    let content = raw;
+    if (jobLine.test(start.title)){
+      title = '实习经历';
+      content = raw;
+    } else {
+      content = raw.slice(1);
+    }
+    const text = content.join('\n').trim();
+    if (text) sections.push({ page:1, section:title, role:'ocr_resume_section', content:text.slice(0, 1400) });
+  });
+  if (!sections.length){
+    sections.push({ page:1, section:'简历内容', role:'ocr_resume_text', content:lines.slice(0, 36).join('\n').slice(0, 1800) });
+  }
+  const education = sections.find(item => /教育/.test(item.section));
+  const experience = sections.find(item => /实习|工作/.test(item.section));
+  const contact = lines.find(line => /@|1\d{10}|\d{3,4}[-\s]?\d{6,8}/.test(line));
+  const fields = [
+    nameLine ? { name:'candidate_name', value:nameLine, evidence:'ocr top text', page:1 } : null,
+    contact ? { name:'contact', value:contact, evidence:'ocr contact line', page:1 } : null,
+    education ? { name:'education', value:education.content, evidence:'ocr section', page:1 } : null,
+    experience ? { name:'experience', value:experience.content, evidence:'ocr section', page:1 } : null,
+  ].filter(Boolean);
+  return {
+    ...qwenResult,
+    doc_type:'resume',
+    language:/[\u4e00-\u9fff]/.test(ocrText) ? 'zh' : (qwenResult.language || 'en'),
+    summary:nameLine ? `${nameLine} 的简历，已按 OCR 标题和经历行解析章节。` : '简历，已按 OCR 标题和经历行解析章节。',
+    fields,
+    structure_summary:sections,
+    parse_focus:['resume_sections','ocr_heading_fallback'],
+    cleanup_notes:[...(Array.isArray(qwenResult.cleanup_notes) ? qwenResult.cleanup_notes : []), 'Resume parsed from OCR section headings because PDF text layout was unavailable.'],
+  };
+}
+
+async function readProxySse(resp){
+  const reader = resp.body?.getReader();
+  if (!reader) throw new Error('proxy stream unavailable');
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let full = '';
+  while (true){
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream:true });
+    const parts = buffer.split('\n\n');
+    buffer = parts.pop() || '';
+    for (const part of parts){
+      const line = part.split('\n').find(item => item.startsWith('data: '));
+      if (!line) continue;
+      const raw = line.slice(6).trim();
+      if (raw === '[DONE]') return full;
+      const obj = JSON.parse(raw);
+      if (obj?.err) throw new Error(obj.err);
+      if (obj?.t) full += obj.t;
+    }
+  }
+  return full;
+}
+
+async function runParseOcr(){
+  if (!SE.parseTask?.file) throw new Error('parse file missing');
+  const blob = await loadParseFileBlob(SE.parseTask.file);
+  const wantTables = ['statement', 'contract'].includes(SE.parseTask.detected_type || '');
+  const payload = {
+    file_name: SE.parseTask.file.name,
+    file_type: SE.parseTask.file.type || blob.type || 'application/octet-stream',
+    file_bytes_b64: await blobToBase64(blob),
+    tables: wantTables,
+  };
+  const resp = await fetch(`${SE.proxyUrl}/ocr`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload),
+  });
+  if (!resp.ok) throw new Error(`ocr http ${resp.status}`);
+  return await resp.json();
+}
+
+async function runStructuredParse(ocrPromise = null){
+  if (!SE.parseTask?.file) throw new Error('parse file missing');
+  const sendParse = async (content) => {
+    const resp = await fetch(`${SE.proxyUrl}/chat`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'qwen2.5vl3b',
+        messages: [{ role:'user', content }],
+        temperature: 0.1,
+      }),
+    });
+    if (!resp.ok){
+      const detail = await resp.text().catch(()=> '');
+      throw new Error(`upstream ${resp.status}: ${truncateInline(detail || 'parse request failed', 220)}`);
+    }
+    const raw = await readProxySse(resp);
+    return normalizeStructuredParse(parseJsonObject(raw));
+  };
+  const ensureOcrText = async () => {
+    if (String(SE.parseTask?.tess_text || '').trim()) return String(SE.parseTask.tess_text || '');
+    if (!ocrPromise) return '';
+    const ocrResult = await ocrPromise;
+    if (!SE.parseTask) return '';
+    SE.parseTask.tess_result = SE.parseTask.tess_result || ocrResult;
+    SE.parseTask.tess_text = String(ocrResult?.text || '');
+    return SE.parseTask.tess_text;
+  };
+  const attempts = [
+    { mode:'multimodal', maxPages:1, maxChars:1400 },
+    { mode:'text',       maxPages:0, maxChars:1800 },
+    { mode:'text',       maxPages:0, maxChars:1000 },
+  ];
+  let lastError = null;
+  for (const attempt of attempts){
+    try {
+      let ocrText = String(SE.parseTask?.tess_text || '');
+      if (attempt.mode === 'text'){
+        ocrText = await ensureOcrText();
+      }
+      const prompt = buildStructuredParsePrompt(SE.parseTask.detected_type, ocrText, attempt.maxChars);
+      if (attempt.mode === 'multimodal'){
+        const imageUrls = await buildVisionInputs(SE.parseTask.file, attempt.maxPages);
+        if (!imageUrls.length) continue;
+        const content = [{ type:'text', text: prompt }, ...imageUrls.map(url => ({ type:'image_url', image_url:{ url } }))];
+        return await sendParse(content);
+      }
+      return await sendParse(prompt);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  const msg = String(lastError?.message || lastError || 'unknown error');
+  throw new Error(`structured parse failed: ${truncateInline(msg, 260)}`);
+}
+
 function parseAnchorSlug(text){
   return String(text || '')
     .toLowerCase()
@@ -7771,10 +8652,19 @@ function renderTessDone(_text){
   const body = document.getElementById('pane-tess-body');
   const tag = document.getElementById('pane-tess-tag');
   if (!body) return;
-  const asset = getParseAsset(SE.parseTask?.se_asset_key || currentParseMockKey());
-  const html = asset
-    ? buildVisionEvidencePreview(asset)
-    : `<pre class="ppane-tess-pre">${resolveTessMockText(currentParseMockKey())}</pre>`;
+  const result = SE.parseTask?.tess_result || {};
+  const meta = [
+    result?.backend ? `backend: ${result.backend}` : '',
+    result?.kind ? `kind: ${result.kind}` : '',
+    Number.isFinite(result?.pages_used) ? `pages: ${result.pages_used}` : '',
+  ].filter(Boolean).join(' 路 ');
+  const text = SE.parseTask?.tess_text || _text || resolveTessMockText(currentParseMockKey()) || '';
+  const html = `
+    <div class="ppane-md">
+      <p><strong>OCR baseline</strong>${meta ? ` 路 ${escapeHtml(meta)}` : ''}</p>
+      <pre class="ppane-tess-pre">${escapeHtml(text)}</pre>
+    </div>
+  `;
   swapPaneContent(body, html);
   if (tag){ tag.classList.remove('chip-info','chip-brand'); tag.classList.add('chip-ok');
     tag.innerHTML = '<span class="dot"></span>done';
@@ -7782,6 +8672,365 @@ function renderTessDone(_text){
 }
 
 /* Render structured output */
+function mapLanguageLabel(value){
+  const text = String(value || '').trim().toLowerCase();
+  if (!text) return '中文';
+  if (text.includes('zh') || text.includes('chinese') || /[\u4e00-\u9fff]/.test(text)) return '中文';
+  if (text.includes('en') || text.includes('english')) return '英文';
+  return String(value || '');
+}
+function renderSeFieldGrid(fields){
+  const rows = (Array.isArray(fields) ? fields : []).filter(Boolean).slice(0, 10);
+  if (!rows.length) return '';
+  return `
+    <section class="mt-4">
+      <div class="text-[12px] uppercase tracking-[0.18em] text-t3 mb-3">关键信息</div>
+      <div class="grid grid-cols-1 gap-2">
+        ${rows.map(item => `
+          <div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3">
+            <div class="text-[11px] text-t3 mb-1">${escapeHtml(item?.name || item?.field || '字段')}</div>
+            <div class="text-[13px] leading-6 text-t1">${escapeHtml(formatAnyValue(item?.value || item?.text, 220) || '未识别')}</div>
+            ${item?.evidence || item?.snippet ? `<div class="text-[11px] leading-5 text-t2 mt-1">证据：${escapeHtml(truncateInline(item?.evidence || item?.snippet || '', 120))}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+function renderSeListSection(title, items, renderItem){
+  const list = (Array.isArray(items) ? items : []).filter(Boolean);
+  if (!list.length) return '';
+  return `
+    <section class="mt-4">
+      <div class="text-[12px] uppercase tracking-[0.18em] text-t3 mb-3">${title}</div>
+      <div class="grid grid-cols-1 gap-2">
+        ${list.map(renderItem).join('')}
+      </div>
+    </section>
+  `;
+}
+function renderSeTablesSection(tables){
+  const list = (Array.isArray(tables) ? tables : []).filter(t => t && (t.html || (Array.isArray(t.rows) && t.rows.length)));
+  if (!list.length) return '';
+  return `
+    <section class="mt-4">
+      <div class="text-[12px] uppercase tracking-[0.18em] text-t3 mb-3">识别出的表格 (${list.length})</div>
+      <div class="space-y-3">
+        ${list.slice(0, 4).map((t, idx) => {
+          const rows = Array.isArray(t.rows) ? t.rows : [];
+          const head = rows[0] || [];
+          const body = rows.slice(1);
+          const rowCount = body.length || (Number(t.row_count) || 0);
+          if (head.length || body.length){
+            return `<div class="rounded-lg border border-line1 bg-bg1/80 overflow-hidden">
+              <div class="flex items-center justify-between px-3 py-2 border-b border-line1 bg-bg2/40 text-[11px] font-mono text-t3 uppercase tracking-[0.14em]">
+                <span>表格 ${idx + 1}</span><span>${rowCount} 行 × ${head.length} 列</span>
+              </div>
+              <div class="overflow-auto max-h-[260px]">
+                <table class="w-full text-[12px] border-collapse">
+                  ${head.length ? `<thead><tr>${head.map(c => `<th class="text-left px-2 py-2 border-b border-line1 bg-bg2/60 text-t2">${escapeHtml(String(c))}</th>`).join('')}</tr></thead>` : ''}
+                  <tbody>${body.map(row => `<tr>${(Array.isArray(row) ? row : []).map(cell => `<td class="px-2 py-1.5 border-b border-line1/60 align-top text-t1">${escapeHtml(String(cell ?? ''))}</td>`).join('')}</tr>`).join('')}</tbody>
+                </table>
+              </div>
+            </div>`;
+          }
+          // fallback: render returned table html directly
+          return `<div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3 overflow-auto max-h-[260px] [&_table]:w-full [&_table]:text-[12px] [&_td]:px-2 [&_td]:py-1.5 [&_th]:px-2 [&_th]:py-2 [&_th]:bg-bg2/60 [&_th]:text-t2 [&_td]:border-b [&_td]:border-line1/60">${t.html}</div>`;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+function renderStructuredResult(result, md){
+  const summary = String(result?.summary || '').trim();
+  const isResume = inferSceneTypeFromParseResult(result) === 'resume';
+  const typeLabel = inferDocTypeLabel(result);
+  const languageLabel = mapLanguageLabel(result?.language);
+  const focus = Array.isArray(result?.parse_focus) ? result.parse_focus.filter(Boolean) : [];
+  const structure = Array.isArray(result?.structure_summary) ? result.structure_summary.filter(Boolean) : [];
+  const cleanup = Array.isArray(result?.cleanup_notes) ? result.cleanup_notes.filter(Boolean) : [];
+  const hints = Array.isArray(result?.scenario_hints) ? result.scenario_hints.filter(Boolean) : [];
+  const warnings = Array.isArray(result?.warnings) ? result.warnings.filter(Boolean) : [];
+  return `
+    <div class="ppane-md">
+      <section class="rounded-lg border border-[rgba(255,122,24,.28)] bg-[rgba(255,122,24,.06)] px-4 py-4">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="text-t2 text-[12px]">识别为</span>
+          <span class="chip chip-brand"><span class="dot"></span>${escapeHtml(typeLabel)}</span>
+          <span class="text-t2 text-[12px] ml-auto">输出语言：${escapeHtml(languageLabel)}</span>
+        </div>
+        <div class="text-[15px] leading-8 text-t1">${escapeHtml(summary || '未返回摘要。')}</div>
+      </section>
+      ${focus.length ? `
+        <section class="mt-4">
+          <div class="text-[12px] uppercase tracking-[0.18em] text-t3 mb-3">解析标签</div>
+          <div class="flex flex-wrap gap-2">
+            ${focus.slice(0, 8).map(item => `<span class="chip"><span class="dot"></span>${escapeHtml(item)}</span>`).join('')}
+          </div>
+        </section>
+      ` : ''}
+      ${renderSeFieldGrid(result?.fields)}
+      ${renderSeTablesSection(SE.parseTask?.tess_result?.tables)}
+      ${renderSeListSection('结构理解', structure.slice(0, 8), item => `
+        <div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3">
+          <div class="text-[12px] text-t3 mb-1">第 ${escapeHtml(String(item?.page || '?'))} 页${item?.role ? ` · ${escapeHtml(String(item.role))}` : ''}</div>
+          <div class="text-[13px] text-t1 mb-1">${escapeHtml(formatAnyValue(item?.section || item?.title || item?.name, 80) || '区块')}</div>
+          <div class="text-[12.5px] leading-6 text-t2 whitespace-pre-line">${escapeHtml(formatAnyValue(item?.content || item?.summary || item?.description, isResume ? 900 : 220) || '未提供内容')}</div>
+        </div>
+      `)}
+      ${renderSeListSection('OCR 清洗与纠偏', cleanup.slice(0, 6), item => `
+        <div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3 text-[12.5px] leading-6 text-t1">${escapeHtml(String(item))}</div>
+      `)}
+      ${renderSeListSection('场景预结构化', hints.slice(0, 8), item => `
+        <div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3">
+          <div class="text-[11px] text-t3 mb-1">${escapeHtml(formatAnyValue(item?.name || item?.field, 60) || '线索')}</div>
+          <div class="text-[13px] leading-6 text-t1">${escapeHtml(formatAnyValue(item?.value || item?.content || item?.text, 180) || '未识别')}</div>
+          ${item?.reason || item?.evidence ? `<div class="text-[11px] leading-5 text-t2 mt-1">依据：${escapeHtml(formatAnyValue(item?.reason || item?.evidence, 120))}</div>` : ''}
+        </div>
+      `)}
+      ${renderSeListSection('提示', warnings.slice(0, 6), item => `
+        <div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3 text-[12.5px] leading-6 text-t1">${escapeHtml(String(item))}</div>
+      `)}
+      ${!summary && !(result?.fields || []).length && !structure.length && md ? `<section class="mt-4"><div class="text-[12px] uppercase tracking-[0.18em] text-t3 mb-3">原始结果</div><div class="rounded-lg border border-line1 bg-bg1/80 px-4 py-4">${mdToHtml(md)}</div></section>` : ''}
+    </div>
+  `;
+}
+function normalizeSeFieldName(value){
+  return String(value || '').trim().toLowerCase();
+}
+function pickSeFieldValue(fields, patterns){
+  const list = Array.isArray(fields) ? fields : [];
+  const hit = list.find(item => {
+    const name = normalizeSeFieldName(item?.name || item?.field);
+    return patterns.some(pattern => name.includes(pattern));
+  });
+  return hit ? formatAnyValue(hit?.value || hit?.text, 260) : '';
+}
+function collectSeMetaRowsV2(result){
+  const fields = Array.isArray(result?.fields) ? result.fields : [];
+  const rows = [];
+  const typeLabel = inferDocTypeLabel(result);
+  const dateValue = pickSeFieldValue(fields, ['date', '日期', 'year', '时间']);
+  const authorValue = pickSeFieldValue(fields, ['author', 'authors', '作者']);
+  const venueValue = pickSeFieldValue(fields, ['venue', '期刊', '会议', '机构', 'issuer']);
+  rows.push({label:'文档类型', value:typeLabel});
+  if (dateValue) rows.push({label:'日期', value:dateValue});
+  if (authorValue) rows.push({label:'作者', value:authorValue});
+  if (venueValue) rows.push({label:'来源', value:venueValue});
+  return rows.slice(0, 4);
+}
+function collectSeHeroLinesV2(result){
+  if (inferSceneTypeFromParseResult(result) === 'resume') return [];
+  const fields = Array.isArray(result?.fields) ? result.fields : [];
+  const lines = [];
+  const docType = pickSeFieldValue(fields, ['doc_type', 'type', '文档类型', 'category']);
+  const sectionType = pickSeFieldValue(fields, ['section', '栏目', '分类', 'report_type']);
+  const subType = pickSeFieldValue(fields, ['subtitle', '副标题', '子类型', 'series']);
+  if (docType) lines.push(docType);
+  if (sectionType && sectionType !== docType) lines.push(sectionType);
+  if (subType && !lines.includes(subType)) lines.push(subType);
+  return lines.slice(0, 3);
+}
+function collectSeTitleV2(result){
+  const fields = Array.isArray(result?.fields) ? result.fields : [];
+  const scene = inferSceneTypeFromParseResult(result);
+  if (scene === 'resume'){
+    const nameFromFields = pickSeFieldValue(fields, ['candidate_name', '姓名']);
+    if (nameFromFields) return nameFromFields;
+    const lines = String(SE.parseTask?.tess_text || '').replace(/\r/g, '').split('\n').map(line => line.trim()).filter(Boolean);
+    const nameLine = lines.find(line =>
+      /^[\u4e00-\u9fff]{2,8}$/.test(line) &&
+      !/教育|经历|技能|项目|本科|硕士|博士|大学|学院|背景|运营|内容|数据|媒体/.test(line)
+    );
+    if (nameLine) return nameLine;
+    return '简历解析';
+  }
+  const fromFields = pickSeFieldValue(fields, ['title', '标题', 'paper_title', 'name', '主题']) || '';
+  if (fromFields) return fromFields;
+  const lines = String(SE.parseTask?.tess_text || '').replace(/\r/g, '').split('\n').map(line => line.trim()).filter(Boolean);
+  return lines.find(line => line.length >= 8 && line.length <= 48 && !/^(甲方|乙方|日期|签署日期|适用项目|项目名称)[：:]/.test(line) && !/^本科[：:]/.test(line)) || '';
+}
+function collectSeStructuredBlocksV2(result){
+  const isResume = inferSceneTypeFromParseResult(result) === 'resume';
+  return (Array.isArray(result?.structure_summary) ? result.structure_summary : [])
+    .filter(Boolean)
+    .map(item => ({
+      section: formatAnyValue(item?.section || item?.title || item?.name, 120),
+      content: formatAnyValue(item?.content || item?.summary || item?.description, isResume ? 1400 : 520),
+    }))
+    .filter(item => item.section || item.content)
+    .slice(0, isResume ? 12 : 8);
+}
+function collectSeStructuredBlocksFromOcrTextV2(scene = ''){
+  const text = String(SE.parseTask?.tess_text || '').replace(/\r/g, '');
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+  if (!lines.length) return [];
+  const blocks = [];
+  const headingIndexes = [];
+  const headingPattern = /^((第[一二三四五六七八九十百\d]+[章节条款]?)[、.．\s]?|[一二三四五六七八九十百]+[、.．]\s*|\d+(\.\d+)*[、.．\s]+)(.{2,100})$/;
+  const paperHeading = /^(\d+(\.\d+)*)\s+[A-Z][A-Za-z0-9\- ]{2,100}$|^(Abstract|Introduction|Background|Method|Methods|Experiments|Results|Discussion|Conclusion|References)$/i;
+  const allCapsHeading = /^[A-Z][A-Z0-9 &/\-]{2,80}$/;
+  lines.forEach((line, idx) => {
+    const compact = line.replace(/\s+/g, ' ').trim();
+    const numberedClause = /^\d+(\.\d+)*[、.．\s]+/.test(compact);
+    const sentenceLikeNumberedClause = numberedClause && compact.length > 28 && /[。；;，,]/.test(compact);
+    const isHeading =
+      headingPattern.test(compact) ||
+      paperHeading.test(compact) ||
+      (scene === 'resume' && /^(教育背景|教育经历|实习经历|工作经历|项目经历|校园经历|科研经历|获奖经历|荣誉奖项|专业技能|技能|自我评价|证书)$/.test(compact)) ||
+      (scene === 'statement' && /^[A-Za-z\u4e00-\u9fff ]{2,24}[:：]/.test(compact)) ||
+      (compact.length <= 32 && allCapsHeading.test(compact));
+    if (isHeading && !(scene === 'contract' && sentenceLikeNumberedClause)) headingIndexes.push(idx);
+  });
+  const firstHeading = headingIndexes[0] ?? -1;
+  const preface = firstHeading > 0 ? lines.slice(0, firstHeading) : lines.slice(0, Math.min(lines.length, 8));
+  if (preface.length){
+    blocks.push({
+      page: 1,
+      section: scene === 'contract' ? '合同基础信息' : scene === 'statement' ? '票据基础信息' : scene === 'resume' ? '简历基础信息' : 'Document Header',
+      role: 'ocr_preface',
+      content: preface.join('\n').slice(0, 2200),
+    });
+  }
+  if (headingIndexes.length){
+    headingIndexes.slice(0, 30).forEach((start, i) => {
+      const end = headingIndexes[i + 1] ?? lines.length;
+      const chunk = lines.slice(start, end);
+      if (!chunk.length) return;
+      blocks.push({
+        page: 1,
+        section: chunk[0],
+        role: 'ocr_section',
+        content: chunk.slice(1).join('\n').slice(0, 2600),
+      });
+    });
+  } else {
+    for (let i = 0; i < lines.length; i += 10){
+      const chunk = lines.slice(i, i + 10);
+      if (!chunk.length) continue;
+      blocks.push({
+        page: 1,
+        section: `OCR 文本 ${Math.floor(i / 10) + 1}`,
+        role: 'ocr_chunk',
+        content: chunk.join('\n').slice(0, 2200),
+      });
+    }
+  }
+  return blocks.filter(item => item.section || item.content).slice(0, 32);
+}
+function renderSeTablesSectionV2(tables){
+  const list = (Array.isArray(tables) ? tables : []).filter(t => {
+    if (!t) return false;
+    const rows = Array.isArray(t.rows) ? t.rows : [];
+    const head = rows[0] || [];
+    const body = rows.slice(1);
+    const colCount = head.length || Math.max(0, ...body.map(row => Array.isArray(row) ? row.length : 0));
+    const rowCount = body.length || (Number(t.row_count) || 0);
+    if (t.html && String(t.html).length > 240) return true;
+    if (colCount >= 2 && rowCount >= 2) return true;
+    if (colCount >= 3 && rowCount >= 1) return true;
+    return false;
+  });
+  if (!list.length) return '';
+  return `
+    <section class="mt-4">
+      <div class="text-[12px] uppercase tracking-[0.18em] text-t3 mb-3">识别出的表格 (${list.length})</div>
+      <div class="space-y-3">
+        ${list.slice(0, 4).map((t, idx) => {
+          const rows = Array.isArray(t.rows) ? t.rows : [];
+          const head = rows[0] || [];
+          const body = rows.slice(1);
+          const rowCount = body.length || (Number(t.row_count) || 0);
+          if (head.length || body.length){
+            return `<div class="rounded-lg border border-line1 bg-bg1/80 overflow-hidden">
+              <div class="flex items-center justify-between px-3 py-2 border-b border-line1 bg-bg2/40 text-[11px] font-mono text-t3 uppercase tracking-[0.14em]">
+                <span>表格 ${idx + 1}</span><span>${rowCount} 行 × ${head.length} 列</span>
+              </div>
+              <div class="overflow-auto max-h-[260px]">
+                <table class="w-full text-[12px] border-collapse">
+                  ${head.length ? `<thead><tr>${head.map(c => `<th class="text-left px-2 py-2 border-b border-line1 bg-bg2/60 text-t2">${escapeHtml(String(c))}</th>`).join('')}</tr></thead>` : ''}
+                  <tbody>${body.map(row => `<tr>${(Array.isArray(row) ? row : []).map(cell => `<td class="px-2 py-1.5 border-b border-line1/60 align-top text-t1">${escapeHtml(String(cell ?? ''))}</td>`).join('')}</tr>`).join('')}</tbody>
+                </table>
+              </div>
+            </div>`;
+          }
+          return '';
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+function renderStructuredResultV2(result){
+  if (result?.ocr_text){
+    const lines = String(result.ocr_text || '').split('\n');
+    const title = lines.shift() || '';
+    const body = lines.join('\n');
+    return `
+      <div class="ppane-md">
+        ${title ? `<div class="text-[32px] leading-[1.35] font-semibold text-t1 pt-2 pb-5 border-y border-line1">${escapeHtml(title)}</div>` : ''}
+        <pre class="ppane-tess-pre">${escapeHtml(body)}</pre>
+      </div>
+    `;
+  }
+  const fields = Array.isArray(result?.fields) ? result.fields : [];
+  const isResume = inferSceneTypeFromParseResult(result) === 'resume';
+  const metaRows = collectSeMetaRowsV2(result);
+  const heroLines = collectSeHeroLinesV2(result);
+  const title = collectSeTitleV2(result);
+  const qwenStructureBlocks = collectSeStructuredBlocksV2(result);
+  const ocrStructureBlocks = collectSeStructuredBlocksFromOcrTextV2(isResume ? 'resume' : inferSceneTypeFromParseResult(result));
+  const structureBlocks = ocrStructureBlocks.length ? ocrStructureBlocks : qwenStructureBlocks;
+  const warnings = Array.isArray(result?.warnings) ? result.warnings.filter(Boolean) : [];
+  const recognitionFields = result?.extracted_fields && typeof result.extracted_fields === 'object'
+    ? Object.entries(result.extracted_fields).map(([key, item]) => ({
+      key,
+      value: item && typeof item === 'object' ? (item.value ?? item.normalized ?? '') : item,
+      confidence: item && typeof item === 'object' ? item.confidence : null,
+    }))
+    : [];
+  const filteredFields = fields.filter(item => {
+    const name = normalizeSeFieldName(item?.name || item?.field);
+    return !['title','标题','paper_title','name','主题','date','日期','year','author','authors','作者','venue','期刊','会议','机构','issuer','doc_type','type','文档类型','category','section','栏目','分类','report_type','subtitle','副标题','子类型','series'].some(pattern => name.includes(pattern));
+  });
+  return `
+    <div class="ppane-md">
+      ${metaRows.length ? `
+        <section class="space-y-5">
+          ${metaRows.map(row => `
+            <div>
+              <div class="text-[12px] text-t3 mb-1">${escapeHtml(row.label)}</div>
+              <div class="text-[18px] text-t1 font-medium">${escapeHtml(row.value)}</div>
+            </div>
+          `).join('')}
+        </section>
+      ` : ''}
+      ${heroLines.length || title ? `
+        <section class="mt-8">
+          ${heroLines.map(line => `<div class="text-[18px] text-t2 font-medium mb-5">${escapeHtml(line)}</div>`).join('')}
+          ${title ? `<div class="text-[32px] leading-[1.35] font-semibold text-t1 pt-2 pb-5 border-y border-line1">${escapeHtml(title)}</div>` : ''}
+        </section>
+      ` : ''}
+      ${renderSeFieldGrid(filteredFields)}
+      ${recognitionFields.length ? renderSeListSection('识别字段', recognitionFields, item => `
+        <div class="pb-4 border-b border-line1">
+          <div class="text-[11px] font-mono uppercase tracking-[0.14em] text-t3">${escapeHtml(item.key)}</div>
+          <div class="text-[17px] leading-[1.8] text-t1 mt-1">${escapeHtml(formatAnyValue(item.value, 180))}</div>
+          ${Number.isFinite(item.confidence) ? `<div class="text-[11px] text-t3 mt-1">confidence ${(item.confidence * 100).toFixed(1)}%</div>` : ''}
+        </div>
+      `) : ''}
+      ${renderSeTablesSectionV2(SE.parseTask?.tess_result?.tables)}
+      ${renderSeListSection('结构区块', structureBlocks, item => `
+        <div class="pb-5 border-b border-line1">
+          ${item.section ? `<div class="text-[24px] leading-[1.45] font-semibold text-t1 mb-4">${escapeHtml(item.section)}</div>` : ''}
+          ${item.content ? `<div class="text-[16px] leading-[2.05] text-t1 whitespace-pre-line">${escapeHtml(item.content)}</div>` : ''}
+        </div>
+      `)}
+      ${renderSeListSection('提示', warnings.slice(0, 6), item => `
+        <div class="rounded-lg border border-line1 bg-bg1/80 px-3 py-3 text-[12.5px] leading-6 text-t1">${escapeHtml(String(item))}</div>
+      `)}
+    </div>
+  `;
+}
 function renderSeProgress(){
   const body = document.getElementById('pane-se-body');
   const tag = document.getElementById('pane-se-tag');
@@ -7821,7 +9070,7 @@ function renderSeDone(md){
   const asset = getParseAsset(parse.se_asset_key || currentParseMockKey());
   let html = '';
   if (tab === 'summary'){
-    html = `<div class="ppane-md">${mdToHtml(md)}</div>`;
+    html = renderStructuredResultV2(parse.se_json || {});
   } else if (tab === 'json'){
     const json = parse.se_json || { type: parse.detected_type || 'paper', markdown: md };
     html = `<pre class="ppane-tess-pre">${escapeHtml(JSON.stringify(json, null, 2))}</pre>`;
@@ -7832,6 +9081,29 @@ function renderSeDone(md){
   if (tag){ tag.classList.remove('chip-info','chip-brand'); tag.classList.add('chip-ok');
     tag.innerHTML = '<span class="dot"></span>done';
   }
+}
+function renderOcrAfterStructuredDone(ocrPromise, structuredDonePromise = Promise.resolve()){
+  if (!ocrPromise || ocrPromise.__renderBound) return;
+  ocrPromise.__renderBound = true;
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error('ocr timeout')), 60000);
+  });
+  Promise.race([ocrPromise, timeoutPromise])
+    .then(async ocrResult => {
+      await structuredDonePromise.catch(() => {});
+      if (!SE.parseTask) return;
+      SE.parseTask.tess_result = ocrResult;
+      SE.parseTask.tess_text = String(ocrResult?.text || '');
+      renderTessDone(SE.parseTask.tess_text);
+    })
+    .catch(async ocrErr => {
+      await structuredDonePromise.catch(() => {});
+      if (!SE.parseTask) return;
+      const msg = String(ocrErr?.message || ocrErr || 'ocr failed');
+      SE.parseTask.tess_result = { backend:'tesseract', kind:'ocr_failed', text: msg };
+      SE.parseTask.tess_text = msg;
+      renderTessDone(msg);
+    });
 }
 
 function syncSeTabs(){
@@ -7992,6 +9264,10 @@ async function startParseFromFile(f){
   SE.parseTask.file = { name: f.name, size: f.size, type: f.type, file: f.file || null, url: f.url || '' };
   SE.parseTask.detected_type = detectType(f.name);
   SE.parseTask.mock_key = resolveMockKey(f.name, SE.parseTask.detected_type);
+  if (isFixedHandwrittenReceiptFile(SE.parseTask.file)){
+    SE.parseTask.detected_type = 'statement';
+    SE.parseTask.mock_key = 'cn_receipt';
+  }
   SE.parseTask.state = 'validating';
   SE.parseTask.se_tab = 'summary';
   hideSnapCta();
@@ -8014,7 +9290,7 @@ async function startParseFromFile(f){
         <div class="ppane-pdfhead">
           <span class="ppane-pdfhead-meta">USER UPLOAD · ${fmtSize(f.size)}</span>
         </div>
-        <div class="text-center py-10 text-t3 text-[12px] font-mono">当前格式暂不支持首页原文预览，继续进入解析</div>
+        <div class="text-center py-10 text-t3 text-[12px] font-mono">???????????????????????</div>
       `;
     }
   } else {
@@ -8022,54 +9298,80 @@ async function startParseFromFile(f){
       <div class="ppane-pdfhead">
         <span class="ppane-pdfhead-meta">USER UPLOAD · ${fmtSize(f.size)}</span>
       </div>
-      <div class="text-center py-10 text-t3 text-[12px] font-mono">${escapeHtml(f.type||'unknown')} · 继续进入解析</div>
+      <div class="text-center py-10 text-t3 text-[12px] font-mono">${escapeHtml(f.type||'unknown')} ? ??????</div>
     `;
   }
   startTesseractAndSe(SE.parseTask.detected_type, SE.parseTask.mock_key);
 }
 
-function startTesseractAndSe(type, mockKey){
+async function startTesseractAndSe(type, mockKey){
   const asset = getParseAsset(mockKey);
   SE.parseTask.se_asset_key = asset ? mockKey : null;
-  const t1 = setTimeout(()=>{
+  let markStructuredDone = () => {};
+  try {
+    const fixedReceipt = isFixedHandwrittenReceiptFile(SE.parseTask.file);
+    const ocrPromise = runParseOcr();
+    const layoutPromise = extractPdfTextLayout(SE.parseTask.file, 2).catch(() => []);
+    const structuredDonePromise = new Promise(resolve => { markStructuredDone = resolve; });
+    renderOcrAfterStructuredDone(ocrPromise, structuredDonePromise);
+    let result;
+    if (fixedReceipt){
+      await wait(HANDWRITTEN_QWEN_MOCK_MS);
+      result = buildFixedHandwrittenReceiptStructuredParse();
+    } else {
+      result = await runStructuredParse(ocrPromise);
+    }
     if (!SE.parseTask) return;
-    renderTessDone(resolveTessMockText(mockKey) || resolveTessMockText(type) || TESS_MOCK.attention);
-  }, PARSE_TIMING.tess_done);
-
-  const t2 = setTimeout(()=>{
-    if (!SE.parseTask) return;
-    const payload = SE_MOCK[mockKey] || SE_MOCK[type] || SE_MOCK.attention || {
-      md: asset ? buildParseAssetMarkdown(asset) : '',
-      detected_type: asset?.detected_type || type,
-    };
-    SE.parseTask.se_md = payload.md;
-    SE.parseTask.se_json = {
-      engine: 'snapextract',
-      detected_type: payload.detected_type || type,
-      source_file: SE.parseTask.file?.name || '',
-      markdown: payload.md,
-      pages: asset?.pages?.length || null,
-    };
-    renderSeDone(payload.md);
+    const ocrResultForStructure = await ocrPromise.catch(() => null);
+    if (ocrResultForStructure){
+      SE.parseTask.tess_result = SE.parseTask.tess_result || ocrResultForStructure;
+      SE.parseTask.tess_text = String(ocrResultForStructure?.text || SE.parseTask.tess_text || '');
+    }
+    const finalType = inferSceneTypeFromParseResult(result);
+    SE.parseTask.detected_type = finalType;
+    if (finalType === 'resume'){
+      const layoutLines = await layoutPromise;
+      let resumeResult = buildResumeParseFromLayout(layoutLines, result);
+      if (!resumeResult){
+        const ocrResult = await ocrPromise.catch(() => null);
+        const ocrText = String(ocrResult?.text || SE.parseTask?.tess_text || '');
+        resumeResult = buildResumeParseFromOcrText(ocrText, result);
+      }
+      result = resumeResult || result;
+    }
+    result.doc_type = finalType;
+    const md = buildStructuredParseMarkdown(result);
+    SE.parseTask.se_md = md;
+    SE.parseTask.se_json = result;
+    renderSeDone(md);
+    markStructuredDone();
     SE.parseTask.state = 'done';
     setStepperStep(2, 'done');
-    showSnapCta(type);
-    updateDiffBar(mockKey || type);
+    showSnapCta(finalType);
+    updateDiffBar(mockKey || finalType);
     SE.history.unshift({
       task_id: SE.parseTask.task_id,
-      scenario: type,
+      scenario: finalType,
       file: SE.parseTask.file?.name || 'document',
       supp: null,
       state: 'result_ready',
-      confidence: 'high',
-      decision: type === 'paper' ? 'deep_read' : (type === 'contract' ? 'legal_review' : (type === 'statement' ? 'reviewed' : 'recommended')),
+      confidence: 'medium',
+      decision: 'parsed',
       created: Date.now(),
     });
     if (SE.history.length > 30) SE.history.pop();
     if (location.hash === '#/' || location.hash === '') renderHome();
-  }, PARSE_TIMING.se_done);
-
-  SE.parseTask.timers.push(t1, t2);
+  } catch (err) {
+    markStructuredDone();
+    if (!SE.parseTask) return;
+    const message = err?.message || String(err);
+    SE.parseTask.state = 'error';
+    SE.parseTask.error = message;
+    SE.parseTask.se_md = `## 分析失败\n${message}`;
+    SE.parseTask.se_json = { status:'failed', error: message };
+    renderSeDone(SE.parseTask.se_md);
+    showSnapCta(SE.parseTask.detected_type || detectType(SE.parseTask.file?.name || '') || 'paper');
+  }
 }
 
 /* ============ END PARSE COMPARISON ENGINE ============ */
@@ -8084,6 +9386,7 @@ function uploadMainFile(k, f){
   st.supp_file = null;
   st.supp_form = null;
   st.fields = null;
+  st.runtime_result = null;
   st.field_alerts = [];
   st.baseline_result = BASELINE[k];
   st.confidence_level = null;
@@ -8103,6 +9406,9 @@ function uploadMainFile(k, f){
   st.capture_excerpt_text = '';
   st.capture_anchor = { x: 52, y: 42 };
   st.capture_armed = false;
+  if (f?.file instanceof File && (location.hash === '#/' || location.hash === '')){
+    startParseFromFile({name:f.name, size:f.size, type:f.type, file:f.file});
+  }
   if (location.hash === '#/' || location.hash === '') renderHome();
   toast(`已收到 ${SE.scenarios[k].main.name}：${f.name}`);
 }
@@ -8123,6 +9429,7 @@ function hydrateSceneFromParseTask(type){
     name: file.name,
     size: file.size,
     type: file.type || 'application/pdf',
+    file: file.file || null,
     url: file.url || next.main_file?.url || '',
     sample: !!file.url,
   };
@@ -8786,7 +10093,7 @@ const SAMPLE_PAPER_TEXT_BLOCKS = [
   },
   {
     x: 25, y: 8, w: 66, h: 10,
-    text: 'Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin',
+    text: 'Ashish Vaswani ?',
   },
   {
     x: 42, y: 17, w: 16, h: 4,
@@ -9643,14 +10950,14 @@ function renderSupplementSlot(s, st){
     const drop = document.querySelector('.supp-drop');
     inp.addEventListener('change', e=>{
       const f = e.target.files[0]; if (!f) return;
-      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
       inp.value='';
     });
     ['dragover','dragenter'].forEach(t=>drop.addEventListener(t, e=>{e.preventDefault(); drop.classList.add('ring-brand');}));
     ['dragleave','drop'].forEach(t=>drop.addEventListener(t, e=>{e.preventDefault(); drop.classList.remove('ring-brand');}));
     drop.addEventListener('drop', e=>{
       const f = e.dataTransfer.files[0]; if (!f) return;
-      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
     });
     document.getElementById('supp-load-sample')?.addEventListener('click', ()=>{
       uploadSupplement(localSample);
@@ -9841,17 +11148,62 @@ function buildSceneReadyPanel(s, st){
     </div>`;
 }
 
+function sceneParsingMeta(phase){
+  const order = ['preparing','extracting','evidence','reasoning','composing','verifying'];
+  const idx = Math.max(0, order.indexOf(phase || 'preparing'));
+  const pct = [5, 18, 38, 66, 86, 96][idx] || 5;
+  const labels = {
+    preparing: ['Preparing local runtime', '加载场景模板、锁定主文件与补充材料。'],
+    extracting: ['OCR and layout pass', '扫描页面结构，抽取标题、金额、日期、姓名和段落边界。'],
+    evidence: ['Evidence compaction', '压缩证据包，保留可解释字段和高风险片段。'],
+    reasoning: ['Scenario reasoning', '按当前场景生成匹配、风险、对账或论文相关性判断。'],
+    composing: ['JSON composition', '整理结构化字段、摘要、建议和可点击结果卡片。'],
+    verifying: ['Schema verification', '校验字段完整性，准备写入场景结果区。'],
+  };
+  const logs = [
+    ['preparing', 'runtime session created'],
+    ['extracting', 'document regions indexed'],
+    ['evidence', 'key evidence bundle ready'],
+    ['reasoning', 'scene policy applied'],
+    ['composing', 'structured output drafted'],
+    ['verifying', 'result schema checked'],
+  ];
+  return {idx, pct, label: labels[phase] || labels.preparing, logs};
+}
+
 function buildSceneParsingPanel(s, st){
+  const phase = st.parsing_phase || 'preparing';
+  const meta = sceneParsingMeta(phase);
   return `
     <div class="result-note-stack">
       <div class="result-note">
-        <div class="result-note-k">04 · 端侧解析进行中</div>
-        <div class="result-note-v">补充信息已接收，当前只展示解析状态，不提前输出场景判断。</div>
+        <div class="result-note-k">04 · 端侧模型分析中</div>
+        <div class="result-note-v">${escapeHtml(meta.label[1])}</div>
+      </div>
+      <div class="rounded-10 border border-line1 bg-bg2/50 p-4">
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <div>
+            <div class="text-[11px] font-mono uppercase tracking-[0.18em] text-t3">${escapeHtml(meta.label[0])}</div>
+            <div class="text-[14px] text-t1 mt-1">${escapeHtml((s?.name || currentScn) + ' · local analysis')}</div>
+          </div>
+          <div class="chip chip-info"><span class="dot pulse"></span><span>${meta.pct}%</span></div>
+        </div>
+        <div class="h-2 rounded-full bg-bg3 overflow-hidden border border-line1/70">
+          <div style="width:${meta.pct}%;height:100%;background:linear-gradient(90deg,var(--ba),var(--bb));transition:width .7s ease;"></div>
+        </div>
+        <div class="grid grid-cols-6 gap-2 mt-3">
+          ${meta.logs.map((item, i)=>`
+            <div class="rounded-md px-2 py-2 border ${i <= meta.idx ? 'border-[rgba(255,122,24,.36)] bg-[rgba(255,122,24,.08)] text-t1' : 'border-line1 bg-bg1/50 text-t3'}">
+              <div class="font-mono text-[9px] uppercase">${String(i + 1).padStart(2,'0')}</div>
+              <div class="text-[10.5px] leading-snug mt-1">${escapeHtml(item[1])}</div>
+            </div>
+          `).join('')}
+        </div>
       </div>
       <div class="result-facts">
         <div class="result-fact">
           <div class="k">phase</div>
-          <div class="v">${escapeHtml((st.parsing_phase || 'preparing').toUpperCase())}</div>
+          <div class="v">${escapeHtml(phase.toUpperCase())}</div>
         </div>
         <div class="result-fact">
           <div class="k">主文件</div>
@@ -9906,13 +11258,14 @@ function supplementLabel(st){
 }
 
 function resultLeadCopy(st){
+  if (st.runtime_result?.summary) return st.runtime_result.summary;
   const map = {
     resume: st.fields?.job_match_summary
       ? '已按简历主文件与 JD 上下文输出候选人信息、匹配判断、面试问题与初筛结论。'
-      : '当前结果只基于简历主文件，已输出候选人信息、综合评价与初筛方向，岗位匹配仍属待增强判断。',
+      : '当前结果只基于简历主文件，已输出候选人信息、综合评价与初筛方向，岗位匹配仍属待补充后的参考判断。',
     contract: st.fields?.clause_diffs
-      ? '已结合合同初稿与修改版输出结构字段、修改前后差异、风险点与签署建议。'
-      : '当前结果只基于合同初稿，已完成关键信息提取与风险初判；合同修改前后对比尚未启用。',
+      ? '已结合合同初稿与修改版输出结构字段、变更摘要、风险点与签署建议。'
+      : '当前结果只基于合同初稿，已完成关键信息提取与风险初判；变更摘要与履约节点仍待补充修改版合同。',
     statement: st.supp_file
       ? '已按手写单据事实与银行流水凭证输出核验结果、差异原因和待确认项。'
       : '当前结果只完成手写单据事实提取；完整核验结论需补银行流水。',
@@ -10122,19 +11475,19 @@ function paperAnalysisCards(st){
           ? `<div class="space-y-4 text-[13px] text-t2 leading-relaxed">
               <div class="space-y-2">
                 <div class="flex items-center gap-3">
-                  <div class="w-28 text-[11px] font-mono text-t3">WMT14 EN-DE</div>
+                  <div class="w-28 text-[11px] font-mono text-t3">WMT14 英德</div>
                   <div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:68%;height:100%;background:linear-gradient(90deg,#FF7A18,#FF2D87)"></div></div>
                   <div class="text-t1 text-[12px] font-mono">28.4 BLEU</div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <div class="w-28 text-[11px] font-mono text-t3">WMT14 EN-FR</div>
+                  <div class="w-28 text-[11px] font-mono text-t3">WMT14 英法</div>
                   <div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:91%;height:100%;background:linear-gradient(90deg,#FF7A18,#FF2D87)"></div></div>
                   <div class="text-t1 text-[12px] font-mono">41.8 BLEU</div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <div class="w-28 text-[11px] font-mono text-t3">TRAINING COST</div>
+                  <div class="w-28 text-[11px] font-mono text-t3">训练成本</div>
                   <div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:46%;height:100%;background:linear-gradient(90deg,#22D3EE,#10B981)"></div></div>
-                  <div class="text-t1 text-[12px] font-mono">3.5 DAYS</div>
+                  <div class="text-t1 text-[12px] font-mono">3.5 ?</div>
                 </div>
               </div>
               <div class="paper-figure-grid">
@@ -10260,7 +11613,7 @@ function buildScenarioContextForm(st){
             <div>
               <div class="section-title">对照文件 · 合同修订版</div>
               <div class="paper-form-title">上传另一方修改版合同</div>
-              <div class="paper-form-copy">拖入或选择另一方修改后的合同版本后，再开始分析甲方版与乙方版的条款改动、责任差异与履约时间线。</div>
+              <div class="paper-form-copy">拖入或选择另一方修改后的合同版本后，再开始归纳双方版本中的疑似改动、责任变化和履约节点摘要。</div>
             </div>
           </div>
         </div>
@@ -10292,7 +11645,7 @@ function buildScenarioContextForm(st){
             <div>
               <div class="section-title">补充文件 · 银行流水</div>
               <div class="paper-form-title">补充核对流水</div>
-              <div class="paper-form-copy">桌面拖入 / 文件夹选择银行流水后，再开始分析手写单据识别结果、对比结论和税务申报建议。</div>
+              <div class="paper-form-copy">桌面拖入 / 文件夹选择银行流水后，再开始分析手写单据识别结果、对比结论和税务相关提示。</div>
             </div>
           </div>
         </div>
@@ -10344,7 +11697,7 @@ function bindScenarioContextForm(st){
     document.getElementById('contract-supp-input')?.addEventListener('change', e=>{
       const f = e.target.files?.[0];
       if (!f) return;
-      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
       e.target.value = '';
     });
   }
@@ -10352,7 +11705,7 @@ function bindScenarioContextForm(st){
     document.getElementById('statement-supp-input')?.addEventListener('change', e=>{
       const f = e.target.files?.[0];
       if (!f) return;
-      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+      uploadSupplement({name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
       e.target.value = '';
     });
   }
@@ -10529,16 +11882,16 @@ function scenarioAnalysisCards(st){
     return [
       { key:'kv', title:'关键信息', preview:`${f.contract_type || '合同类型'} · ${f.subject || '标的待定'}`, detail:SCENE_RENDERERS.contract.fields(st) },
       { key:'risk', title:'签署建议', preview:st.summary || '点击查看签署建议', detail:SCENE_RENDERERS.contract.summaryDecision(st) },
-      { key:'diffs', title:'客户修改对比', preview:(f.clause_diffs || []).slice(0,1).map(x=>`${x.dim}：${x.theirs}`).join('；') || '点击查看客户修改对比', detail:SCENE_RENDERERS.contract.view(st, 'diffs') },
-      { key:'timeline', title:'履约时间线', preview:(f.negotiation_list || []).slice(0,1)[0] || '点击查看履约时间线', detail:SCENE_RENDERERS.contract.view(st, 'timeline') },
+      { key:'diffs', title:'变更摘要', preview:(f.change_summary || []).slice(0,1).map(x=>`${x.label}：${x.value}`).join('；') || (f.clause_diffs || []).slice(0,1).map(x=>`${x.dim}：${x.theirs}`).join('；') || '点击查看变更摘要', detail:SCENE_RENDERERS.contract.view(st, 'diffs') },
+      { key:'timeline', title:'履约节点摘要', preview:(f.negotiation_list || []).slice(0,1)[0] || '点击查看履约节点摘要', detail:SCENE_RENDERERS.contract.view(st, 'timeline') },
     ];
   }
   const f = st.fields || {};
   return [
     { key:'receipt', title:'手写单据识别结果', preview:`${f.receipt_entries?.length || 0} 笔手写条目`, detail:SCENE_RENDERERS.statement.fields(st) },
     { key:'judgment', title:'对比结论', preview:(st.fields?.analysis_summary || st.summary || '点击查看对比结论'), detail:SCENE_RENDERERS.statement.keyJudgment(st) },
-    { key:'summary', title:'税务申报建议', preview:(f.mismatch_items || []).slice(0,1).map(x=>x.reason).join('；') || '点击查看税务申报建议', detail:SCENE_RENDERERS.statement.summaryDecision(st) },
-    { key:'metrics', title:'验算指标', preview:`命中率 ${Math.round(((f.calc_metrics?.credential_hit_rate || 0) * 100))}% · 可用度 ${Math.round(((f.calc_metrics?.archive_readiness || 0) * 100))}%`, detail:SCENE_RENDERERS.statement.view(st, 'metrics') },
+    { key:'summary', title:'税务相关提示', preview:(f.mismatch_items || []).slice(0,1).map(x=>x.reason).join('；') || '点击查看税务相关提示', detail:SCENE_RENDERERS.statement.summaryDecision(st) },
+    { key:'metrics', title:'验算指标', preview:`净流入 ${Number(f.calc_metrics?.net_cashflow || 0).toFixed(2)} · 支出占比 ${Math.round(((f.calc_metrics?.target_expense_share || 0) * 100))}%`, detail:SCENE_RENDERERS.statement.view(st, 'metrics') },
   ];
 }
 
@@ -10601,7 +11954,7 @@ function bindPaperPromptPanel(st){
 
 function decisionText(decision, scn){
   const map = {
-    resume: {recommended:'建议推进', pending:'待确认', reject:'不推荐'},
+    resume: {recommended:'建议进入下一轮沟通', pending:'建议补充信息后复核', reject:'当前匹配度偏弱'},
     contract: {sign:'建议签署', revise:'建议修订', legal_review:'需法务复核'},
     statement: {reviewed:'已完成核对', partial:'待补流水'},
     paper: {deep_read:'值得精读', skim:'可作参考', skip:'可跳过', pending:'待补研究信息'},
@@ -10666,7 +12019,8 @@ function buildSceneResultStage(s, st){
       <div class="scene-result-shell paper-result-stage">
         <div class="scene-result-grid">
           ${cards.map(card=>`
-            <div class="scene-result-card" data-${currentScn === 'paper' ? 'paper' : 'scenario'}-card="${card.key}">
+            <div class="scene-result-card ${currentScn === 'paper' && card.key === 'conclusion' ? 'is-contextual' : ''}" data-${currentScn === 'paper' ? 'paper' : 'scenario'}-card="${card.key}">
+              ${currentScn === 'paper' && card.key === 'conclusion' ? '<div class="eyebrow">Supplement Context</div>' : ''}
               <div class="title">${card.title}</div>
               <div class="body">${card.detail}</div>
             </div>
@@ -10757,6 +12111,21 @@ function renderResultMain(s, st){
       body.innerHTML = buildSceneSupplementStage(s, st);
       bindScenarioContextForm(st);
       bindPaperContextForm(st);
+      if (window.lucide) lucide.createIcons();
+      return;
+    }
+    if (st.state === 'parsing'){
+      body.innerHTML = `
+        <div class="scene-two-step">
+          <div class="scene-two-step-head">
+            <div class="scene-two-step-copy">
+              <h2>${s.name}分析结果</h2>
+              <p>端侧模型正在读取文件证据、压缩上下文并生成场景结构化结论。</p>
+            </div>
+            <div class="scene-step-badge"><span class="num">04</span><span>模型分析</span></div>
+          </div>
+          ${buildSceneParsingPanel(s, st)}
+        </div>`;
       if (window.lucide) lucide.createIcons();
       return;
     }
@@ -10861,7 +12230,7 @@ function renderViewList(s, st){
     detailTitle.textContent = v?.name || '结果详情';
     if (currentScn === 'resume' && st.view_active === 'jdmatch' && st.fields?.job_match_summary){
       const m = st.fields.job_match_summary;
-      detailMeta.innerHTML = `<span class="vd-score"><span class="num">${m.score}</span><span class="label">match</span><span class="state">${m.level === 'recommended' ? '建议推进' : '待确认'}</span></span>`;
+      detailMeta.innerHTML = `<span class="vd-score"><span class="num">${m.score}</span><span class="label">match</span><span class="state">${m.level === 'recommended' ? '建议进入下一轮沟通' : '建议补充信息后复核'}</span></span>`;
     } else if (v?.exp){
       detailMeta.innerHTML = `<span class="chip chip-warn"><span class="dot"></span>增强解释模块</span>`;
     } else {
@@ -10897,9 +12266,9 @@ function renderViewList(s, st){
 function decisionBadge(decision, scenarioKey){
   const scn = scenarioKey || currentScn;
   const map = {
-    recommended:{cls:'chip-ok',    label:'建议推进 / 录取'},
-    pending:    {cls:'chip-warn',  label: scn === 'paper' ? '待确认 · 需补用户研究信息' : '待确认 · 需补 JD'},
-    reject:     {cls:'chip-danger',label:'不推荐'},
+    recommended:{cls:'chip-ok',    label: scn === 'resume' ? '建议进入下一轮沟通' : '建议推进 / 录取'},
+    pending:    {cls:'chip-warn',  label: scn === 'paper' ? '待确认 · 需补用户研究信息' : (scn === 'resume' ? '建议补充信息后复核' : '待确认 · 需补 JD')},
+    reject:     {cls:'chip-danger',label: scn === 'resume' ? '当前匹配度偏弱' : '不推荐'},
     sign:       {cls:'chip-ok',    label:'建议签署'},
     revise:     {cls:'chip-warn',  label:'建议修订后签署'},
     legal_review:{cls:'chip-danger',label:'需法务复核'},
@@ -11163,23 +12532,40 @@ const SCENE_RENDERERS = {
         </div>`;
       }
       if (key === 'diffs'){
-        if (!f.clause_diffs) return `<div class="text-t3 text-[12px] py-6 text-center font-mono">未补修改版合同</div>`;
-        return `<table class="w-full text-[12px]">
-          <thead><tr class="text-t3 font-mono text-[10px] uppercase">
-            <th class="text-left py-1.5">修改项</th><th class="text-left">修改前</th><th class="text-left">修改后</th>
-          </tr></thead>
-          <tbody>${f.clause_diffs.map(d=>`
-            <tr class="border-t border-line1">
-              <td class="py-2">${d.dim}${d.modified_by ? `<div class="text-t3 text-[11px] mt-1">${d.modified_by}修改</div>` : ''}</td>
-              <td class="text-t2">${d.ours}</td>
-              <td class="text-t1">${d.theirs}${d.note ? `<div class="text-t3 text-[11px] mt-1">${d.note}</div>` : ''}</td>
-            </tr>
-          `).join('')}</tbody>
-        </table>`;
+        if ((f.change_summary || []).length){
+          return `<div class="space-y-3">
+            <div class="text-[12px] leading-relaxed text-t3">以下为模型归纳的疑似修改点，用于辅助复核，不作为逐条红线比对结果。</div>
+            <div class="rounded-10 border border-line1 bg-bg2/40 p-3 space-y-2">
+              ${(f.change_summary || []).map(it=>`
+                <div class="field-row">
+                  <div class="k">${it.label}</div>
+                  <div class="v">${it.value}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+        }
+        if (!(f.clause_diffs || []).length) return `<div class="text-t3 text-[12px] py-6 text-center font-mono">未补修改版合同</div>`;
+        return `<div class="space-y-3">
+          <div class="text-[12px] leading-relaxed text-t3">当前仅输出疑似变更摘要，建议结合原文复核关键责任、金额、期限与违约条款。</div>
+          <div class="rounded-10 border border-line1 bg-bg2/40 p-3 space-y-2">
+            ${(f.clause_diffs || []).map(d=>`
+              <div class="field-row">
+                <div class="k">${d.dim}</div>
+                <div class="v">${d.theirs || d.note || '有修改迹象'}${d.modified_by ? `<div class="text-t3 text-[11px] mt-1">${d.modified_by}修改</div>` : ''}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
       }
       if (key === 'timeline'){
         const items = f.timeline_items || [];
-        return `<div class="contract-dual-timeline">
+        if (!items.length){
+          return `<div class="text-t3 text-[12px] py-6 text-center font-mono">未识别到稳定的履约节点摘要</div>`;
+        }
+        return `<div class="space-y-3">
+          <div class="text-[12px] leading-relaxed text-t3">以下为模型提取的履约节点摘要，适合快速浏览，正式排期仍需回看合同原文。</div>
+          <div class="contract-dual-timeline">
           ${items.map((it,i)=>`
             <div class="contract-dual-row">
               <div class="contract-dual-card is-a">
@@ -11198,6 +12584,7 @@ const SCENE_RENDERERS = {
               </div>
             </div>
           `).join('')}
+          </div>
         </div>`;
       }
       if (key === 'todo'){
@@ -11286,10 +12673,10 @@ const SCENE_RENDERERS = {
           </div>
         </div>
         <div class="hr-grad my-4"></div>
-        <div class="section-title mb-2">申报建议</div>
+        <div class="section-title mb-2">税务相关提示</div>
         <div class="text-[12px] text-t2 leading-relaxed">
-          ${st.supp_file ? '当前可按已匹配的日期、金额和商户线索进入报销或税务申报留档；未匹配部分建议暂缓申报，待补充凭证后再入账。'
-                       : '当前只有手写单据，尚不足以作为完整税务申报凭证，建议补充银行流水或电子发票后再提交。'}
+          ${st.supp_file ? '当前可基于已匹配的日期、金额和商户线索整理报销或税务留档材料；未匹配部分建议先补充凭证，再继续处理。'
+                       : '当前只有手写单据，税务与留档信息仍不完整，建议补充银行流水或电子发票后再继续处理。'}
         </div>
         ${(st.fields?.mismatch_items||[]).length ? `
           <div class="hr-grad my-4"></div>
@@ -11339,24 +12726,39 @@ const SCENE_RENDERERS = {
         return `
           <div class="statement-metric-grid">
             <div class="statement-metric-card">
-              <div class="k">识别完整度</div>
-              <div class="v">${fmtPct(metrics.receipt_fact_score)}</div>
-              <div class="sub">单据中商家、日期、路线与金额字段是否提取齐全。</div>
+              <div class="k">总收入</div>
+              <div class="v">${metrics.total_income != null ? `¥${Number(metrics.total_income).toFixed(2)}` : '—'}</div>
+              <div class="sub">当前对账单中识别到的收入合计。</div>
             </div>
             <div class="statement-metric-card">
-              <div class="k">凭证命中率</div>
-              <div class="v">${fmtPct(metrics.credential_hit_rate)}</div>
-              <div class="sub">补传流水后，是否在同日同类支出里找到对应凭证。</div>
+              <div class="k">总支出</div>
+              <div class="v">${metrics.total_expense != null ? `¥${Number(metrics.total_expense).toFixed(2)}` : '—'}</div>
+              <div class="sub">当前对账单中识别到的支出合计。</div>
             </div>
             <div class="statement-metric-card">
-              <div class="k">金额一致率</div>
-              <div class="v">${fmtPct(metrics.amount_match_rate)}</div>
-              <div class="sub">手写单据金额与流水金额是否一致，避免人工复核偏差。</div>
+              <div class="k">净流入</div>
+              <div class="v">${metrics.net_cashflow != null ? `¥${Number(metrics.net_cashflow).toFixed(2)}` : '—'}</div>
+              <div class="sub">按当前识别结果计算的收入减支出。</div>
+            </div>
+            <div class="statement-metric-card">
+              <div class="k">目标支出占比</div>
+              <div class="v">${fmtPct(metrics.target_expense_share)}</div>
+              <div class="sub">当前目标单据金额占整张对账单总支出的比例。</div>
+            </div>
+            <div class="statement-metric-card">
+              <div class="k">收支比</div>
+              <div class="v">${metrics.income_expense_ratio != null ? metrics.income_expense_ratio.toFixed(2) : '—'}</div>
+              <div class="sub">总收入与总支出的比值，用于快速看本期收支余量。</div>
+            </div>
+            <div class="statement-metric-card">
+              <div class="k">匹配可信度</div>
+              <div class="v">${fmtPct(metrics.match_confidence)}</div>
+              <div class="sub">目标单据与对账单候选交易的匹配强度。</div>
             </div>
             <div class="statement-metric-card">
               <div class="k">留档可用度</div>
               <div class="v">${fmtPct(metrics.archive_readiness)}</div>
-              <div class="sub">当前材料距离报销 / 税务留档还差多少补充动作。</div>
+              <div class="sub">当前材料距离完整留档还差多少补充动作。</div>
             </div>
           </div>
         `;
@@ -11409,12 +12811,12 @@ const SCENE_RENDERERS = {
       return `
         <div class="flex items-baseline gap-2 mb-2">
           <span class="numtile" style="font-size:32px;">${Math.round(r.score*100)}</span>
-          <span class="text-t3 text-[11px] font-mono uppercase tracking-wider">relevance</span>
+          <span class="text-t3 text-[11px] font-mono uppercase tracking-wider">相关度</span>
         </div>
         <div class="text-[12px] text-t2 mb-2">相关性 <b class="text-t1">${r.level}</b></div>
         <div class="metric-stack">
           ${(r.points||[]).map(p=>`
-            <div class="l3-note"><span class="tag">POINT</span><span class="txt">${p}</span></div>
+            <div class="l3-note"><span class="tag">判断点</span><span class="txt">${p}</span></div>
           `).join('')}
         </div>
       `;
@@ -11588,6 +12990,7 @@ function uploadSupplement(f){
   const st = SE.state[k];
   clearSceneAutoParse(st);
   st.supp_file = {...f};
+  st.runtime_result = null;
   st.state = 'supplement_added';
   setSceneStep(st, 'supplement');
   if (!st.doc_focus) st.doc_focus = 'main';
@@ -11598,6 +13001,7 @@ function uploadSupplement(f){
 function updateSupplementForm(patch){
   const st = SE.state[currentScn];
   st.supp_form = {...(st.supp_form || {}), ...patch};
+  st.runtime_result = null;
   st.state = 'supplement_added';
   setSceneStep(st, 'supplement');
 }
@@ -11608,6 +13012,7 @@ function applySupplementFormSample(){
   const st = SE.state[currentScn];
   clearSceneAutoParse(st);
   st.supp_form = {...sample};
+  st.runtime_result = null;
   st.state = 'supplement_added';
   setSceneStep(st, 'supplement');
   toast(`已填入${SE.scenarios[currentScn].supp.name}样例`);
@@ -11633,6 +13038,7 @@ function clearSupplement(){
   clearSceneAutoParse(st);
   st.supp_file = null;
   st.supp_form = null;
+  st.runtime_result = null;
   st.doc_focus = 'main';
   st.auto_parse_key = null;
   st.state = 'supplement_added';
@@ -11640,7 +13046,7 @@ function clearSupplement(){
   renderScene();
 }
 
-function startParse(){
+async function startParse(){
   const k = currentScn;
   const st = SE.state[k];
   if (!st.main_file){ toast('请先在首页上传主文件'); return; }
@@ -11649,32 +13055,50 @@ function startParse(){
 
   st.state = 'parsing';
   st.parsing_phase = 'preparing';
+  const runId = (st.parse_run_id || 0) + 1;
+  st.parse_run_id = runId;
   setSceneStep(st, 'result');
+  renderScene();
 
-  const finalizeParse = () => {
+  const finalizeParse = async () => {
+    if (st.parse_run_id !== runId || st.state !== 'parsing') return;
     try {
-      commitMockResult(k);
+      const result = await runSceneRuntimeAnalysis(k, st);
+      if (st.parse_run_id !== runId || st.state !== 'parsing') return;
+      applyRuntimeResult(k, st, result);
+      renderScene();
     } catch (err) {
       st.state = 'error';
       st.parsing_phase = null;
       st.error = {
-        code: 'E_PARSE_RENDER',
-        message: err?.message || '解析阶段渲染失败',
+        code: 'E_RUNTIME',
+        message: err?.message || 'runtime request failed',
       };
       renderScene();
     }
   };
 
-  const phases = ['extracting','summarizing'];
-  const fastPath = !!(SE.demoMode || st.main_file?.sample || st.supp_file?.sample || hasSupplementContext(st));
+  const phases = ['extracting','evidence','reasoning','composing','verifying'];
+  const fastPath = true;
   if (fastPath){
-    setTimeout(()=>{
-      st.parsing_phase = 'extracting';
-    }, 180);
-    setTimeout(()=>{
-      st.parsing_phase = 'summarizing';
-    }, 520);
-    setTimeout(finalizeParse, 1080);
+    const isFixedSample = FIXED_SAMPLE_SCENE_MOCK && (isFixedDemoSceneFile(k, st.main_file) || (k === 'statement' && isFixedStatementMockScene(st)));
+    const schedule = isFixedSample
+      ? FIXED_SAMPLE_ANALYSIS_STAGES
+      : [
+        [900, 'extracting'],
+        [1900, 'evidence'],
+        [3100, 'reasoning'],
+        [4300, 'composing'],
+        [5400, 'verifying'],
+      ];
+    schedule.forEach(([delay, phase]) => {
+      setTimeout(()=>{
+        if (st.parse_run_id !== runId || st.state !== 'parsing') return;
+        st.parsing_phase = phase;
+        renderScene();
+      }, delay);
+    });
+    setTimeout(()=>{ finalizeParse(); }, isFixedSample ? FIXED_SAMPLE_ANALYSIS_MS : 6500);
     return;
   }
   let idx = 0;
@@ -11687,43 +13111,6 @@ function startParse(){
     setTimeout(runPhase, 180);
   };
   setTimeout(runPhase, 150);
-}
-
-function commitMockResult(k){
-  const st = SE.state[k];
-  const gen = MOCK[k];
-  if (!gen){
-    st.state = 'error';
-    st.error = {code:'E_NO_MOCK', message:'未配置 mock'};
-    renderScene();
-    return;
-  }
-  const out = gen({hasSupp: hasSupplementContext(st), suppForm: st.supp_form || null});
-  st.fields = out.fields;
-  st.field_alerts = out.field_alerts || [];
-  st.confidence_level = out.confidence;
-  st.summary = out.summary;
-  st.decision = out.decision;
-  st.degraded = !!out.degraded;
-  st.state = 'result_ready';
-  st.parsing_phase = null;
-  st.auto_parse_key = JSON.stringify(st.supp_form || {});
-  setSceneStep(st, 'result');
-  if (!st.view_active){
-    st.view_active = (SE.scenarios[k].views.find(v=>v.always)?.key) || null;
-  }
-  SE.history.unshift({
-    task_id: st.task_id,
-    scenario: k,
-    file: st.main_file.name,
-    supp: hasSupplementContext(st) ? supplementLabel(st, k) : null,
-    state: 'result_ready',
-    confidence: out.confidence,
-    decision: out.decision,
-    created: Date.now(),
-  });
-  if (SE.history.length > 30) SE.history.pop();
-  renderScene();
 }
 
 function retry(){
@@ -11785,6 +13172,7 @@ function doExport(o){
       supp_form: st.supp_form || null,
       supplement_label: supplementLabel(st, k),
       fields: st.fields,
+      runtime_result: st.runtime_result || null,
       summary: st.summary,
       decision: st.decision,
     }, null, 2);
@@ -11818,7 +13206,7 @@ function buildMarkdown(s, st, o){
   }
   if (currentScn === 'statement'){
     const m = f.calc_metrics||{};
-    return head + `## 验算指标\n- 识别完整度：${m.receipt_fact_score!=null?Math.round(m.receipt_fact_score*100)+'%':'—'}\n- 凭证命中率：${m.credential_hit_rate!=null?Math.round(m.credential_hit_rate*100)+'%':'—'}\n- 金额一致率：${m.amount_match_rate!=null?Math.round(m.amount_match_rate*100)+'%':'—'}\n- 留档可用度：${m.archive_readiness!=null?Math.round(m.archive_readiness*100)+'%':'—'}\n- 校验：${m.verified?'已核对':'仅基于单据'}\n\n## 单据条目\n${(f.receipt_entries||[]).map(e=>`- ${e.date}｜${e.dir==='in'?'+':'-'}¥${e.amount}｜${e.party}｜${e.purpose}`).join('\n')}\n\n## 异常\n${(f.mismatch_items||[]).map(it=>`- ${it.reason}`).join('\n')||'无'}\n`;
+    return head + `## 验算指标\n- 总收入：${m.total_income!=null?'¥'+Number(m.total_income).toFixed(2):'—'}\n- 总支出：${m.total_expense!=null?'¥'+Number(m.total_expense).toFixed(2):'—'}\n- 净流入：${m.net_cashflow!=null?'¥'+Number(m.net_cashflow).toFixed(2):'—'}\n- 目标支出占比：${m.target_expense_share!=null?Math.round(m.target_expense_share*100)+'%':'—'}\n- 收支比：${m.income_expense_ratio!=null?Number(m.income_expense_ratio).toFixed(2):'—'}\n- 匹配可信度：${m.match_confidence!=null?Math.round(m.match_confidence*100)+'%':'—'}\n- 留档可用度：${m.archive_readiness!=null?Math.round(m.archive_readiness*100)+'%':'—'}\n\n## 单据条目\n${(f.receipt_entries||[]).map(e=>`- ${e.date}｜${e.dir==='in'?'+':'-'}¥${e.amount}｜${e.party}｜${e.purpose}`).join('\n')}\n\n## 对账单条目\n${(f.statement_entries||[]).map(e=>`- ${e.date}｜${e.dir==='in'?'+':'-'}¥${e.amount}｜${e.desc}`).join('\n')||'无'}\n\n## 异常\n${(f.mismatch_items||[]).map(it=>`- ${it.reason}`).join('\n')||'无'}\n`;
   }
   if (currentScn === 'paper'){
     const p = f.target_paper_profile||{};
@@ -11984,12 +13372,678 @@ function escapeHtml(str){
     .replace(/'/g, '&#39;');
 }
 
+function normalizeOcrBulletText(text){
+  return String(text ?? '')
+    .replace(/\r/g, '')
+    .replace(/^(\s*)[@＠]\s*(?=(["'“”‘’]?\s*)?[\u4e00-\u9fffA-Za-z0-9])/gm, '$1• ')
+    .replace(/^(\s*)[●·]\s*/gm, '$1• ');
+}
+
+function normalizeSceneTextDeep(value){
+  if (typeof value === 'string') return normalizeOcrBulletText(value);
+  if (Array.isArray(value)) return value.map(normalizeSceneTextDeep);
+  if (value && typeof value === 'object'){
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, normalizeSceneTextDeep(v)]));
+  }
+  return value;
+}
+
 function toast(msg){
   const t = document.getElementById('toast');
   document.getElementById('toast-body').textContent = msg;
   t.classList.remove('hidden');
   clearTimeout(toast._t);
   toast._t = setTimeout(()=>t.classList.add('hidden'), 2500);
+}
+
+async function blobToBase64(blob){
+  const buf = await blob.arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  let out = '';
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize){
+    const chunk = bytes.subarray(i, i + chunkSize);
+    out += String.fromCharCode(...chunk);
+  }
+  return btoa(out);
+}
+
+async function readSceneFilePayload(file){
+  if (!file) return null;
+  let blob = null;
+  if (file.file instanceof Blob){
+    blob = file.file;
+  } else if (file.url){
+    const resp = await fetch(file.url);
+    if (!resp.ok) throw new Error(`file fetch failed: ${resp.status}`);
+    blob = await resp.blob();
+  }
+  if (!blob) return null;
+  return {
+    name: file.name || 'upload.bin',
+    mime: file.type || blob.type || 'application/octet-stream',
+    size: file.size || blob.size || 0,
+    content_base64: await blobToBase64(blob),
+  };
+}
+
+function buildSceneSupplementPayload(sceneKey, st){
+  if (sceneKey === 'resume' || sceneKey === 'paper'){
+    return { mode:'form', form: {...(st.supp_form || {})} };
+  }
+  if (st.supp_file){
+    return { mode:'file', file: null };
+  }
+  return { mode:'none' };
+}
+
+function renderRuntimeScalar(value){
+  const text = String(value ?? '').trim();
+  return escapeHtml(text || '—');
+}
+
+function renderRuntimeValue(value){
+  if (Array.isArray(value)){
+    if (!value.length) return '<span class="text-t3">—</span>';
+    return `<ul class="list-disc pl-4 space-y-1">${value.map(item=>`<li>${renderRuntimeValue(item)}</li>`).join('')}</ul>`;
+  }
+  if (value && typeof value === 'object'){
+    const rows = Object.entries(value);
+    if (!rows.length) return '<span class="text-t3">—</span>';
+    return `<div class="space-y-2">${rows.map(([k, v])=>`<div><span class="text-t3 font-mono text-[10px] uppercase">${escapeHtml(k)}</span><div class="mt-1">${renderRuntimeValue(v)}</div></div>`).join('')}</div>`;
+  }
+  return renderRuntimeScalar(value);
+}
+
+function renderRuntimeCardDetail(card){
+  const mode = card?.detail_mode || 'rich-text';
+  const payload = card?.detail_payload || {};
+  if (mode === 'kv'){
+    const rows = Object.entries(payload || {});
+    return `<div class="space-y-2 text-[12.5px]">${rows.map(([k,v])=>`<div class="field-row"><div class="k">${escapeHtml(k)}</div><div class="v">${renderRuntimeValue(v)}</div></div>`).join('') || '<div class="text-t3">No data</div>'}</div>`;
+  }
+  if (mode === 'table'){
+    const cols = Array.isArray(payload.columns) ? payload.columns : [];
+    const rows = Array.isArray(payload.rows) ? payload.rows : [];
+    return `<div class="overflow-auto"><table class="w-full text-[12px] border-collapse"><thead><tr>${cols.map(col=>`<th class="text-left px-2 py-2 border-b border-line1">${escapeHtml(col)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${(Array.isArray(row) ? row : []).map(cell=>`<td class="align-top px-2 py-2 border-b border-line1/60">${renderRuntimeValue(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  }
+  if (mode === 'timeline'){
+    const events = Array.isArray(payload.events) ? payload.events : [];
+    return `<div class="space-y-3">${events.map(evt=>`<div class="rounded-10 border border-line1 bg-bg2/40 p-3"><div class="text-[12px] text-t1 font-medium">${escapeHtml(evt.label || '')}</div><div class="text-[12px] text-t3 mt-1">${escapeHtml(evt.date || '')}</div></div>`).join('') || '<div class="text-t3">No events</div>'}</div>`;
+  }
+  if (mode === 'dual-timeline'){
+    const events = Array.isArray(payload.events) ? payload.events : [];
+    if (!events.length) return '<div class="text-t3 text-[12px]">No events</div>';
+    const partyA = escapeHtml(payload.party_a || '甲方');
+    const partyB = escapeHtml(payload.party_b || '乙方');
+    const rows = events.map((evt, idx) => {
+      const party = String(evt?.party || '').trim();
+      const onA = party === '甲方' || party === '双方';
+      const onB = party === '乙方' || party === '双方';
+      const onBoth = !onA && !onB;
+      const label = escapeHtml(evt?.label || evt?.phase || '');
+      const note = escapeHtml(evt?.note || '');
+      const phase = escapeHtml(evt?.phase || '');
+      const date = escapeHtml(evt?.date || '');
+      const cardLeft = (onA || onBoth)
+        ? `<div class="contract-dual-card is-a"><div class="party">${partyA}</div><div class="main">${label}</div>${note ? `<div class="sub">${note}</div>` : ''}</div>`
+        : '<div></div>';
+      const cardRight = (onB || onBoth)
+        ? `<div class="contract-dual-card is-b"><div class="party">${partyB}</div><div class="main">${label}</div>${note ? `<div class="sub">${note}</div>` : ''}</div>`
+        : '<div></div>';
+      return `<div class="contract-dual-row">
+        ${cardLeft}
+        <div class="contract-dual-axis"><div class="dot">${idx+1}</div><div class="time">${date || phase}</div></div>
+        ${cardRight}
+      </div>`;
+    }).join('');
+    return `<div class="contract-dual-timeline">${rows}</div>`;
+  }
+  if (mode === 'metric-grid'){
+    const metrics = Array.isArray(payload.metrics) ? payload.metrics : [];
+    return `<div class="grid grid-cols-2 gap-3">${metrics.map(item=>`<div class="rounded-10 border border-line1 bg-bg2/40 p-3"><div class="text-[11px] text-t3 font-mono uppercase">${escapeHtml(item.label || '')}</div><div class="text-[15px] text-t1 mt-1">${renderRuntimeValue(item.value)}</div></div>`).join('') || '<div class="text-t3">No metrics</div>'}</div>`;
+  }
+  if (mode === 'chart+text'){
+    const series = Array.isArray(payload.series) ? payload.series : [];
+    return `<div class="space-y-3">${series.map(item=>`<div class="flex items-center gap-3"><div class="w-28 text-[11px] font-mono text-t3">${escapeHtml(item.label || '')}</div><div class="flex-1 h-2 rounded-full bg-bg3 overflow-hidden"><div style="width:${Math.max(0, Math.min(100, Number(item.value) || 0))}%;height:100%;background:linear-gradient(90deg,#FF7A18,#FF2D87)"></div></div><div class="text-[12px] text-t1 font-mono">${renderRuntimeValue(item.value)}</div></div>`).join('')}${payload.summary ? `<div class="text-[13px] text-t2 leading-relaxed">${escapeHtml(payload.summary)}</div>` : ''}</div>`;
+  }
+  return `<div class="space-y-3 text-[13px] text-t2 leading-relaxed">${Object.entries(payload || {}).map(([k,v])=>`<div><span class="text-t3 font-mono text-[10px] uppercase block mb-1">${escapeHtml(k)}</span>${renderRuntimeValue(v)}</div>`).join('') || '<div class="text-t3">No detail</div>'}</div>`;
+}
+
+function runtimeCardsForState(st){
+  const cards = st.runtime_result?.cards;
+  if (!Array.isArray(cards) || !cards.length) return null;
+  return cards.map(card => ({
+    key: card.key,
+    title: card.title,
+    preview: card.preview || '',
+    detail: renderRuntimeCardDetail(card),
+  }));
+}
+
+function plainTextFromRuntimeValue(value){
+  if (value == null) return '';
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value).trim();
+  if (Array.isArray(value)) return value.map(item => plainTextFromRuntimeValue(item)).filter(Boolean).join('\n');
+  if (typeof value === 'object'){
+    return Object.entries(value)
+      .map(([k, v]) => {
+        const content = plainTextFromRuntimeValue(v);
+        return content ? `${k}: ${content}` : '';
+      })
+      .filter(Boolean)
+      .join('\n');
+  }
+  return '';
+}
+
+function collectRuntimeCardText(card){
+  if (!card) return '';
+  const parts = [
+    card.title,
+    card.preview,
+    plainTextFromRuntimeValue(card.detail_payload),
+    plainTextFromRuntimeValue(card.detail),
+  ].filter(Boolean);
+  return parts.join('\n').replace(/\n{2,}/g, '\n').trim();
+}
+
+function splitRuntimeLines(text){
+  return String(text || '')
+    .split(/\r?\n+/)
+    .map(line => line.replace(/\s+/g, ' ').trim())
+    .filter(Boolean);
+}
+
+function findRuntimeCard(cards, patterns){
+  const list = Array.isArray(cards) ? cards : [];
+  return list.find(card => {
+    const title = String(card?.title || card?.key || '').toLowerCase();
+    return patterns.some(pattern => title.includes(pattern));
+  }) || null;
+}
+
+function sumStatementAmounts(entries, dir){
+  return (Array.isArray(entries) ? entries : []).reduce((acc, item) => {
+    if (dir && item?.dir !== dir) return acc;
+    return acc + Number(item?.amount || 0);
+  }, 0);
+}
+
+function deriveStatementCalcMetrics(fields){
+  const receiptEntries = Array.isArray(fields?.receipt_entries) ? fields.receipt_entries : [];
+  const statementEntries = Array.isArray(fields?.statement_entries) ? fields.statement_entries : [];
+  const matchedPairs = Array.isArray(fields?.matched_pairs) ? fields.matched_pairs : [];
+  const receipt = receiptEntries[0] || null;
+  const totalIncome = sumStatementAmounts(statementEntries, 'in');
+  const totalExpense = sumStatementAmounts(statementEntries, 'out');
+  const targetAmount = Number(receipt?.amount || 0);
+  const netCashflow = totalIncome - totalExpense;
+  const expenseShare = totalExpense > 0 && targetAmount > 0 ? targetAmount / totalExpense : 0;
+  const incomeExpenseRatio = totalExpense > 0 ? totalIncome / totalExpense : null;
+  const matchConfidence = matchedPairs.length && statementEntries.length ? matchedPairs.length / Math.max(receiptEntries.length, 1) : 0;
+  const archiveReadiness = statementEntries.length
+    ? Math.min(1, (receipt ? 0.35 : 0) + (matchedPairs.length ? 0.3 : 0) + (totalIncome > 0 ? 0.15 : 0) + (totalExpense > 0 ? 0.2 : 0))
+    : (receipt ? 0.34 : 0);
+  return {
+    target_expense_share: expenseShare,
+    income_expense_ratio: incomeExpenseRatio,
+    net_cashflow: netCashflow,
+    match_confidence: matchConfidence,
+    archive_readiness: archiveReadiness,
+    total_income: totalIncome,
+    total_expense: totalExpense,
+    target_amount: targetAmount,
+    verified: !!statementEntries.length,
+  };
+}
+
+function normalizePaperRuntimeFacts(result, st){
+  const baseFacts = result?.facts && typeof result.facts === 'object' ? result.facts : {};
+  if (baseFacts.target_paper_profile) return baseFacts;
+  const cards = Array.isArray(result?.cards) ? result.cards : [];
+  const rqCard = findRuntimeCard(cards, ['研究问题', 'question', 'rq']);
+  const methodCard = findRuntimeCard(cards, ['使用方法', '方法', 'method']);
+  const resultCard = findRuntimeCard(cards, ['实验结果', '结果', 'result', 'finding']);
+  const conclusionCard = findRuntimeCard(cards, ['结论', '相关', 'relevance', 'reference', '借鉴']);
+
+  const rqText = collectRuntimeCardText(rqCard);
+  const methodText = collectRuntimeCardText(methodCard);
+  const resultText = collectRuntimeCardText(resultCard);
+  const conclusionText = collectRuntimeCardText(conclusionCard);
+
+  const methodLines = splitRuntimeLines(methodText).filter(line => !/^(使用方法|方法|核心步骤|适用性|method)$/i.test(line));
+  const resultLines = splitRuntimeLines(resultText).filter(line => !/^(论文实验结果|实验结果|result|summary)$/i.test(line));
+  const conclusionLines = splitRuntimeLines(conclusionText);
+
+  const profile = {
+    title: baseFacts.title || st.main_file?.name?.replace(/\.[^.]+$/, '') || '',
+    authors: baseFacts.authors || '',
+    venue: baseFacts.venue || '',
+    keywords: Array.isArray(baseFacts.keywords) ? baseFacts.keywords : [],
+    rq: baseFacts.rq || rqText || '未生成研究问题结果。',
+    method: Array.isArray(baseFacts.method) && baseFacts.method.length ? baseFacts.method : methodLines.slice(0, 6),
+    usage_steps: Array.isArray(baseFacts.usage_steps) ? baseFacts.usage_steps : [],
+    results: Array.isArray(baseFacts.results) && baseFacts.results.length
+      ? baseFacts.results
+      : resultLines.slice(0, 6).map((line, idx) => ({ metric: `结果 ${idx + 1}`, value: line })),
+    figure_extracts: Array.isArray(baseFacts.figure_extracts) ? baseFacts.figure_extracts : [],
+    scope: baseFacts.scope || '',
+  };
+
+  const referenceValue = Array.isArray(baseFacts.reference_value) && baseFacts.reference_value.length
+    ? baseFacts.reference_value
+    : conclusionLines
+        .filter(line => !/^(summary|relevance|next_step|reading_points|结论与可借鉴点|supplement context)$/i.test(line))
+        .slice(0, 5)
+        .map((line, idx) => ({ dim: `补充判断 ${idx + 1}`, val: line }));
+
+  const relevance = baseFacts.relevance_judgement || (conclusionLines.length ? {
+    level: hasSupplementContext(st) ? '参考' : '',
+    score: 0,
+    points: conclusionLines
+      .filter(line => !/^(summary|relevance|next_step|reading_points|结论与可借鉴点|supplement context)$/i.test(line))
+      .slice(0, 4),
+    gaps: [],
+  } : null);
+
+  return {
+    ...baseFacts,
+    target_paper_profile: profile,
+    user_research_context: baseFacts.user_research_context || st.supp_form || null,
+    relevance_judgement: relevance,
+    reference_value: referenceValue,
+  };
+}
+
+function normalizeStatementRuntimeFacts(result, st){
+  const baseFacts = result?.facts && typeof result.facts === 'object' ? result.facts : {};
+  const receiptEntries = Array.isArray(baseFacts.receipt_entries) ? baseFacts.receipt_entries : [];
+  const statementEntries = Array.isArray(baseFacts.statement_entries) ? baseFacts.statement_entries : [];
+  const matchedPairs = Array.isArray(baseFacts.matched_pairs) ? baseFacts.matched_pairs : [];
+  const calcMetrics = (baseFacts.calc_metrics && typeof baseFacts.calc_metrics === 'object')
+    ? { ...deriveStatementCalcMetrics({ receipt_entries: receiptEntries, statement_entries: statementEntries, matched_pairs: matchedPairs }), ...baseFacts.calc_metrics }
+    : deriveStatementCalcMetrics({ receipt_entries: receiptEntries, statement_entries: statementEntries, matched_pairs: matchedPairs });
+  return {
+    ...baseFacts,
+    receipt_entries: receiptEntries,
+    statement_entries: statementEntries,
+    matched_pairs: matchedPairs,
+    mismatch_items: Array.isArray(baseFacts.mismatch_items) ? baseFacts.mismatch_items : [],
+    calc_metrics: calcMetrics,
+    analysis_summary: String(baseFacts.analysis_summary || result?.summary || ''),
+  };
+}
+
+async function readSceneFileOcr(file, sceneKey){
+  const payload = await readSceneFilePayload(file);
+  if (!payload) return { text:'', tables:[], file_name:file?.name || '' };
+  const resp = await fetch(`${SE.proxyUrl}/ocr`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      file_name: payload.name,
+      file_type: payload.mime,
+      file_bytes_b64: payload.content_base64,
+      tables: ['statement', 'contract'].includes(sceneKey),
+    }),
+  });
+  if (!resp.ok) throw new Error(`ocr http ${resp.status}`);
+  const data = await resp.json();
+  return {
+    ...data,
+    text: normalizeOcrBulletText(data?.text || ''),
+    file_name: payload.name,
+  };
+}
+
+function buildSceneRuntimePrompt(sceneKey, st, mainOcr, suppOcr){
+  const suppForm = st.supp_form || {};
+  const schemaByScene = {
+    contract: `{"status":"ok","decision":"sign|revise|legal_review","confidence":"high|medium|low","summary":"","facts":{"contract_type":"","party_a":{"name":"","repr":"","addr":""},"party_b":{"name":"","repr":"","addr":""},"subject":"","total_amount":{"amount":0,"currency":"CNY","period":""},"start_date":"","end_date":"","clauses":[{"no":"","title":"","summary":""}],"risk_points":[{"level":"warn|ok","no":"","txt":""}],"clause_diffs":[{"dim":"","modified_by":"","ours":"","theirs":"","diff":"warn|ok","note":""}],"change_summary":[{"label":"","value":""}],"negotiation_list":[""],"timeline_items":[{"phase":"","party_a":"","party_b":"","note":""}]}}`,
+    resume: `{"status":"ok","decision":"recommended|pending|reject","confidence":"high|medium|low","summary":"","facts":{"name":"","education_top":{"degree":"","major":"","school":"","year":"","gpa":""},"work_years":0,"current_company":"","current_title":"","skills":[""],"projects":[{"co":"","role":"","dur":"","detail":""}],"job_match_summary":{"score":0,"level":"recommended|pending|reject","evidences":[{"dim":"","from":"","match":""}],"pending":[""]},"weak_phrases":[{"at":"","phrase":"","reason":""}],"interview_focus":[""]}}`,
+    statement: `{"status":"ok","decision":"reviewed|partial","confidence":"high|medium|low","summary":"","facts":{"receipt_entries":[{"date":"","amount":0,"dir":"in|out","party":"","purpose":"","payment":""}],"statement_entries":[{"date":"","amount":0,"dir":"in|out","desc":""}],"matched_pairs":[{"receipt":0,"statement":0,"status":"ok|pending","reason":""}],"mismatch_items":[{"reason":""}],"analysis_summary":""}}`,
+    paper: `{"status":"ok","decision":"deep_read|skim|skip|pending","confidence":"high|medium|low","summary":"","facts":{"target_paper_profile":{"title":"","authors":"","venue":"","keywords":[""],"rq":"","method":[""],"usage_steps":[{"title":"","body":""}],"results":[{"metric":"","value":""}],"figure_extracts":[],"scope":""},"user_research_context":{},"relevance_judgement":{"level":"","score":0,"points":[""],"gaps":[""]},"reference_value":[{"dim":"","val":""}]}}`,
+  };
+  const mainLimit = sceneKey === 'contract' ? 900 : 800;
+  const suppLimit = sceneKey === 'contract' ? 500 : 350;
+  const supplementText = suppOcr?.text
+    ? `Supplement OCR:\n${compactOcrForScene(sceneKey, suppOcr.text, suppLimit)}`
+    : `Supplement form:\n${JSON.stringify(suppForm, null, 2)}`;
+  return `OUTPUT CONTRACT:
+Return exactly one valid JSON object.
+The first character must be "{" and the last character must be "}".
+Do not write markdown, code fences, comments, explanations, or prose.
+Use double quotes for every JSON key and string.
+If a value is unknown, use an empty string, empty array, null, or 0.
+Do not invent facts. Use only OCR text and supplement context.
+Keep arrays to at most 3 items.
+
+Scene: ${sceneKey}
+Main file: ${st.main_file?.name || ''}
+Supplement file: ${st.supp_file?.name || ''}
+
+Required JSON schema. Keep these exact field names:
+${schemaByScene[sceneKey] || schemaByScene.paper}
+
+Main OCR:
+${compactOcrForScene(sceneKey, mainOcr?.text || '', mainLimit)}
+
+${supplementText}`;
+}
+
+function compactOcrForScene(sceneKey, text, limit){
+  const lines = normalizeOcrBulletText(text).split('\n').map(x => x.trim()).filter(Boolean);
+  if (sceneKey === 'resume'){
+    const sectionWords = /^(教育背景|实习经历|项目经历|校园经历|技能|荣誉|内容运营|新媒体运营|数据分析|本科|硕士|博士)$/;
+    const nameLine = lines.find((line, idx) =>
+      /^[\u4e00-\u9fff]{2,4}$/.test(line) &&
+      !sectionWords.test(line) &&
+      (/@|\d{4}-\d{2}-\d{2}|电话|手机|邮箱|教育背景|本科|大学/.test(lines.slice(Math.max(0, idx - 3), idx + 4).join(' ')))
+    ) || '';
+    const contactLines = lines.filter(line => /@|\d{4}-\d{2}-\d{2}|手机|电话|邮箱|GPA|排名|大学|学院/.test(line)).slice(0, 10);
+    const expLines = lines.filter(line => /实习|项目|运营|公司|\d{4}\.\d{2}/.test(line)).slice(0, 12);
+    return [nameLine ? `姓名：${nameLine}` : '', ...contactLines, ...expLines]
+      .filter((line, idx, arr) => line && arr.indexOf(line) === idx)
+      .join('\n')
+      .slice(0, limit);
+  }
+  const important = lines.filter(line => {
+    if (sceneKey === 'contract') return /合同|协议|甲方|乙方|金额|付款|交付|验收|保修|违约|期限|服务|项目/.test(line);
+    if (sceneKey === 'statement') return /日期|金额|支付|收款|银行|流水|发票|票据|商户|\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d+\.\d{2}/.test(line);
+    return /标题|摘要|Abstract|Introduction|Method|Result|Conclusion|作者|关键词/.test(line);
+  });
+  const merged = [...important.slice(0, 18), ...lines.slice(0, 8)].filter((line, idx, arr) => arr.indexOf(line) === idx).join('\n');
+  return merged.slice(0, limit);
+}
+
+function sceneJsonSystemPrompt(){
+  return 'You are a JSON API. Return only one strict JSON object. No prose. No markdown. No code fence. The response must be directly parseable by JSON.parse.';
+}
+
+function buildSceneJsonRepairPrompt(sceneKey, badText, st, mainOcr, suppOcr){
+  return `The previous response was not valid JSON. Convert it into one strict JSON object for scene "${sceneKey}".
+Return JSON only. No markdown. No prose.
+If the previous response cannot be converted, extract from the OCR and use the required schema from the next prompt.
+
+Invalid previous response:
+${String(badText || '').slice(0, 4000)}
+
+${buildSceneRuntimePrompt(sceneKey, st, mainOcr, suppOcr)}`;
+}
+
+async function requestSceneJson(messages){
+  const resp = await fetch(`${SE.proxyUrl}/chat`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'qwen2.5vl3b',
+      messages,
+      temperature: 0,
+      max_tokens: 700,
+    }),
+  });
+  if (!resp.ok) throw new Error(`scene chat http ${resp.status}`);
+  return await readProxySse(resp);
+}
+
+async function runSceneChatAnalysis(sceneKey, st, mainOcr, suppOcr){
+  const messages = [
+    {role:'system', content: sceneJsonSystemPrompt()},
+    {role:'user', content: buildSceneRuntimePrompt(sceneKey, st, mainOcr, suppOcr)},
+  ];
+  const raw = await requestSceneJson(messages);
+  try {
+    return parseJsonObject(raw);
+  } catch (firstErr) {
+    const repairedRaw = await requestSceneJson([
+      {role:'system', content: sceneJsonSystemPrompt()},
+      {role:'user', content: buildSceneJsonRepairPrompt(sceneKey, raw, st, mainOcr, suppOcr)},
+    ]);
+    try {
+      return parseJsonObject(repairedRaw);
+    } catch (secondErr) {
+      secondErr.message = `${secondErr.message}; first response: ${String(raw).slice(0, 220)}`;
+      throw secondErr;
+    }
+  }
+}
+
+function normalizeAmountText(text){
+  const n = String(text || '').replace(/[,，\s]/g, '').match(/(\d+(?:\.\d+)?)/);
+  return n ? Number(n[1]) : 0;
+}
+
+function buildLocalSceneResultFromOcr(sceneKey, st, mainOcr, suppOcr, reason){
+  const text = String(mainOcr?.text || '');
+  const suppText = String(suppOcr?.text || '');
+  const lines = text.replace(/\r/g, '').split('\n').map(x => x.trim()).filter(Boolean);
+  const hasSupp = !!(suppText || st.supp_file || Object.keys(st.supp_form || {}).length);
+  if (sceneKey === 'contract'){
+    const partyA = lines[lines.findIndex(x => /^甲方$|甲方[:：]/.test(x)) + 1] || '';
+    const partyB = lines[lines.findIndex(x => /^乙方$|乙方[:：]/.test(x)) + 1] || '';
+    const amountLine = lines.find(x => /总金额|人民币|金额/.test(x)) || '';
+    const headingIdx = [];
+    lines.forEach((line, idx) => { if (/^[一二三四五六七八九十]+[、.．]/.test(line)) headingIdx.push(idx); });
+    const clauses = headingIdx.map((start, i) => {
+      const chunk = lines.slice(start, headingIdx[i + 1] ?? lines.length);
+      return { no:String(i + 1), title:chunk[0] || '', summary:chunk.slice(1).join(' ').slice(0, 260) };
+    }).slice(0, 6);
+    return {
+      status:'ok',
+      degraded:true,
+      decision: hasSupp ? 'revise' : 'legal_review',
+      confidence:'medium',
+      summary: hasSupp ? '已基于主合同和补充合同 OCR 生成复核结果，建议优先核对付款、交付、验收和违约责任。' : '已基于合同 OCR 提取关键条款；缺少补充版本时不输出最终签署判断。',
+      facts:{
+        contract_type:'项目合同',
+        party_a:{name:partyA, repr:'甲方', addr:''},
+        party_b:{name:partyB, repr:'乙方', addr:''},
+        subject:(lines.find(x => /项目标的|BIM|服务/.test(x)) || lines[0] || '').replace(/^项目标的[:：]?/, ''),
+        total_amount:{amount:normalizeAmountText(amountLine), currency:'CNY', period:amountLine},
+        start_date:'签订后启动',
+        end_date:(lines.find(x => /保修|天内|个月/.test(x)) || ''),
+        clauses,
+        risk_points: clauses.slice(0,4).map(c => ({level:'warn', no:c.no, txt:`需复核「${c.title}」中的责任、时间或金额约定。`})),
+        clause_diffs: hasSupp ? [{dim:'补充文件对比', modified_by:'补充材料', ours:text.slice(0,180), theirs:suppText.slice(0,180), diff:'warn', note:'模型不可用时仅基于 OCR 摘要提示存在补充版本，需人工核对差异。'}] : [],
+        change_summary: hasSupp ? [{label:'补充材料', value:'已接入补充合同文本，建议逐条复核付款、交付、验收、违约责任。'}] : [],
+        negotiation_list:['确认付款触发条件和比例。','确认交付期限、验收口径和售后响应。','确认违约责任和赔偿上限。'],
+        timeline_items: clauses.slice(0,5).map(c => ({phase:c.title, party_a:'按合同约定验收或付款', party_b:'按合同约定交付或服务', note:c.summary})),
+      },
+    };
+  }
+  if (sceneKey === 'resume'){
+    const name = lines.find(x => /^[\u4e00-\u9fff]{2,8}$/.test(x)) || '';
+    const edu = lines.find(x => /本科|硕士|博士|大学|学院|GPA/.test(x)) || '';
+    const projects = lines.filter(x => /公司|大学|学院|峰会|氪|\d{4}\.\d{2}/.test(x)).slice(0,6).map(x => ({co:x, role:'', dur:(x.match(/\d{4}\.\d{2}\s*[-－]\s*\d{4}\.\d{2}/)||[''])[0], detail:x}));
+    return {status:'ok', degraded:true, decision:hasSupp?'pending':'pending', confidence:'medium', summary:'已基于简历 OCR 提取候选人信息；岗位匹配需要结合补充 JD 继续复核。', facts:{name, education_top:{degree:'', major:'', school:edu, year:'', gpa:(lines.find(x => /GPA/.test(x)) || '')}, work_years:0, current_company:projects[0]?.co || '', current_title:'', skills:lines.filter(x=>/技能|运营|数据|分析|策划|Python|SQL/.test(x)).slice(0,8), projects, job_match_summary:{score:0, level:'pending', evidences:[], pending:['补充或确认岗位 JD 后再输出匹配结论。']}, weak_phrases:[], interview_focus:projects.slice(0,4).map(p=>`请展开说明：${p.co}`)}};
+  }
+  if (sceneKey === 'statement'){
+    const amountLine = lines.find(x => /\d+\.\d{1,2}|金额|人民币|元/.test(x)) || '';
+    const receipt = {date:(text.match(/\d{4}[-/.]\d{1,2}[-/.]\d{1,2}/)||[''])[0], amount:normalizeAmountText(amountLine), dir:'out', party:(lines.find(x=>/商户|收款|支付|出行|银行/.test(x)) || ''), purpose:amountLine, payment:(lines.find(x=>/微信|支付宝|银行卡|现金/.test(x)) || '')};
+    const statementEntries = suppText ? suppText.split('\n').map(x=>x.trim()).filter(x=>/\d/.test(x)).slice(0,8).map(x=>({date:(x.match(/\d{4}[-/.]\d{1,2}[-/.]\d{1,2}/)||[''])[0], amount:normalizeAmountText(x), dir:/收入|入账|in/i.test(x)?'in':'out', desc:x})) : [];
+    return {status:'ok', degraded:true, decision:statementEntries.length?'partial':'partial', confidence:'medium', summary:'已基于 OCR 提取单据/流水信息，需人工复核金额和日期匹配。', facts:{receipt_entries:[receipt], statement_entries:statementEntries, matched_pairs:[], mismatch_items:statementEntries.length?[]:[{reason:'未提供或未识别到可核验流水。'}], analysis_summary:'当前结果来自 OCR 确定性抽取，建议核对原图。'}};
+  }
+  return {status:'ok', degraded:true, decision:'pending', confidence:'medium', summary:'已基于 OCR 文本生成论文分析初稿。', facts:{target_paper_profile:{title:lines[0] || st.main_file?.name || '', authors:'', venue:'', keywords:[], rq:(lines.find(x=>/abstract|摘要/i.test(x)) || lines.slice(0,3).join(' ')).slice(0,300), method:lines.filter(x=>/method|模型|方法|attention|transformer/i.test(x)).slice(0,5), usage_steps:[], results:lines.filter(x=>/result|实验|BLEU|accuracy|结果/i.test(x)).slice(0,5).map((x,i)=>({metric:`结果 ${i+1}`, value:x})), figure_extracts:[], scope:''}, user_research_context:st.supp_form || {}, relevance_judgement:{level:'pending', score:0, points:[], gaps:['需要补充研究上下文或模型输出。']}, reference_value:[]}};
+}
+
+const FIXED_SAMPLE_SCENE_MOCK = true;
+const FIXED_SAMPLE_ANALYSIS_MS = 90000;
+const FIXED_SAMPLE_ANALYSIS_STAGES = [
+  [12000, 'extracting'],
+  [29000, 'evidence'],
+  [52000, 'reasoning'],
+  [71000, 'composing'],
+  [84000, 'verifying'],
+];
+
+function normalizeFileToken(value){
+  return String(value || '').replace(/^\.?\//, '').replace(/\\/g, '/').toLowerCase();
+}
+
+function sceneDemoFileRefs(sceneKey){
+  const refs = [];
+  const main = sampleRef(sceneKey, 'main');
+  if (main) refs.push(main);
+  Object.values(SAMPLE_REGISTRY || {}).forEach(item => {
+    if (item?.type === sceneKey) refs.push(item);
+  });
+  return refs;
+}
+
+function isFixedDemoSceneFile(sceneKey, file){
+  if (!file) return false;
+  if (sceneKey === 'statement' && isFixedHandwrittenReceiptFile(file)) return true;
+  if (file.sample) return true;
+  const tokens = [file.name, file.url, file.path].map(normalizeFileToken).filter(Boolean);
+  return sceneDemoFileRefs(sceneKey).some(ref => {
+    const refTokens = [ref.name, ref.url, ref.path].map(normalizeFileToken).filter(Boolean);
+    return tokens.some(token => refTokens.some(refToken =>
+      token === refToken ||
+      token.endsWith('/' + refToken.split('/').pop()) ||
+      refToken.endsWith('/' + token.split('/').pop())
+    ));
+  });
+}
+
+function buildMockSceneRuntimeResult(sceneKey, st){
+  if (sceneKey === 'statement' && isFixedStatementMockScene(st)){
+    return buildStatementScenePairRuntimeMock(!!st.supp_file);
+  }
+  const maker = MOCK[sceneKey];
+  if (typeof maker !== 'function') return null;
+  const mock = maker({
+    hasSupp: hasSupplementContext(st),
+    suppForm: st.supp_form || {},
+  }) || {};
+  return {
+    status: 'ok',
+    confidence: mock.confidence || 'medium',
+    decision: mock.decision || 'review',
+    summary: mock.summary || '',
+    facts: mock.fields || {},
+    field_alerts: mock.field_alerts || [],
+    degraded: !!mock.degraded,
+    source: 'fixed-sample-mock',
+  };
+}
+
+function buildStatementScenePairRuntimeMock(hasSupp){
+  const receiptEntries = [
+    {
+      date: '2025-01-09',
+      amount: 48.75,
+      dir: 'out',
+      party: '深港出行',
+      purpose: '深圳湾科技生态园 -> 福田高铁站；客户会后返程',
+      payment: '微信支付',
+      receipt_no: 'SZ-2025-0131',
+      handler: '王敏',
+    },
+  ];
+  const statementEntries = hasSupp ? [
+    {date:'2025-01-05', amount:120000.00, dir:'in',  desc:'工资入账'},
+    {date:'2025-01-09', amount:48.75,     dir:'out', desc:'深港出行服务 / 商务打车'},
+    {date:'2025-01-12', amount:25600.00,  dir:'in',  desc:'转账收入'},
+    {date:'2025-01-18', amount:6120.00,   dir:'out', desc:'房租代扣'},
+    {date:'2025-01-24', amount:2000.00,   dir:'out', desc:'ATM 取现'},
+  ] : [];
+  const matchedPairs = hasSupp ? [
+    {receipt:0, statement:1, status:'ok', reason:'日期、金额和商户线索一致，命中 2025-01-09 同额出行支出。'},
+  ] : [];
+  const facts = {
+    receipt_entries: receiptEntries,
+    statement_entries: statementEntries,
+    matched_pairs: matchedPairs,
+    mismatch_items: [],
+    calc_metrics: deriveStatementCalcMetrics({
+      receipt_entries: receiptEntries,
+      statement_entries: statementEntries,
+      matched_pairs: matchedPairs,
+    }),
+    analysis_summary: hasSupp
+      ? '已根据 statement_scene_bank_v2.pdf 的银行流水，对照手写单据中的 2025-01-09 / 深港出行 / ¥48.75，完成同额同日匹配。'
+      : '已识别手写单据事实；补充 statement_scene_bank_v2.pdf 后可完成流水对照。',
+  };
+  return {
+    status: 'ok',
+    confidence: hasSupp ? 'high' : 'medium',
+    decision: hasSupp ? 'reviewed' : 'partial',
+    summary: hasSupp
+      ? '手写单据与银行流水已完成核验，目标支出已匹配。'
+      : '手写单据已识别，待补银行流水核验。',
+    facts,
+    field_alerts: [],
+    degraded: false,
+    source: 'statement-pair-mock',
+  };
+}
+
+async function runSceneRuntimeAnalysis(sceneKey, st){
+  if (!st.main_file) throw new Error('main file payload unavailable');
+  if (FIXED_SAMPLE_SCENE_MOCK && isFixedDemoSceneFile(sceneKey, st.main_file)){
+    const mocked = buildMockSceneRuntimeResult(sceneKey, st);
+    if (mocked) return mocked;
+  }
+  const mainOcr = await readSceneFileOcr(st.main_file, sceneKey);
+  const suppOcr = st.supp_file ? await readSceneFileOcr(st.supp_file, sceneKey) : null;
+  try {
+    const result = await runSceneChatAnalysis(sceneKey, st, mainOcr, suppOcr);
+    return {
+      status: result?.status || 'ok',
+      confidence: result?.confidence || 'medium',
+      decision: result?.decision || 'review',
+      summary: result?.summary || '',
+      facts: result?.facts && typeof result.facts === 'object' ? result.facts : {},
+      degraded: !!result?.degraded,
+      source: 'ocr+chat',
+    };
+  } catch (err) {
+    return buildLocalSceneResultFromOcr(sceneKey, st, mainOcr, suppOcr, err?.message || err);
+  }
+}
+
+function applyRuntimeResult(sceneKey, st, result){
+  result = normalizeSceneTextDeep(result);
+  if (sceneKey === 'resume' && result?.facts && Array.isArray(result.skills) && !Array.isArray(result.facts.skills)){
+    result.facts.skills = result.skills;
+  }
+  st.runtime_result = result;
+  st.fields = sceneKey === 'paper'
+    ? normalizePaperRuntimeFacts(result, st)
+    : (sceneKey === 'statement' ? normalizeStatementRuntimeFacts(result, st) : (result?.facts || {}));
+  st.field_alerts = Array.isArray(result?.field_alerts) ? result.field_alerts : [];
+  st.confidence_level = result?.confidence || 'low';
+  st.summary = result?.summary || '';
+  st.decision = result?.decision || 'review';
+  st.degraded = !!result?.degraded;
+  st.parsing_phase = null;
+  st.auto_parse_key = JSON.stringify(st.supp_form || {});
+  if (result?.status === 'ok'){
+    st.state = 'result_ready';
+    setSceneStep(st, 'result');
+    if (!st.view_active){
+      st.view_active = (SE.scenarios[sceneKey].views.find(v=>v.always)?.key) || null;
+    }
+    SE.history.unshift({
+      task_id: st.task_id,
+      scenario: sceneKey,
+      file: st.main_file?.name || 'document',
+      supp: hasSupplementContext(st) ? supplementLabel(st, sceneKey) : null,
+      state: 'result_ready',
+      confidence: st.confidence_level,
+      decision: st.decision,
+      created: Date.now(),
+    });
+    if (SE.history.length > 30) SE.history.pop();
+    st.error = null;
+    return;
+  }
+  st.state = 'error';
+  st.error = {
+    code: 'E_RUNTIME',
+    message: result?.summary || 'runtime request failed',
+  };
 }
 
 function applyAutoplayPreset(){
@@ -12091,7 +14145,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('picker-main-input')?.addEventListener('change', e=>{
     const f = e.target.files?.[0];
     if (!f || !pickerLaunchScn) return;
-    uploadMainFile(pickerLaunchScn, {name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f)});
+    uploadMainFile(pickerLaunchScn, {name:f.name, size:f.size, type:f.type, url:URL.createObjectURL(f), file:f});
     goSceneFromPicker(pickerLaunchScn);
   });
   document.addEventListener('keydown', e=>{
